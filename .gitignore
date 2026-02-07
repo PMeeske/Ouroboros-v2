@@ -1,35 +1,86 @@
-## Build output
-bin/
-obj/
-out/
-publish/
-
-## .NET
-*.user
+/bin
+/obj
+**/bin/
+**/obj/
+/example/Entwicklung
+/.vscode
+/.vs
+**/.vs/
 *.suo
-*.cache
-*.vs/
-*.DotSettings.user
-project.lock.json
-TestResults/
-coverage-report/
+*.user
+/.monadic_ingest_cache.json
+logs/
+*.log
+appsettings.*.local.json
+.env
+
+# Test results
+**/TestResults/
+*.trx
+*.coverage
+*.coveragexml
+*.zip
+
+# Code Coverage Reports
+TestCoverageReport/
+coverage/
+**/coverage.cobertura.xml
 StrykerOutput/
+**/StrykerOutput/
+.stryker-temp/
 
-## NuGet
-packages/
-*.nupkg
+# Node.js dependencies and Playwright
+node_modules/
+package-lock.json
+.github/scripts/node_modules/
+.github/scripts/package-lock.json
 
-## IDE
-.idea/
-.vscode/.settings
-*.swp
-*~
+# Playwright artifacts
+playwright-report/
+test-results/
+playwright/.cache/
 
-## OS
-Thumbs.db
+# Android/MAUI build artifacts
+*.apk
+*.aab
+*.ipa
+*.dSYM
+*.app
 .DS_Store
 
-## Terraform
+# Temporary tool downloads
+actionlint
+actionlint_*.tar.gz
+
+# Reqnroll auto-generated files
+*.feature.cs
+
+# Test/debug files in root
+/test_*.wav
+/speech_*.wav
+/test_*.py
+/test_*.metta
+/test_*.csx
+/test_*.ps1
+/*_test.wav
+/repro_*.cs
+/ollama_agent.*
+
+# Generated OpenAPI specs
+/openapi.json
+
+# NuGet
+packages/
+*.nupkg
+*.snupkg
+
+# IDE
+.idea/
+*.swp
+*~
+Thumbs.db
+
+# Terraform
 .terraform/
 *.tfstate
 *.tfstate.backup
