@@ -1,0 +1,12 @@
+[submodule ".build"]
+	path = .build
+	url = https://github.com/PMeeske/ouroboros-build.git
+[submodule "foundation"]
+	path = foundation
+	url = https://github.com/PMeeske/ouroboros-foundation.git
+[submodule "engine"]
+	path = engine
+	url = https://github.com/PMeeske/ouroboros-engine.git
+[submodule "app"]
+	path = app
+	url = https://github.com/PMeeske/ouroboros-app.git

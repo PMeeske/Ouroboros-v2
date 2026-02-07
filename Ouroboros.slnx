@@ -1,0 +1,60 @@
+<Solution>
+  <!-- Foundation: Source -->
+  <Folder Name="/foundation/src/">
+    <Project Path="foundation/src/Ouroboros.Core/Ouroboros.Core.csproj" />
+    <Project Path="foundation/src/Ouroboros.Domain/Ouroboros.Domain.csproj" />
+    <Project Path="foundation/src/Ouroboros.Genetic/Ouroboros.Genetic.csproj" />
+    <Project Path="foundation/src/Ouroboros.Roslynator/Ouroboros.Roslynator.csproj" />
+    <Project Path="foundation/src/Ouroboros.Tools/Ouroboros.Tools.csproj" />
+  </Folder>
+  <!-- Foundation: Tests -->
+  <Folder Name="/foundation/tests/">
+    <Project Path="foundation/tests/Ouroboros.Core.Tests/Ouroboros.Core.Tests.csproj" />
+    <Project Path="foundation/tests/Ouroboros.Domain.Tests/Ouroboros.Domain.Tests.csproj" />
+    <Project Path="foundation/tests/Ouroboros.Tools.Tests/Ouroboros.Tools.Tests.csproj" />
+    <Project Path="foundation/tests/Ouroboros.Genetic.Tests/Ouroboros.Genetic.Tests.csproj" />
+    <Project Path="foundation/tests/Ouroboros.Foundation.BDD/Ouroboros.Foundation.BDD.csproj" />
+  </Folder>
+  <!-- Engine: Source -->
+  <Folder Name="/engine/src/">
+    <Project Path="engine/src/Ouroboros.Agent/Ouroboros.Agent.csproj" />
+    <Project Path="engine/src/Ouroboros.Network/Ouroboros.Network.csproj" />
+    <Project Path="engine/src/Ouroboros.Pipeline/Ouroboros.Pipeline.csproj" />
+    <Project Path="engine/src/Ouroboros.Providers/Ouroboros.Providers.csproj" />
+  </Folder>
+  <!-- Engine: Tests -->
+  <Folder Name="/engine/tests/">
+    <Project Path="engine/tests/Ouroboros.Agent.Tests/Ouroboros.Agent.Tests.csproj" />
+    <Project Path="engine/tests/Ouroboros.Pipeline.Tests/Ouroboros.Pipeline.Tests.csproj" />
+    <Project Path="engine/tests/Ouroboros.Providers.Tests/Ouroboros.Providers.Tests.csproj" />
+    <Project Path="engine/tests/Ouroboros.Network.Tests/Ouroboros.Network.Tests.csproj" />
+    <Project Path="engine/tests/Ouroboros.Learning.Tests/Ouroboros.Learning.Tests.csproj" />
+    <Project Path="engine/tests/Ouroboros.Safety.Tests/Ouroboros.Safety.Tests.csproj" />
+    <Project Path="engine/tests/Ouroboros.Meta.Tests/Ouroboros.Meta.Tests.csproj" />
+    <Project Path="engine/tests/Ouroboros.Memory.Tests/Ouroboros.Memory.Tests.csproj" />
+    <Project Path="engine/tests/Ouroboros.Engine.BDD/Ouroboros.Engine.BDD.csproj" />
+  </Folder>
+  <!-- App: Source -->
+  <Folder Name="/app/src/">
+    <Project Path="app/src/Ouroboros.Android/Ouroboros.Android.csproj" />
+    <Project Path="app/src/Ouroboros.Application/Ouroboros.Application.csproj" />
+    <Project Path="app/src/Ouroboros.CLI/Ouroboros.CLI.csproj" />
+    <Project Path="app/src/Ouroboros.Easy/Ouroboros.Easy.csproj" />
+    <Project Path="app/src/Ouroboros.Examples/Ouroboros.Examples.csproj" />
+    <Project Path="app/src/Ouroboros.WebApi/Ouroboros.WebApi.csproj" />
+  </Folder>
+  <!-- App: Tests -->
+  <Folder Name="/app/tests/">
+    <Project Path="app/tests/Ouroboros.CLI.Tests/Ouroboros.CLI.Tests.csproj" />
+    <Project Path="app/tests/Ouroboros.WebApi.Tests/Ouroboros.WebApi.Tests.csproj" />
+    <Project Path="app/tests/Ouroboros.Integration.Tests/Ouroboros.Integration.Tests.csproj" />
+    <Project Path="app/tests/Ouroboros.Application.Tests/Ouroboros.Application.Tests.csproj" />
+    <Project Path="app/tests/Ouroboros.Android.Tests/Ouroboros.Android.Tests.csproj" />
+    <Project Path="app/tests/Ouroboros.App.BDD/Ouroboros.App.BDD.csproj" />
+  </Folder>
+  <!-- Shared: TestKit -->
+  <Folder Name="/.build/test-infra/">
+    <Project Path=".build/test-infra/Ouroboros.TestKit/Ouroboros.TestKit.csproj" />
+    <Project Path=".build/test-infra/Ouroboros.TestKit.BDD/Ouroboros.TestKit.BDD.csproj" />
+  </Folder>
+</Solution>
