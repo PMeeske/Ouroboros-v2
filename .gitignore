@@ -1,0 +1,36 @@
+## Build output
+bin/
+obj/
+out/
+publish/
+
+## .NET
+*.user
+*.suo
+*.cache
+*.vs/
+*.DotSettings.user
+project.lock.json
+TestResults/
+coverage-report/
+StrykerOutput/
+
+## NuGet
+packages/
+*.nupkg
+
+## IDE
+.idea/
+.vscode/.settings
+*.swp
+*~
+
+## OS
+Thumbs.db
+.DS_Store
+
+## Terraform
+.terraform/
+*.tfstate
+*.tfstate.backup
+*.tfplan

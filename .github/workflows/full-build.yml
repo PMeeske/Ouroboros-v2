@@ -1,0 +1,89 @@
+# Full build workflow for the Ouroboros meta-repo
+# Builds and tests all sub-repos together
+
+name: Full Build
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: full-build-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build-all:
+    name: Build All Projects
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      - name: Checkout with submodules
+        uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11  # v4.1.1
+        with:
+          fetch-depth: 0
+          submodules: recursive
+
+      - name: Setup .NET SDK
+        uses: actions/setup-dotnet@4d6c8fcf3c8f7a60068d26b594648e99df24cee3  # v4.0.0
+        with:
+          dotnet-version: '10.0.x'
+
+      - name: Install MAUI workloads
+        run: dotnet workload install maui-android
+
+      - name: Restore dependencies
+        run: dotnet restore Ouroboros.slnx
+
+      - name: Build solution
+        run: dotnet build Ouroboros.slnx --configuration Release --no-restore
+
+  test-foundation:
+    name: Test Foundation
+    needs: build-all
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11
+        with: { submodules: recursive }
+      - uses: actions/setup-dotnet@4d6c8fcf3c8f7a60068d26b594648e99df24cee3
+        with: { dotnet-version: '10.0.x' }
+      - run: |
+          dotnet test foundation/tests/Ouroboros.Core.Tests/Ouroboros.Core.Tests.csproj --configuration Release --logger "trx;LogFileName=results.trx"
+          dotnet test foundation/tests/Ouroboros.Domain.Tests/Ouroboros.Domain.Tests.csproj --configuration Release --logger "trx;LogFileName=results.trx"
+          dotnet test foundation/tests/Ouroboros.Tools.Tests/Ouroboros.Tools.Tests.csproj --configuration Release --logger "trx;LogFileName=results.trx"
+          dotnet test foundation/tests/Ouroboros.Genetic.Tests/Ouroboros.Genetic.Tests.csproj --configuration Release --logger "trx;LogFileName=results.trx"
+
+  test-engine:
+    name: Test Engine
+    needs: build-all
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11
+        with: { submodules: recursive }
+      - uses: actions/setup-dotnet@4d6c8fcf3c8f7a60068d26b594648e99df24cee3
+        with: { dotnet-version: '10.0.x' }
+      - run: |
+          dotnet test engine/tests/Ouroboros.Agent.Tests/Ouroboros.Agent.Tests.csproj --configuration Release --logger "trx;LogFileName=results.trx"
+          dotnet test engine/tests/Ouroboros.Pipeline.Tests/Ouroboros.Pipeline.Tests.csproj --configuration Release --logger "trx;LogFileName=results.trx"
+          dotnet test engine/tests/Ouroboros.Providers.Tests/Ouroboros.Providers.Tests.csproj --configuration Release --logger "trx;LogFileName=results.trx"
+          dotnet test engine/tests/Ouroboros.Network.Tests/Ouroboros.Network.Tests.csproj --configuration Release --logger "trx;LogFileName=results.trx"
+
+  test-app:
+    name: Test App
+    needs: build-all
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11
+        with: { submodules: recursive }
+      - uses: actions/setup-dotnet@4d6c8fcf3c8f7a60068d26b594648e99df24cee3
+        with: { dotnet-version: '10.0.x' }
+      - run: |
+          dotnet test app/tests/Ouroboros.CLI.Tests/Ouroboros.CLI.Tests.csproj --configuration Release --logger "trx;LogFileName=results.trx"
+          dotnet test app/tests/Ouroboros.WebApi.Tests/Ouroboros.WebApi.Tests.csproj --configuration Release --logger "trx;LogFileName=results.trx"
+          dotnet test app/tests/Ouroboros.Application.Tests/Ouroboros.Application.Tests.csproj --configuration Release --logger "trx;LogFileName=results.trx"
