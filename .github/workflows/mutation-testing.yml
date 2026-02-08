@@ -167,13 +167,13 @@ jobs:
             --project "${{ matrix.project }}" \
             --mutation-level "${ML}" \
             --max-concurrent-test-runners 4 \
-            --since:master
+            --since:main
         else
           dotnet stryker \
             --config-file "${{ matrix.config }}" \
             --project "${{ matrix.project }}" \
             --max-concurrent-test-runners 4 \
-            --since:master
+            --since:main
         fi
 
     - name: Extract mutation score
