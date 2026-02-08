@@ -2,15 +2,21 @@ name: GitHub Models Integration Tests
 
 on:
   push:
-    branches: [ main ]
+    branches: [ main, master ]
     paths:
-      - 'src/**'
+      - 'foundation/**'
+      - 'engine/**'
+      - 'app/**'
+      - '.build/**'
       - '**.csproj'
       - '.github/workflows/github-models-integration-test.yml'
   pull_request:
-    branches: [ main ]
+    branches: [ main, master ]
     paths:
-      - 'src/**'
+      - 'foundation/**'
+      - 'engine/**'
+      - 'app/**'
+      - '.build/**'
       - '**.csproj'
       - '.github/workflows/github-models-integration-test.yml'
   workflow_dispatch:
@@ -39,6 +45,7 @@ jobs:
       uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11  # v4.1.1
       with:
         fetch-depth: 0
+        submodules: recursive
 
     - name: Setup .NET
       uses: actions/setup-dotnet@4d6c8fcf3c8f7a60068d26b594648e99df24cee3  # v4.0.0
@@ -59,13 +66,12 @@ jobs:
         timeout_minutes: 10
         max_attempts: 3
         retry_wait_seconds: 30
-        command: dotnet restore
+        command: dotnet restore Ouroboros.slnx
 
     - name: Build
       run: |
-        # Build CLI project for integration tests
-        dotnet build --configuration Release --no-restore \
-          src/Ouroboros.CLI/Ouroboros.CLI.csproj
+        # Build CLI project and its dependencies for integration tests
+        dotnet build app/src/Ouroboros.CLI/Ouroboros.CLI.csproj --configuration Release --no-restore
       timeout-minutes: 15
 
     - name: Test 1 - GitHub Models API Connectivity
@@ -79,7 +85,7 @@ jobs:
         retry_wait_seconds: 10
         command: |
           echo "=== Test 1: GitHub Models API Connectivity ==="
-          cd src/Ouroboros.CLI
+          cd app/src/Ouroboros.CLI
           
           # Basic ask command to verify GitHub Models works
           dotnet run --no-build --configuration Release -- ask \
@@ -101,7 +107,7 @@ jobs:
         retry_wait_seconds: 10
         command: |
           echo "=== Test 2: Pipeline DSL with GitHub Models ==="
-          cd src/Ouroboros.CLI
+          cd app/src/Ouroboros.CLI
           
           # Test pipeline DSL with draft step
           dotnet run --no-build --configuration Release -- pipeline \
@@ -123,7 +129,7 @@ jobs:
         retry_wait_seconds: 10
         command: |
           echo "=== Test 3: Different Model Selection ==="
-          cd src/Ouroboros.CLI
+          cd app/src/Ouroboros.CLI
           
           # Test with gpt-4o model (standard model)
           dotnet run --no-build --configuration Release -- ask \
