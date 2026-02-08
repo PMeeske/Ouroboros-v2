@@ -5,8 +5,8 @@
 <h1 align="center">Ouroboros</h1>
 
 <p align="center">
-  <img src="https://img.shields.io/badge/tests-3132%20passing%2C%201%20failing-red" alt="Tests">
-  <img src="https://img.shields.io/badge/coverage-6.6%25-red" alt="Coverage">
+  <img src="https://img.shields.io/badge/tests-3173%20passing%2C%205%20failing-red" alt="Tests">
+  <img src="https://img.shields.io/badge/coverage-7.6%25-red" alt="Coverage">
   <a href="https://dotnet.microsoft.com/download/dotnet/10.0"><img src="https://img.shields.io/badge/.NET-10.0-blue" alt=".NET Version"></a>
   <a href="https://www.nuget.org/packages/LangChain/"><img src="https://img.shields.io/badge/LangChain-0.17.0-purple" alt="LangChain"></a>
 </p>
