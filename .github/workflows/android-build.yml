@@ -2,12 +2,12 @@ name: Android App Build
 
 on:
   push:
-    branches: [ main, master, develop, 'copilot/**' ]
+    branches: [ main, develop, 'copilot/**' ]
     paths:
       - 'app/src/Ouroboros.Android/**'
       - '.github/workflows/android-build.yml'
   pull_request:
-    branches: [ main, master, develop ]
+    branches: [ main, develop ]
     paths:
       - 'app/src/Ouroboros.Android/**'
   workflow_dispatch:
