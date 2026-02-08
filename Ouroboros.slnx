@@ -64,4 +64,17 @@
     <!-- BDD TestKit excluded: not needed when BDD projects are excluded -->
     <!-- <Project Path=".build/test-infra/Ouroboros.TestKit.BDD/Ouroboros.TestKit.BDD.csproj" /> -->
   </Folder>
+  <!-- Kubernetes manifests -->
+  <Folder Name="/k8s/">
+    <File Path="k8s/namespace.yaml" />
+    <File Path="k8s/configmap.yaml" />
+    <File Path="k8s/secrets.yaml" />
+    <File Path="k8s/deployment.yaml" />
+    <File Path="k8s/deployment.cloud.yaml" />
+    <File Path="k8s/webapi-deployment.yaml" />
+    <File Path="k8s/webapi-deployment.cloud.yaml" />
+    <File Path="k8s/ollama.yaml" />
+    <File Path="k8s/qdrant.yaml" />
+    <File Path="k8s/jaeger.yaml" />
+  </Folder>
 </Solution>
