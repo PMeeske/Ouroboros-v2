@@ -2,7 +2,7 @@ name: IONOS Cloud Deployment
 
 on:
   push:
-    branches: [main]
+    branches: [main, master]
   workflow_dispatch:
 
 # Prevent concurrent deployments to the same environment
@@ -111,6 +111,8 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11  # v4.1.1
+        with:
+          submodules: recursive
 
       - name: Setup .NET
         uses: actions/setup-dotnet@4d6c8fcf3c8f7a60068d26b594648e99df24cee3  # v4.0.0
@@ -123,41 +125,22 @@ jobs:
           timeout_minutes: 10
           max_attempts: 3
           retry_wait_seconds: 30
-          command: dotnet restore
+          command: dotnet restore Ouroboros.slnx
 
       - name: Build
-        run: |
-          # Build all projects except tests first
-          for project in \
-            src/Ouroboros.Agent/Ouroboros.Agent.csproj \
-            src/Ouroboros.CLI/Ouroboros.CLI.csproj \
-            src/Ouroboros.Core/Ouroboros.Core.csproj \
-            src/Ouroboros.Domain/Ouroboros.Domain.csproj \
-            src/Ouroboros.Examples/Ouroboros.Examples.csproj \
-            src/Ouroboros.Pipeline/Ouroboros.Pipeline.csproj \
-            src/Ouroboros.Providers/Ouroboros.Providers.csproj \
-            src/Ouroboros.Tools/Ouroboros.Tools.csproj \
-            src/Ouroboros.WebApi/Ouroboros.WebApi.csproj
-          do
-            dotnet build --no-restore --configuration Release "$project"
-          done
+        run: dotnet build Ouroboros.slnx --no-restore --configuration Release
         timeout-minutes: 15
 
       - name: Run xUnit tests
         run: |
-          # Run tests - will build test project
-          # Note: Test project may fail with NU1903 vulnerability warning (known issue)
-          # We check the actual exit code to ensure real test failures are caught
-          dotnet test --configuration Release --verbosity normal \
-            --logger "trx;LogFileName=test-results.trx" \
-            src/Ouroboros.Tests/Ouroboros.Tests.csproj
+          # Run tests using the solution
+          dotnet test Ouroboros.slnx --configuration Release --no-build --verbosity normal \
+            --logger "trx;LogFileName=test-results.trx"
           EXIT_CODE=$?
           
           if [ $EXIT_CODE -ne 0 ]; then
             echo "::warning::Tests failed with exit code $EXIT_CODE"
-            echo "This may be due to NuGet vulnerability warning NU1903 (known issue)"
             echo "Check test results artifact for details"
-            # Allow workflow to continue for artifact upload
           fi
         timeout-minutes: 15
         continue-on-error: true
@@ -178,6 +161,8 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11  # v4.1.1
+        with:
+          submodules: recursive
 
       - name: Validate registry credentials
         env:
