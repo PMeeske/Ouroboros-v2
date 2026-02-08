@@ -2,7 +2,7 @@ name: .NET Integration Tests
 
 on:
   push:
-    branches: [ main, master ]
+    branches: [ main ]
     paths:
       - 'foundation/**'
       - 'engine/**'
@@ -12,7 +12,7 @@ on:
       - 'Ouroboros.slnx'
       - '.github/workflows/dotnet-integration-tests.yml'
   pull_request:
-    branches: [ main, master ]
+    branches: [ main ]
     paths:
       - 'foundation/**'
       - 'engine/**'

@@ -2,7 +2,7 @@ name: Ollama Integration Tests
 
 on:
   push:
-    branches: [ main, master ]
+    branches: [ main ]
     paths:
       - 'foundation/**'
       - 'engine/**'
@@ -11,7 +11,7 @@ on:
       - '**.csproj'
       - '.github/workflows/ollama-integration-test.yml'
   pull_request:
-    branches: [ main, master ]
+    branches: [ main ]
     paths:
       - 'foundation/**'
       - 'engine/**'
