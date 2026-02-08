@@ -2,18 +2,26 @@ name: .NET Test Grid
 
 on:
   push:
-    branches: [ main, develop ]
+    branches: [ main, master, develop ]
     paths:
       - '!README.md'
-      - 'src/**'
+      - 'foundation/**'
+      - 'engine/**'
+      - 'app/**'
+      - '.build/**'
       - '**.csproj'
+      - 'Ouroboros.slnx'
       - '.github/workflows/dotnet-test-grid.yml'
   pull_request:
-    branches: [ main, develop ]
+    branches: [ main, master, develop ]
     paths:
       - '!README.md'
-      - 'src/**'
+      - 'foundation/**'
+      - 'engine/**'
+      - 'app/**'
+      - '.build/**'
       - '**.csproj'
+      - 'Ouroboros.slnx'
       - '.github/workflows/dotnet-test-grid.yml'
   workflow_dispatch:
 
@@ -43,36 +51,33 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          # Core & Foundational tests (Ouroboros.Tests.Core, Ouroboros.Tests.Domain, Ouroboros.Tests.Steps)
-          - category: Core
-            filter: "Category=Unit&(FullyQualifiedName~Ouroboros.Tests.Core.|FullyQualifiedName~Ouroboros.Tests.Domain.|FullyQualifiedName~Ouroboros.Tests.Steps.)"
-          # Pipeline & Memory tests (Ouroboros.Tests.Pipeline, Ouroboros.Tests.Memory, Ouroboros.Tests.GraphRAG)
-          - category: Pipeline
-            filter: "Category=Unit&(FullyQualifiedName~Ouroboros.Tests.Pipeline.|FullyQualifiedName~Ouroboros.Tests.Memory.|FullyQualifiedName~Ouroboros.Tests.GraphRAG.)"
-          # AI & Learning tests
-          - category: AI-Learning
-            filter: "Category=Unit&(FullyQualifiedName~Ouroboros.Tests.Learning.|FullyQualifiedName~Ouroboros.Tests.Reasoning.|FullyQualifiedName~Ouroboros.Tests.MetaLearning.|FullyQualifiedName~Ouroboros.Tests.MetaAI.|FullyQualifiedName~Ouroboros.Tests.Council.|FullyQualifiedName~Ouroboros.Tests.Affect.)"
-          # Tools & Providers tests
-          - category: Tools-Providers
-            filter: "Category=Unit&(FullyQualifiedName~Ouroboros.Tests.Tools.|FullyQualifiedName~Ouroboros.Tests.Providers.|FullyQualifiedName~Ouroboros.Tests.Hyperon.|FullyQualifiedName~Ouroboros.Tests.Genetic.|FullyQualifiedName~Ouroboros.Tests.Synthesis.)"
-          # Governance & Security tests
-          - category: Governance
-            filter: "Category=Unit&(FullyQualifiedName~Ouroboros.Tests.Governance.|FullyQualifiedName~Ouroboros.Tests.LawsOfForm.|FullyQualifiedName~Ouroboros.Tests.SelfModel.|FullyQualifiedName~Ouroboros.Tests.Reflection.|FullyQualifiedName~Ouroboros.Tests.Agent.)"
-          # General tests (top-level Ouroboros.Tests.Tests namespace) - Part 1: A-M
-          - category: General-Part1
-            filter: "Category=Unit&FullyQualifiedName~Ouroboros.Tests.Tests.&(FullyQualifiedName~Ouroboros.Tests.Tests.A|FullyQualifiedName~Ouroboros.Tests.Tests.B|FullyQualifiedName~Ouroboros.Tests.Tests.C|FullyQualifiedName~Ouroboros.Tests.Tests.D|FullyQualifiedName~Ouroboros.Tests.Tests.E|FullyQualifiedName~Ouroboros.Tests.Tests.F|FullyQualifiedName~Ouroboros.Tests.Tests.G|FullyQualifiedName~Ouroboros.Tests.Tests.H|FullyQualifiedName~Ouroboros.Tests.Tests.I|FullyQualifiedName~Ouroboros.Tests.Tests.J|FullyQualifiedName~Ouroboros.Tests.Tests.K|FullyQualifiedName~Ouroboros.Tests.Tests.L|FullyQualifiedName~Ouroboros.Tests.Tests.M)"
-          # General tests (top-level Ouroboros.Tests.Tests namespace) - Part 2: N-Z
-          - category: General-Part2
-            filter: "Category=Unit&FullyQualifiedName~Ouroboros.Tests.Tests.&(FullyQualifiedName~Ouroboros.Tests.Tests.N|FullyQualifiedName~Ouroboros.Tests.Tests.O|FullyQualifiedName~Ouroboros.Tests.Tests.P|FullyQualifiedName~Ouroboros.Tests.Tests.Q|FullyQualifiedName~Ouroboros.Tests.Tests.R|FullyQualifiedName~Ouroboros.Tests.Tests.S|FullyQualifiedName~Ouroboros.Tests.Tests.T|FullyQualifiedName~Ouroboros.Tests.Tests.U|FullyQualifiedName~Ouroboros.Tests.Tests.V|FullyQualifiedName~Ouroboros.Tests.Tests.W|FullyQualifiedName~Ouroboros.Tests.Tests.X|FullyQualifiedName~Ouroboros.Tests.Tests.Y|FullyQualifiedName~Ouroboros.Tests.Tests.Z)"
-          # CLI tests (Commands, Parsing - unit tests only, integration tests run in separate workflow)
-          - category: CLI
-            filter: "Category=CLI|(Category=Unit&FullyQualifiedName~Ouroboros.Tests.CLI.)"
-          # Database tests (Storage, HealthCheck, Models)
-          - category: Database
-            filter: "Category=Database|(Category=Unit&FullyQualifiedName~Ouroboros.Tests.Database.)"
-          # Remaining tests not covered by other categories (Android, MultiAgent, etc.)
-          - category: Other
-            filter: "Category=Unit&(FullyQualifiedName~Ouroboros.Tests.Android.|FullyQualifiedName~Ouroboros.Tests.MultiAgent.)"
+          # Foundation tests
+          - category: Foundation
+            projects: >-
+              foundation/tests/Ouroboros.Core.Tests/Ouroboros.Core.Tests.csproj
+              foundation/tests/Ouroboros.Domain.Tests/Ouroboros.Domain.Tests.csproj
+              foundation/tests/Ouroboros.Tools.Tests/Ouroboros.Tools.Tests.csproj
+              foundation/tests/Ouroboros.Genetic.Tests/Ouroboros.Genetic.Tests.csproj
+          # Engine: Pipeline & Memory tests
+          - category: Engine-Pipeline
+            projects: >-
+              engine/tests/Ouroboros.Pipeline.Tests/Ouroboros.Pipeline.Tests.csproj
+              engine/tests/Ouroboros.Memory.Tests/Ouroboros.Memory.Tests.csproj
+              engine/tests/Ouroboros.Network.Tests/Ouroboros.Network.Tests.csproj
+          # Engine: Agent, Providers, Learning, Safety, Meta tests
+          - category: Engine-Agent
+            projects: >-
+              engine/tests/Ouroboros.Agent.Tests/Ouroboros.Agent.Tests.csproj
+              engine/tests/Ouroboros.Providers.Tests/Ouroboros.Providers.Tests.csproj
+              engine/tests/Ouroboros.Learning.Tests/Ouroboros.Learning.Tests.csproj
+              engine/tests/Ouroboros.Safety.Tests/Ouroboros.Safety.Tests.csproj
+              engine/tests/Ouroboros.Meta.Tests/Ouroboros.Meta.Tests.csproj
+          # App tests (CLI, WebApi, Application)
+          - category: App
+            projects: >-
+              app/tests/Ouroboros.CLI.Tests/Ouroboros.CLI.Tests.csproj
+              app/tests/Ouroboros.WebApi.Tests/Ouroboros.WebApi.Tests.csproj
+              app/tests/Ouroboros.Application.Tests/Ouroboros.Application.Tests.csproj
 
     outputs:
       passed: ${{ steps.test-results.outputs.passed }}
@@ -84,24 +89,12 @@ jobs:
       uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11  # v4.1.1
       with:
         fetch-depth: 0
+        submodules: recursive
 
     - name: Setup .NET
       uses: actions/setup-dotnet@4d6c8fcf3c8f7a60068d26b594648e99df24cee3  # v4.0.0
       with:
         dotnet-version: ${{ env.DOTNET_VERSION }}
-
-    - name: Install .NET MAUI workloads
-      uses: nick-fields/retry@7152eba30c6575329ac0576536151aca5a72780e  # v3.0.0
-      with:
-        timeout_minutes: 15
-        max_attempts: 3
-        retry_wait_seconds: 30
-        command: |
-          echo "Installing MAUI workloads..."
-          dotnet workload install maui-android maui-tizen --skip-sign-check --verbosity detailed
-          echo "Verifying installation..."
-          dotnet workload list
-          echo "✓ MAUI workload installation complete"
 
     - name: Cache NuGet packages
       uses: actions/cache@v4
@@ -118,26 +111,10 @@ jobs:
         timeout_minutes: 10
         max_attempts: 3
         retry_wait_seconds: 30
-        command: dotnet restore
+        command: dotnet restore Ouroboros.slnx
 
-    - name: Build
-      run: |
-        # Build main projects separately from tests
-        # Tests have TreatWarningsAsErrors=true which fails on NuGet vulnerability warnings (NU1903)
-        # Tests will be built during the test step when dotnet test runs
-        for project in \
-          src/Ouroboros.Agent/Ouroboros.Agent.csproj \
-          src/Ouroboros.CLI/Ouroboros.CLI.csproj \
-          src/Ouroboros.Core/Ouroboros.Core.csproj \
-          src/Ouroboros.Domain/Ouroboros.Domain.csproj \
-          src/Ouroboros.Examples/Ouroboros.Examples.csproj \
-          src/Ouroboros.Pipeline/Ouroboros.Pipeline.csproj \
-          src/Ouroboros.Providers/Ouroboros.Providers.csproj \
-          src/Ouroboros.Tools/Ouroboros.Tools.csproj \
-          src/Ouroboros.WebApi/Ouroboros.WebApi.csproj
-        do
-          dotnet build --configuration Release --no-restore "$project"
-        done
+    - name: Build solution
+      run: dotnet build Ouroboros.slnx --configuration Release --no-restore
       timeout-minutes: 15
 
     - name: Run Unit Tests (${{ matrix.category }})
@@ -148,20 +125,25 @@ jobs:
         max_attempts: 2
         retry_wait_seconds: 10
         command: |
-          # Run unit tests for this category with coverage collection
-          dotnet test \
-            --configuration Release \
-            --verbosity normal \
-            --filter "${{ matrix.filter }}" \
-            --collect:"XPlat Code Coverage" \
-            --settings coverlet.runsettings \
-            --results-directory ./TestResults \
-            --logger "trx;LogFileName=${{ matrix.category }}-test-results.trx" \
-            src/Ouroboros.Tests/Ouroboros.Tests.csproj
-          EXIT_CODE=$?
+          # Run unit tests for each test project in this category
+          EXIT_CODE=0
+          for project in ${{ matrix.projects }}; do
+            if [ -f "$project" ]; then
+              echo "Running tests: $project"
+              dotnet test "$project" \
+                --configuration Release \
+                --no-build \
+                --verbosity normal \
+                --collect:"XPlat Code Coverage" \
+                --results-directory ./TestResults \
+                --logger "trx;LogFileName=${{ matrix.category }}-$(basename $(dirname $project))-test-results.trx" || EXIT_CODE=$?
+            else
+              echo "::warning::Test project not found: $project"
+            fi
+          done
           
           if [ $EXIT_CODE -ne 0 ]; then
-            echo "::warning::Unit tests (${{ matrix.category }}) failed with exit code $EXIT_CODE"
+            echo "::warning::Unit tests (${{ matrix.category }}) had failures with exit code $EXIT_CODE"
             echo "Check test results for details"
           fi
       continue-on-error: true
@@ -170,30 +152,27 @@ jobs:
       id: test-results
       if: always()
       run: |
-        # Parse TRX file for test counts
-        TRX_FILE="TestResults/${{ matrix.category }}-test-results.trx"
-        if [ -f "$TRX_FILE" ]; then
-          PASSED=$(grep -oP 'passed="\K[0-9]+' "$TRX_FILE" | head -1 || echo "0")
-          FAILED=$(grep -oP 'failed="\K[0-9]+' "$TRX_FILE" | head -1 || echo "0")
-          SKIPPED=$(grep -oP 'skipped="\K[0-9]+' "$TRX_FILE" | head -1 || echo "0")
-          
-          # Also try total if counters format is different
-          if [ -z "$PASSED" ] || [ "$PASSED" = "0" ]; then
+        # Parse TRX files for test counts (may be multiple per category)
+        TOTAL_PASSED=0
+        TOTAL_FAILED=0
+        TOTAL_SKIPPED=0
+        
+        for TRX_FILE in TestResults/${{ matrix.category }}-*-test-results.trx; do
+          if [ -f "$TRX_FILE" ]; then
             PASSED=$(grep -oP 'Counters[^>]*passed="\K[0-9]+' "$TRX_FILE" | head -1 || echo "0")
             FAILED=$(grep -oP 'Counters[^>]*failed="\K[0-9]+' "$TRX_FILE" | head -1 || echo "0")
             SKIPPED=$(grep -oP 'Counters[^>]*skipped="\K[0-9]+' "$TRX_FILE" | head -1 || echo "0")
+            TOTAL_PASSED=$((TOTAL_PASSED + ${PASSED:-0}))
+            TOTAL_FAILED=$((TOTAL_FAILED + ${FAILED:-0}))
+            TOTAL_SKIPPED=$((TOTAL_SKIPPED + ${SKIPPED:-0}))
+            echo "  $TRX_FILE: Passed=$PASSED, Failed=$FAILED, Skipped=$SKIPPED"
           fi
-          
-          echo "passed=${PASSED:-0}" >> $GITHUB_OUTPUT
-          echo "failed=${FAILED:-0}" >> $GITHUB_OUTPUT
-          echo "skipped=${SKIPPED:-0}" >> $GITHUB_OUTPUT
-          echo "Category ${{ matrix.category }}: Passed=$PASSED, Failed=$FAILED, Skipped=$SKIPPED"
-        else
-          echo "passed=0" >> $GITHUB_OUTPUT
-          echo "failed=0" >> $GITHUB_OUTPUT
-          echo "skipped=0" >> $GITHUB_OUTPUT
-          echo "No TRX file found for ${{ matrix.category }}"
-        fi
+        done
+        
+        echo "passed=${TOTAL_PASSED}" >> $GITHUB_OUTPUT
+        echo "failed=${TOTAL_FAILED}" >> $GITHUB_OUTPUT
+        echo "skipped=${TOTAL_SKIPPED}" >> $GITHUB_OUTPUT
+        echo "Category ${{ matrix.category }}: Passed=$TOTAL_PASSED, Failed=$TOTAL_FAILED, Skipped=$TOTAL_SKIPPED"
 
     - name: Upload test results
       uses: actions/upload-artifact@5d5d22a31266ced268874388b861e4b58bb5c2f3  # v4.3.1
@@ -553,15 +532,10 @@ jobs:
         echo "All unit test categories have completed." >> $GITHUB_STEP_SUMMARY
         echo "" >> $GITHUB_STEP_SUMMARY
         echo "### Categories Tested" >> $GITHUB_STEP_SUMMARY
-        echo "- Core (Core, Domain, Steps)" >> $GITHUB_STEP_SUMMARY
-        echo "- Pipeline (Pipeline, Memory, GraphRAG)" >> $GITHUB_STEP_SUMMARY
-        echo "- AI-Learning (Learning, Reasoning, MetaLearning, MetaAI, Council, Affect)" >> $GITHUB_STEP_SUMMARY
-        echo "- Tools-Providers (Tools, Providers, Hyperon, Genetic, Synthesis)" >> $GITHUB_STEP_SUMMARY
-        echo "- Governance (Governance, LawsOfForm, SelfModel, Reflection, Agent)" >> $GITHUB_STEP_SUMMARY
-        echo "- General-Part1 (Top-level tests A-M)" >> $GITHUB_STEP_SUMMARY
-        echo "- General-Part2 (Top-level tests N-Z)" >> $GITHUB_STEP_SUMMARY
-        echo "- CLI (Command-line interface unit tests)" >> $GITHUB_STEP_SUMMARY
-        echo "- Other (Android, MultiAgent)" >> $GITHUB_STEP_SUMMARY
+        echo "- Foundation (Core, Domain, Tools, Genetic)" >> $GITHUB_STEP_SUMMARY
+        echo "- Engine-Pipeline (Pipeline, Memory, Network)" >> $GITHUB_STEP_SUMMARY
+        echo "- Engine-Agent (Agent, Providers, Learning, Safety, Meta)" >> $GITHUB_STEP_SUMMARY
+        echo "- App (CLI, WebApi, Application)" >> $GITHUB_STEP_SUMMARY
         echo "" >> $GITHUB_STEP_SUMMARY
         echo "**Note:** Integration tests (WebApi, CLI integration, etc.) run in the separate '.NET Integration Tests' workflow." >> $GITHUB_STEP_SUMMARY
         echo "" >> $GITHUB_STEP_SUMMARY
