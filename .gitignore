@@ -57,6 +57,7 @@ actionlint_*.tar.gz
 
 # Test/debug files in root
 /test_*.wav
+/test-results*.txt
 /speech_*.wav
 /test_*.py
 /test_*.metta
