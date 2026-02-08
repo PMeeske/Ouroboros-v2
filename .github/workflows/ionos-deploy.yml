@@ -22,6 +22,8 @@ jobs:
     name: Check Submodule Availability
     runs-on: ubuntu-latest
     timeout-minutes: 5
+    permissions:
+      contents: read
     outputs:
       available: ${{ steps.check.outputs.available }}
     steps:
@@ -484,6 +486,7 @@ jobs:
     if: needs.check-submodules.outputs.available == 'false'
     runs-on: ubuntu-latest
     timeout-minutes: 5
+    permissions: {}
     steps:
       - name: Report skipped
         run: |
