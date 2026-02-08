@@ -2,18 +2,26 @@ name: .NET Test Grid
 
 on:
   push:
-    branches: [ main, develop ]
+    branches: [ main, master, develop ]
     paths:
       - '!README.md'
-      - 'src/**'
+      - 'foundation/**'
+      - 'engine/**'
+      - 'app/**'
+      - '.build/**'
       - '**.csproj'
+      - 'Ouroboros.slnx'
       - '.github/workflows/dotnet-test-grid.yml'
   pull_request:
-    branches: [ main, develop ]
+    branches: [ main, master, develop ]
     paths:
       - '!README.md'
-      - 'src/**'
+      - 'foundation/**'
+      - 'engine/**'
+      - 'app/**'
+      - '.build/**'
       - '**.csproj'
+      - 'Ouroboros.slnx'
       - '.github/workflows/dotnet-test-grid.yml'
   workflow_dispatch:
 
@@ -84,24 +92,12 @@ jobs:
       uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11  # v4.1.1
       with:
         fetch-depth: 0
+        submodules: recursive
 
     - name: Setup .NET
       uses: actions/setup-dotnet@4d6c8fcf3c8f7a60068d26b594648e99df24cee3  # v4.0.0
       with:
         dotnet-version: ${{ env.DOTNET_VERSION }}
-
-    - name: Install .NET MAUI workloads
-      uses: nick-fields/retry@7152eba30c6575329ac0576536151aca5a72780e  # v3.0.0
-      with:
-        timeout_minutes: 15
-        max_attempts: 3
-        retry_wait_seconds: 30
-        command: |
-          echo "Installing MAUI workloads..."
-          dotnet workload install maui-android maui-tizen --skip-sign-check --verbosity detailed
-          echo "Verifying installation..."
-          dotnet workload list
-          echo "✓ MAUI workload installation complete"
 
     - name: Cache NuGet packages
       uses: actions/cache@v4
@@ -118,26 +114,10 @@ jobs:
         timeout_minutes: 10
         max_attempts: 3
         retry_wait_seconds: 30
-        command: dotnet restore
+        command: dotnet restore Ouroboros.slnx
 
-    - name: Build
-      run: |
-        # Build main projects separately from tests
-        # Tests have TreatWarningsAsErrors=true which fails on NuGet vulnerability warnings (NU1903)
-        # Tests will be built during the test step when dotnet test runs
-        for project in \
-          src/Ouroboros.Agent/Ouroboros.Agent.csproj \
-          src/Ouroboros.CLI/Ouroboros.CLI.csproj \
-          src/Ouroboros.Core/Ouroboros.Core.csproj \
-          src/Ouroboros.Domain/Ouroboros.Domain.csproj \
-          src/Ouroboros.Examples/Ouroboros.Examples.csproj \
-          src/Ouroboros.Pipeline/Ouroboros.Pipeline.csproj \
-          src/Ouroboros.Providers/Ouroboros.Providers.csproj \
-          src/Ouroboros.Tools/Ouroboros.Tools.csproj \
-          src/Ouroboros.WebApi/Ouroboros.WebApi.csproj
-        do
-          dotnet build --configuration Release --no-restore "$project"
-        done
+    - name: Build solution
+      run: dotnet build Ouroboros.slnx --configuration Release --no-restore
       timeout-minutes: 15
 
     - name: Run Unit Tests (${{ matrix.category }})
@@ -149,15 +129,16 @@ jobs:
         retry_wait_seconds: 10
         command: |
           # Run unit tests for this category with coverage collection
-          dotnet test \
+          # Test all test projects in the solution matching the filter
+          dotnet test Ouroboros.slnx \
             --configuration Release \
+            --no-build \
             --verbosity normal \
             --filter "${{ matrix.filter }}" \
             --collect:"XPlat Code Coverage" \
             --settings coverlet.runsettings \
             --results-directory ./TestResults \
-            --logger "trx;LogFileName=${{ matrix.category }}-test-results.trx" \
-            src/Ouroboros.Tests/Ouroboros.Tests.csproj
+            --logger "trx;LogFileName=${{ matrix.category }}-test-results.trx"
           EXIT_CODE=$?
           
           if [ $EXIT_CODE -ne 0 ]; then
