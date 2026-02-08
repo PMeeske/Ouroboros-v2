@@ -19,16 +19,16 @@ jobs:
 
       - name: Update submodules to latest main
         run: |
-          git submodule update --remote --merge
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
+          git submodule update --remote --merge
 
       - name: Check for changes and commit
         run: |
-          if git diff --quiet; then
+          git add .build foundation engine app
+          if git diff --quiet HEAD; then
             echo "No submodule updates needed"
           else
-            git add .build foundation engine app
             git commit -m "chore: update submodules to latest main [skip ci]"
             git push
           fi
