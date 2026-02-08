@@ -19,6 +19,7 @@
   <!-- Engine: Source -->
   <Folder Name="/engine/src/">
     <Project Path="engine/src/Ouroboros.Agent/Ouroboros.Agent.csproj" />
+    <Project Path="engine/src/Ouroboros.Benchmarks/Ouroboros.Benchmarks.csproj" />
     <Project Path="engine/src/Ouroboros.Network/Ouroboros.Network.csproj" />
     <Project Path="engine/src/Ouroboros.Pipeline/Ouroboros.Pipeline.csproj" />
     <Project Path="engine/src/Ouroboros.Providers/Ouroboros.Providers.csproj" />
