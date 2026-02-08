@@ -19,9 +19,14 @@ jobs:
 
       - name: Update submodules to latest main
         run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
-          git submodule update --remote --merge || (cd app && git merge --allow-unrelated-histories FETCH_HEAD)
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          
+          # Try normal update first
+          if ! git submodule update --remote --merge; then
+            echo "Normal update failed, attempting to merge unrelated histories for all submodules..."
+            git submodule foreach 'git merge --allow-unrelated-histories --no-edit FETCH_HEAD || echo "Failed to merge $name"'
+          fi
 
       - name: Check for changes and commit
         run: |
