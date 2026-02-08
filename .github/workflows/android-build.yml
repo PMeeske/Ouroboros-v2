@@ -24,8 +24,40 @@ env:
   DOTNET_VERSION: '10.0.x'
 
 jobs:
+  check-submodules:
+    name: Check Submodule Availability
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    outputs:
+      available: ${{ steps.check.outputs.available }}
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11  # v4.1.1
+
+    - name: Try cloning submodules
+      run: git submodule update --init --recursive 2>&1 || true
+
+    - name: Check submodule availability
+      id: check
+      run: |
+        MISSING=""
+        for sub in .build foundation engine app; do
+          if [ ! -f "$sub/.git" ] && [ ! -d "$sub/.git" ]; then
+            MISSING="$MISSING $sub"
+          fi
+        done
+        if [ -n "$MISSING" ]; then
+          echo "available=false" >> $GITHUB_OUTPUT
+          echo "::warning::Sub-repo(s) not available:$MISSING — skipping Android build"
+        else
+          echo "available=true" >> $GITHUB_OUTPUT
+          echo "All submodules available"
+        fi
+
   check-android-project:
     name: Check if Android project exists
+    needs: check-submodules
+    if: needs.check-submodules.outputs.available == 'true'
     runs-on: ubuntu-latest
     timeout-minutes: 5
     outputs:
@@ -50,8 +82,8 @@ jobs:
 
   build-android:
     name: Build Android APK
-    needs: check-android-project
-    if: needs.check-android-project.outputs.android_exists == 'true'
+    needs: [check-submodules, check-android-project]
+    if: needs.check-submodules.outputs.available == 'true' && needs.check-android-project.outputs.android_exists == 'true'
     runs-on: ubuntu-latest
     timeout-minutes: 30
     
@@ -441,3 +473,17 @@ jobs:
         echo "**Expected location**: \`app/src/Ouroboros.Android/\`" >> $GITHUB_STEP_SUMMARY
         echo "" >> $GITHUB_STEP_SUMMARY
         echo "This is normal if the Android app has not been created yet." >> $GITHUB_STEP_SUMMARY
+
+  submodules-skipped:
+    name: Submodules Not Available
+    needs: check-submodules
+    if: needs.check-submodules.outputs.available == 'false'
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+    - name: Report skipped
+      run: |
+        echo "## ⚠️ Android Build Skipped" >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+        echo "One or more sub-repo submodules could not be cloned." >> $GITHUB_STEP_SUMMARY
+        echo "Ensure the submodule repositories are accessible to GitHub Actions." >> $GITHUB_STEP_SUMMARY

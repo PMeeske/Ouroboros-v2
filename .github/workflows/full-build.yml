@@ -14,9 +14,44 @@ concurrency:
   group: full-build-${{ github.ref }}
   cancel-in-progress: true
 
+permissions:
+  contents: read
+
 jobs:
+  check-submodules:
+    name: Check Submodule Availability
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    outputs:
+      available: ${{ steps.check.outputs.available }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11  # v4.1.1
+
+      - name: Try cloning submodules
+        run: git submodule update --init --recursive 2>&1 || true
+
+      - name: Check submodule availability
+        id: check
+        run: |
+          MISSING=""
+          for sub in .build foundation engine app; do
+            if [ ! -f "$sub/.git" ] && [ ! -d "$sub/.git" ]; then
+              MISSING="$MISSING $sub"
+            fi
+          done
+          if [ -n "$MISSING" ]; then
+            echo "available=false" >> $GITHUB_OUTPUT
+            echo "::warning::Sub-repo(s) not available:$MISSING — skipping build and test jobs"
+          else
+            echo "available=true" >> $GITHUB_OUTPUT
+            echo "All submodules available"
+          fi
+
   build-all:
     name: Build All Projects
+    needs: check-submodules
+    if: needs.check-submodules.outputs.available == 'true'
     runs-on: ubuntu-latest
     timeout-minutes: 30
 
@@ -43,7 +78,8 @@ jobs:
 
   test-foundation:
     name: Test Foundation
-    needs: build-all
+    needs: [check-submodules, build-all]
+    if: needs.check-submodules.outputs.available == 'true'
     runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:
@@ -59,7 +95,8 @@ jobs:
 
   test-engine:
     name: Test Engine
-    needs: build-all
+    needs: [check-submodules, build-all]
+    if: needs.check-submodules.outputs.available == 'true'
     runs-on: ubuntu-latest
     timeout-minutes: 20
     steps:
@@ -75,7 +112,8 @@ jobs:
 
   test-app:
     name: Test App
-    needs: build-all
+    needs: [check-submodules, build-all]
+    if: needs.check-submodules.outputs.available == 'true'
     runs-on: ubuntu-latest
     timeout-minutes: 20
     steps:
@@ -87,3 +125,21 @@ jobs:
           dotnet test app/tests/Ouroboros.CLI.Tests/Ouroboros.CLI.Tests.csproj --configuration Release --logger "trx;LogFileName=results.trx"
           dotnet test app/tests/Ouroboros.WebApi.Tests/Ouroboros.WebApi.Tests.csproj --configuration Release --logger "trx;LogFileName=results.trx"
           dotnet test app/tests/Ouroboros.Application.Tests/Ouroboros.Application.Tests.csproj --configuration Release --logger "trx;LogFileName=results.trx"
+
+  skipped-summary:
+    name: Submodules Not Available
+    needs: check-submodules
+    if: needs.check-submodules.outputs.available == 'false'
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Report skipped
+        run: |
+          echo "## ⚠️ Full Build Skipped" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "One or more sub-repo submodules could not be cloned." >> $GITHUB_STEP_SUMMARY
+          echo "Ensure the submodule repositories are accessible to GitHub Actions:" >> $GITHUB_STEP_SUMMARY
+          echo "- \`ouroboros-build\`" >> $GITHUB_STEP_SUMMARY
+          echo "- \`ouroboros-foundation\`" >> $GITHUB_STEP_SUMMARY
+          echo "- \`ouroboros-engine\`" >> $GITHUB_STEP_SUMMARY
+          echo "- \`ouroboros-app\`" >> $GITHUB_STEP_SUMMARY
