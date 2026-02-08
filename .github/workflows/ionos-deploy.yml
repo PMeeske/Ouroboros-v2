@@ -2,7 +2,7 @@ name: IONOS Cloud Deployment
 
 on:
   push:
-    branches: [main, master]
+    branches: [main]
   workflow_dispatch:
 
 # Prevent concurrent deployments to the same environment
