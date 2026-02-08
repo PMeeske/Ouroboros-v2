@@ -21,7 +21,7 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git submodule update --remote --merge
+          git submodule update --remote --merge --allow-unrelated-histories
 
       - name: Check for changes and commit
         run: |
