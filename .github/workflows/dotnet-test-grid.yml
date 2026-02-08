@@ -2,7 +2,7 @@ name: .NET Test Grid
 
 on:
   push:
-    branches: [ main, master, develop ]
+    branches: [ main, develop ]
     paths:
       - '!README.md'
       - 'foundation/**'
@@ -13,7 +13,7 @@ on:
       - 'Ouroboros.slnx'
       - '.github/workflows/dotnet-test-grid.yml'
   pull_request:
-    branches: [ main, master, develop ]
+    branches: [ main, develop ]
     paths:
       - '!README.md'
       - 'foundation/**'
@@ -345,7 +345,7 @@ jobs:
 
     - name: Upload coverage to Codecov (optional)
       uses: codecov/codecov-action@54bcd8715eee62d40e33596ef5e8f0f48dbbccab  # v4.1.0
-      if: github.event_name == 'push' && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master')
+      if: github.event_name == 'push' && github.ref == 'refs/heads/main'
       continue-on-error: true
       with:
         files: CoverageReport/Cobertura.xml
@@ -359,7 +359,7 @@ jobs:
     name: Update README Badges
     runs-on: ubuntu-latest
     needs: [check-submodules, unit-tests, test-coverage]
-    if: needs.check-submodules.outputs.available == 'true' && (github.event_name == 'push' || github.event_name == 'workflow_dispatch') && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master')
+    if: needs.check-submodules.outputs.available == 'true' && (github.event_name == 'push' || github.event_name == 'workflow_dispatch') && github.ref == 'refs/heads/main'
 
     steps:
     - name: Checkout code
@@ -574,7 +574,7 @@ jobs:
         echo "### Coverage" >> $GITHUB_STEP_SUMMARY
         echo "Coverage report has been generated and uploaded as an artifact." >> $GITHUB_STEP_SUMMARY
         echo "" >> $GITHUB_STEP_SUMMARY
-        if ([ "${{ github.event_name }}" = "push" ] || [ "${{ github.event_name }}" = "workflow_dispatch" ]) && ([ "${{ github.ref }}" = "refs/heads/main" ] || [ "${{ github.ref }}" = "refs/heads/master" ]); then
+        if ([ "${{ github.event_name }}" = "push" ] || [ "${{ github.event_name }}" = "workflow_dispatch" ]) && [ "${{ github.ref }}" = "refs/heads/main" ]; then
           echo "README badges have been updated with the latest test and coverage results." >> $GITHUB_STEP_SUMMARY
         fi
 
