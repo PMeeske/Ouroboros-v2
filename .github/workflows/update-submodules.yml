@@ -21,12 +21,12 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git submodule update --remote --merge --allow-unrelated-histories
+          git submodule update --remote --merge
 
       - name: Check for changes and commit
         run: |
           git add .build foundation engine app
-          if git diff --quiet HEAD; then
+          if git diff --staged --quiet; then
             echo "No submodule updates needed"
           else
             git commit -m "chore: update submodules to latest main [skip ci]"
