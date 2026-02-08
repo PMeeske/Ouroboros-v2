@@ -117,7 +117,7 @@ jobs:
             gh pr create \
               --title "🤖 Copilot fix for #${GH_ISSUE_NUMBER}" \
               --body "Addresses issue #${GH_ISSUE_NUMBER} with a solution suggested by \`gh copilot\`." \
-              --base main \
+              --base master \
               --head "$BRANCH_NAME"
           else
             echo "⚠️ No changes were made by Copilot. Skipping PR creation."
