@@ -2,14 +2,14 @@ name: Android App Build
 
 on:
   push:
-    branches: [ main, develop, 'copilot/**' ]
+    branches: [ main, master, develop, 'copilot/**' ]
     paths:
-      - 'src/Ouroboros.Android/**'
+      - 'app/src/Ouroboros.Android/**'
       - '.github/workflows/android-build.yml'
   pull_request:
-    branches: [ main, develop ]
+    branches: [ main, master, develop ]
     paths:
-      - 'src/Ouroboros.Android/**'
+      - 'app/src/Ouroboros.Android/**'
   workflow_dispatch:
 
 permissions:
@@ -34,11 +34,13 @@ jobs:
     steps:
     - name: Checkout code
       uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11  # v4.1.1
+      with:
+        submodules: recursive
     
     - name: Check for Android project
       id: check
       run: |
-        if [ -d "src/Ouroboros.Android" ] && [ -f "src/Ouroboros.Android/Ouroboros.Android.csproj" ]; then
+        if [ -d "app/src/Ouroboros.Android" ] && [ -f "app/src/Ouroboros.Android/Ouroboros.Android.csproj" ]; then
           echo "exists=true" >> $GITHUB_OUTPUT
           echo "✓ Android project found"
         else
@@ -63,6 +65,7 @@ jobs:
       uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11  # v4.1.1
       with:
         fetch-depth: 0
+        submodules: recursive
     
     - name: Generate version info
       id: version
@@ -126,13 +129,12 @@ jobs:
         retry_wait_seconds: 30
         command: |
           echo "Restoring core dependencies..."
-          cd src
-          dotnet restore Ouroboros.Core/Ouroboros.Core.csproj
-          dotnet restore Ouroboros.Domain/Ouroboros.Domain.csproj
-          dotnet restore Ouroboros.Pipeline/Ouroboros.Pipeline.csproj
-          dotnet restore Ouroboros.Tools/Ouroboros.Tools.csproj
-          dotnet restore Ouroboros.Providers/Ouroboros.Providers.csproj
-          dotnet restore Ouroboros.Agent/Ouroboros.Agent.csproj
+          dotnet restore foundation/src/Ouroboros.Core/Ouroboros.Core.csproj
+          dotnet restore foundation/src/Ouroboros.Domain/Ouroboros.Domain.csproj
+          dotnet restore engine/src/Ouroboros.Pipeline/Ouroboros.Pipeline.csproj
+          dotnet restore foundation/src/Ouroboros.Tools/Ouroboros.Tools.csproj
+          dotnet restore engine/src/Ouroboros.Providers/Ouroboros.Providers.csproj
+          dotnet restore engine/src/Ouroboros.Agent/Ouroboros.Agent.csproj
 
     - name: Restore Android project dependencies
       uses: nick-fields/retry@7152eba30c6575329ac0576536151aca5a72780e  # v3.0.0
@@ -142,13 +144,13 @@ jobs:
         retry_wait_seconds: 30
         command: |
           echo "Restoring Android project dependencies..."
-          cd src/Ouroboros.Android
+          cd app/src/Ouroboros.Android
           dotnet restore --verbosity detailed
 
     - name: Build Android APK
       run: |
         echo "Building Android APK..."
-        cd src/Ouroboros.Android
+        cd app/src/Ouroboros.Android
         dotnet build -c Release -f net10.0-android --verbosity normal \
           /p:ApplicationDisplayVersion="${{ steps.version.outputs.version }}" \
           /p:ApplicationVersion="${{ github.run_number }}"
@@ -158,14 +160,22 @@ jobs:
       if: always()
       run: |
         echo "Build output directory contents:"
-        find src/Ouroboros.Android/bin -type f 2>/dev/null || echo "No build output found"
+        find app/src/Ouroboros.Android/bin -type f 2>/dev/null || echo "No build output found"
     
     - name: Run smoke tests
       id: smoke-tests
       continue-on-error: true
       run: |
         echo "Running Android smoke tests..."
-        cd src/Ouroboros.Android.Tests
+        
+        # Guard against missing test directory
+        if [ ! -d "app/tests/Ouroboros.Android.Tests" ]; then
+          echo "⚠️  Test directory not found, skipping smoke tests"
+          echo "smoke_tests_passed=skipped" >> $GITHUB_OUTPUT
+          exit 0
+        fi
+        
+        cd app/tests/Ouroboros.Android.Tests
         
         # Check if test project exists
         if [ ! -f "Ouroboros.Android.Tests.csproj" ]; then
@@ -206,11 +216,11 @@ jobs:
       id: find-apk
       run: |
         echo "Searching for APK files..."
-        APK_PATH=$(find src/Ouroboros.Android/bin/Release/net10.0-android -name "*.apk" -type f 2>/dev/null | head -n 1)
+        APK_PATH=$(find app/src/Ouroboros.Android/bin/Release/net10.0-android -name "*.apk" -type f 2>/dev/null | head -n 1)
         if [ -z "$APK_PATH" ]; then
           echo "Error: No APK found!"
           echo "Listing all files in build directory:"
-          ls -R src/Ouroboros.Android/bin/ || echo "Build output directory not found"
+          ls -R app/src/Ouroboros.Android/bin/ || echo "Build output directory not found"
           exit 1
         fi
         echo "apk_path=$APK_PATH" >> $GITHUB_OUTPUT
@@ -428,6 +438,6 @@ jobs:
         echo "" >> $GITHUB_STEP_SUMMARY
         echo "The Android project was not found in this repository." >> $GITHUB_STEP_SUMMARY
         echo "" >> $GITHUB_STEP_SUMMARY
-        echo "**Expected location**: \`src/Ouroboros.Android/\`" >> $GITHUB_STEP_SUMMARY
+        echo "**Expected location**: \`app/src/Ouroboros.Android/\`" >> $GITHUB_STEP_SUMMARY
         echo "" >> $GITHUB_STEP_SUMMARY
         echo "This is normal if the Android app has not been created yet." >> $GITHUB_STEP_SUMMARY
