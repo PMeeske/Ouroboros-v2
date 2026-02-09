@@ -13,7 +13,7 @@ on:
     types: [dependency-updated]
 
 concurrency:
-  group: full-build-${{ github.event_name == 'repository_dispatch' && format('dispatch-{0}', github.event.client_payload.source_repo) || github.ref }}
+  group: full-build-${{ github.event_name == 'repository_dispatch' && format('dispatch-{0}', github.event.client_payload.source_repo || 'unknown') || github.ref }}
   cancel-in-progress: true
 
 permissions:
