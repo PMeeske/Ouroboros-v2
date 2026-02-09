@@ -13,14 +13,11 @@
     <Project Path="foundation/tests/Ouroboros.Domain.Tests/Ouroboros.Domain.Tests.csproj" />
     <Project Path="foundation/tests/Ouroboros.Tools.Tests/Ouroboros.Tools.Tests.csproj" />
     <Project Path="foundation/tests/Ouroboros.Genetic.Tests/Ouroboros.Genetic.Tests.csproj" />
-    <!-- BDD tests excluded: not in original solution, have pre-existing compilation errors -->
-    <!-- <Project Path="foundation/tests/Ouroboros.Foundation.BDD/Ouroboros.Foundation.BDD.csproj" /> -->
+    <Project Path="foundation/tests/Ouroboros.Foundation.BDD/Ouroboros.Foundation.BDD.csproj" />
   </Folder>
   <!-- Engine: Source -->
   <Folder Name="/engine/src/">
     <Project Path="engine/src/Ouroboros.Agent/Ouroboros.Agent.csproj" />
-    <!-- Benchmarks excluded: project does not exist in engine submodule -->
-    <!-- <Project Path="engine/src/Ouroboros.Benchmarks/Ouroboros.Benchmarks.csproj" /> -->
     <Project Path="engine/src/Ouroboros.Network/Ouroboros.Network.csproj" />
     <Project Path="engine/src/Ouroboros.Pipeline/Ouroboros.Pipeline.csproj" />
     <Project Path="engine/src/Ouroboros.Providers/Ouroboros.Providers.csproj" />
@@ -35,8 +32,7 @@
     <Project Path="engine/tests/Ouroboros.Safety.Tests/Ouroboros.Safety.Tests.csproj" />
     <Project Path="engine/tests/Ouroboros.Meta.Tests/Ouroboros.Meta.Tests.csproj" />
     <Project Path="engine/tests/Ouroboros.Memory.Tests/Ouroboros.Memory.Tests.csproj" />
-    <!-- BDD tests excluded: not in original solution, have pre-existing compilation errors -->
-    <!-- <Project Path="engine/tests/Ouroboros.Engine.BDD/Ouroboros.Engine.BDD.csproj" /> -->
+    <Project Path="engine/tests/Ouroboros.Engine.BDD/Ouroboros.Engine.BDD.csproj" />
   </Folder>
   <!-- App: Source -->
   <Folder Name="/app/src/">
@@ -56,14 +52,12 @@
     <Project Path="app/tests/Ouroboros.Application.Tests/Ouroboros.Application.Tests.csproj" />
     <!-- Android.Tests excluded: requires 'dotnet workload install android' -->
     <!-- <Project Path="app/tests/Ouroboros.Android.Tests/Ouroboros.Android.Tests.csproj" /> -->
-    <!-- BDD tests excluded: not in original solution, have pre-existing compilation errors -->
-    <!-- <Project Path="app/tests/Ouroboros.App.BDD/Ouroboros.App.BDD.csproj" /> -->
+    <Project Path="app/tests/Ouroboros.App.BDD/Ouroboros.App.BDD.csproj" />
   </Folder>
   <!-- Shared: TestKit -->
   <Folder Name="/.build/test-infra/">
     <Project Path=".build/test-infra/Ouroboros.TestKit/Ouroboros.TestKit.csproj" />
-    <!-- BDD TestKit excluded: not needed when BDD projects are excluded -->
-    <!-- <Project Path=".build/test-infra/Ouroboros.TestKit.BDD/Ouroboros.TestKit.BDD.csproj" /> -->
+    <Project Path=".build/test-infra/Ouroboros.TestKit.BDD/Ouroboros.TestKit.BDD.csproj" />
   </Folder>
   <!-- Kubernetes manifests -->
   <Folder Name="/k8s/">
