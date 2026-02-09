@@ -147,15 +147,45 @@ jobs:
         continue-on-error: true
         id: genetic_tests
         
-      - name: Upload crash dumps
-        if: failure()
+      - name: Upload test results and crash dumps
+        if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: crash-dumps-foundation
+          name: test-results-foundation
           path: |
+            **/TestResults/**/*.trx
             **/TestResults/**/*.dmp
             **/TestResults/**/*.sequence.xml
           if-no-files-found: ignore
+
+      - name: Test result summary
+        if: always()
+        run: |
+          echo "## Test Results" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          
+          for trx in $(find . -name "*.trx" 2>/dev/null); do
+            TEST_NAME=$(basename $(dirname $(dirname "$trx")))
+            echo "### $TEST_NAME" >> $GITHUB_STEP_SUMMARY
+            
+            # Extract counters from TRX
+            TOTAL=$(grep -oP 'total="\K[^"]+' "$trx" 2>/dev/null | head -1 || echo "?")
+            PASSED=$(grep -oP 'passed="\K[^"]+' "$trx" 2>/dev/null | head -1 || echo "?")
+            FAILED=$(grep -oP 'failed="\K[^"]+' "$trx" 2>/dev/null | head -1 || echo "?")
+            echo "| Total | Passed | Failed |" >> $GITHUB_STEP_SUMMARY
+            echo "|-------|--------|--------|" >> $GITHUB_STEP_SUMMARY
+            echo "| $TOTAL | $PASSED | $FAILED |" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            
+            # List failed tests
+            if [ "$FAILED" != "0" ] && [ "$FAILED" != "?" ]; then
+              echo "**Failed tests:**" >> $GITHUB_STEP_SUMMARY
+              grep -oP 'testName="\K[^"]+' "$trx" | while read test; do
+                echo "- \`$test\`" >> $GITHUB_STEP_SUMMARY
+              done
+              echo "" >> $GITHUB_STEP_SUMMARY
+            fi
+          done
           
       - name: Check test results
         run: |
@@ -236,15 +266,45 @@ jobs:
         continue-on-error: true
         id: network_tests
         
-      - name: Upload crash dumps
-        if: failure()
+      - name: Upload test results and crash dumps
+        if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: crash-dumps-engine
+          name: test-results-engine
           path: |
+            **/TestResults/**/*.trx
             **/TestResults/**/*.dmp
             **/TestResults/**/*.sequence.xml
           if-no-files-found: ignore
+
+      - name: Test result summary
+        if: always()
+        run: |
+          echo "## Test Results" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          
+          for trx in $(find . -name "*.trx" 2>/dev/null); do
+            TEST_NAME=$(basename $(dirname $(dirname "$trx")))
+            echo "### $TEST_NAME" >> $GITHUB_STEP_SUMMARY
+            
+            # Extract counters from TRX
+            TOTAL=$(grep -oP 'total="\K[^"]+' "$trx" 2>/dev/null | head -1 || echo "?")
+            PASSED=$(grep -oP 'passed="\K[^"]+' "$trx" 2>/dev/null | head -1 || echo "?")
+            FAILED=$(grep -oP 'failed="\K[^"]+' "$trx" 2>/dev/null | head -1 || echo "?")
+            echo "| Total | Passed | Failed |" >> $GITHUB_STEP_SUMMARY
+            echo "|-------|--------|--------|" >> $GITHUB_STEP_SUMMARY
+            echo "| $TOTAL | $PASSED | $FAILED |" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            
+            # List failed tests
+            if [ "$FAILED" != "0" ] && [ "$FAILED" != "?" ]; then
+              echo "**Failed tests:**" >> $GITHUB_STEP_SUMMARY
+              grep -oP 'testName="\K[^"]+' "$trx" | while read test; do
+                echo "- \`$test\`" >> $GITHUB_STEP_SUMMARY
+              done
+              echo "" >> $GITHUB_STEP_SUMMARY
+            fi
+          done
           
       - name: Check test results
         run: |
@@ -313,15 +373,45 @@ jobs:
         continue-on-error: true
         id: app_tests
         
-      - name: Upload crash dumps
-        if: failure()
+      - name: Upload test results and crash dumps
+        if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: crash-dumps-app
+          name: test-results-app
           path: |
+            **/TestResults/**/*.trx
             **/TestResults/**/*.dmp
             **/TestResults/**/*.sequence.xml
           if-no-files-found: ignore
+
+      - name: Test result summary
+        if: always()
+        run: |
+          echo "## Test Results" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          
+          for trx in $(find . -name "*.trx" 2>/dev/null); do
+            TEST_NAME=$(basename $(dirname $(dirname "$trx")))
+            echo "### $TEST_NAME" >> $GITHUB_STEP_SUMMARY
+            
+            # Extract counters from TRX
+            TOTAL=$(grep -oP 'total="\K[^"]+' "$trx" 2>/dev/null | head -1 || echo "?")
+            PASSED=$(grep -oP 'passed="\K[^"]+' "$trx" 2>/dev/null | head -1 || echo "?")
+            FAILED=$(grep -oP 'failed="\K[^"]+' "$trx" 2>/dev/null | head -1 || echo "?")
+            echo "| Total | Passed | Failed |" >> $GITHUB_STEP_SUMMARY
+            echo "|-------|--------|--------|" >> $GITHUB_STEP_SUMMARY
+            echo "| $TOTAL | $PASSED | $FAILED |" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            
+            # List failed tests
+            if [ "$FAILED" != "0" ] && [ "$FAILED" != "?" ]; then
+              echo "**Failed tests:**" >> $GITHUB_STEP_SUMMARY
+              grep -oP 'testName="\K[^"]+' "$trx" | while read test; do
+                echo "- \`$test\`" >> $GITHUB_STEP_SUMMARY
+              done
+              echo "" >> $GITHUB_STEP_SUMMARY
+            fi
+          done
           
       - name: Check test results
         run: |
