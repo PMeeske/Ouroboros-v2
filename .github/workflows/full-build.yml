@@ -89,11 +89,83 @@ jobs:
         with: { submodules: recursive }
       - uses: actions/setup-dotnet@4d6c8fcf3c8f7a60068d26b594648e99df24cee3
         with: { dotnet-version: '10.0.x' }
-      - run: |
-          dotnet test foundation/tests/Ouroboros.Core.Tests/Ouroboros.Core.Tests.csproj --configuration Release --logger "trx;LogFileName=results.trx"
-          dotnet test foundation/tests/Ouroboros.Domain.Tests/Ouroboros.Domain.Tests.csproj --configuration Release --logger "trx;LogFileName=results.trx"
-          dotnet test foundation/tests/Ouroboros.Tools.Tests/Ouroboros.Tools.Tests.csproj --configuration Release --logger "trx;LogFileName=results.trx"
-          dotnet test foundation/tests/Ouroboros.Genetic.Tests/Ouroboros.Genetic.Tests.csproj --configuration Release --logger "trx;LogFileName=results.trx"
+      
+      - name: Validate test environment
+        run: |
+          echo "=== .NET SDK Info ==="
+          dotnet --info
+          echo ""
+          echo "=== Test Project Info ==="
+          dotnet build foundation/tests/Ouroboros.Core.Tests/Ouroboros.Core.Tests.csproj --configuration Release -v minimal
+          echo ""
+          
+      - name: Run Core Tests with crash diagnostics
+        run: |
+          dotnet test foundation/tests/Ouroboros.Core.Tests/Ouroboros.Core.Tests.csproj \
+            --configuration Release \
+            --logger "trx;LogFileName=results.trx" \
+            --blame-crash \
+            --blame-hang-timeout 5m \
+            --verbosity detailed \
+            -- RunConfiguration.TestSessionTimeout=600000
+        continue-on-error: true
+        id: core_tests
+        
+      - name: Run Domain Tests with crash diagnostics
+        run: |
+          dotnet test foundation/tests/Ouroboros.Domain.Tests/Ouroboros.Domain.Tests.csproj \
+            --configuration Release \
+            --logger "trx;LogFileName=results.trx" \
+            --blame-crash \
+            --blame-hang-timeout 5m \
+            --verbosity detailed \
+            -- RunConfiguration.TestSessionTimeout=600000
+        continue-on-error: true
+        id: domain_tests
+        
+      - name: Run Tools Tests with crash diagnostics
+        run: |
+          dotnet test foundation/tests/Ouroboros.Tools.Tests/Ouroboros.Tools.Tests.csproj \
+            --configuration Release \
+            --logger "trx;LogFileName=results.trx" \
+            --blame-crash \
+            --blame-hang-timeout 5m \
+            --verbosity detailed \
+            -- RunConfiguration.TestSessionTimeout=600000
+        continue-on-error: true
+        id: tools_tests
+        
+      - name: Run Genetic Tests with crash diagnostics
+        run: |
+          dotnet test foundation/tests/Ouroboros.Genetic.Tests/Ouroboros.Genetic.Tests.csproj \
+            --configuration Release \
+            --logger "trx;LogFileName=results.trx" \
+            --blame-crash \
+            --blame-hang-timeout 5m \
+            --verbosity detailed \
+            -- RunConfiguration.TestSessionTimeout=600000
+        continue-on-error: true
+        id: genetic_tests
+        
+      - name: Upload crash dumps
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: crash-dumps-foundation
+          path: |
+            **/TestResults/**/*.dmp
+            **/TestResults/**/*.sequence.xml
+          if-no-files-found: ignore
+          
+      - name: Check test results
+        run: |
+          if [ "${{ steps.core_tests.outcome }}" != "success" ] || \
+             [ "${{ steps.domain_tests.outcome }}" != "success" ] || \
+             [ "${{ steps.tools_tests.outcome }}" != "success" ] || \
+             [ "${{ steps.genetic_tests.outcome }}" != "success" ]; then
+            echo "One or more test suites failed"
+            exit 1
+          fi
 
   test-engine:
     name: Test Engine
@@ -106,11 +178,83 @@ jobs:
         with: { submodules: recursive }
       - uses: actions/setup-dotnet@4d6c8fcf3c8f7a60068d26b594648e99df24cee3
         with: { dotnet-version: '10.0.x' }
-      - run: |
-          dotnet test engine/tests/Ouroboros.Agent.Tests/Ouroboros.Agent.Tests.csproj --configuration Release --logger "trx;LogFileName=results.trx"
-          dotnet test engine/tests/Ouroboros.Pipeline.Tests/Ouroboros.Pipeline.Tests.csproj --configuration Release --logger "trx;LogFileName=results.trx"
-          dotnet test engine/tests/Ouroboros.Providers.Tests/Ouroboros.Providers.Tests.csproj --configuration Release --logger "trx;LogFileName=results.trx"
-          dotnet test engine/tests/Ouroboros.Network.Tests/Ouroboros.Network.Tests.csproj --configuration Release --logger "trx;LogFileName=results.trx"
+      
+      - name: Validate test environment
+        run: |
+          echo "=== .NET SDK Info ==="
+          dotnet --info
+          echo ""
+          echo "=== Test Project Info ==="
+          dotnet build engine/tests/Ouroboros.Agent.Tests/Ouroboros.Agent.Tests.csproj --configuration Release -v minimal
+          echo ""
+          
+      - name: Run Agent Tests with crash diagnostics
+        run: |
+          dotnet test engine/tests/Ouroboros.Agent.Tests/Ouroboros.Agent.Tests.csproj \
+            --configuration Release \
+            --logger "trx;LogFileName=results.trx" \
+            --blame-crash \
+            --blame-hang-timeout 5m \
+            --verbosity detailed \
+            -- RunConfiguration.TestSessionTimeout=600000
+        continue-on-error: true
+        id: agent_tests
+        
+      - name: Run Pipeline Tests with crash diagnostics
+        run: |
+          dotnet test engine/tests/Ouroboros.Pipeline.Tests/Ouroboros.Pipeline.Tests.csproj \
+            --configuration Release \
+            --logger "trx;LogFileName=results.trx" \
+            --blame-crash \
+            --blame-hang-timeout 5m \
+            --verbosity detailed \
+            -- RunConfiguration.TestSessionTimeout=600000
+        continue-on-error: true
+        id: pipeline_tests
+        
+      - name: Run Providers Tests with crash diagnostics
+        run: |
+          dotnet test engine/tests/Ouroboros.Providers.Tests/Ouroboros.Providers.Tests.csproj \
+            --configuration Release \
+            --logger "trx;LogFileName=results.trx" \
+            --blame-crash \
+            --blame-hang-timeout 5m \
+            --verbosity detailed \
+            -- RunConfiguration.TestSessionTimeout=600000
+        continue-on-error: true
+        id: providers_tests
+        
+      - name: Run Network Tests with crash diagnostics
+        run: |
+          dotnet test engine/tests/Ouroboros.Network.Tests/Ouroboros.Network.Tests.csproj \
+            --configuration Release \
+            --logger "trx;LogFileName=results.trx" \
+            --blame-crash \
+            --blame-hang-timeout 5m \
+            --verbosity detailed \
+            -- RunConfiguration.TestSessionTimeout=600000
+        continue-on-error: true
+        id: network_tests
+        
+      - name: Upload crash dumps
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: crash-dumps-engine
+          path: |
+            **/TestResults/**/*.dmp
+            **/TestResults/**/*.sequence.xml
+          if-no-files-found: ignore
+          
+      - name: Check test results
+        run: |
+          if [ "${{ steps.agent_tests.outcome }}" != "success" ] || \
+             [ "${{ steps.pipeline_tests.outcome }}" != "success" ] || \
+             [ "${{ steps.providers_tests.outcome }}" != "success" ] || \
+             [ "${{ steps.network_tests.outcome }}" != "success" ]; then
+            echo "One or more test suites failed"
+            exit 1
+          fi
 
   test-app:
     name: Test App
@@ -123,10 +267,70 @@ jobs:
         with: { submodules: recursive }
       - uses: actions/setup-dotnet@4d6c8fcf3c8f7a60068d26b594648e99df24cee3
         with: { dotnet-version: '10.0.x' }
-      - run: |
-          dotnet test app/tests/Ouroboros.CLI.Tests/Ouroboros.CLI.Tests.csproj --configuration Release --logger "trx;LogFileName=results.trx"
-          dotnet test app/tests/Ouroboros.WebApi.Tests/Ouroboros.WebApi.Tests.csproj --configuration Release --logger "trx;LogFileName=results.trx"
-          dotnet test app/tests/Ouroboros.Application.Tests/Ouroboros.Application.Tests.csproj --configuration Release --logger "trx;LogFileName=results.trx"
+      
+      - name: Validate test environment
+        run: |
+          echo "=== .NET SDK Info ==="
+          dotnet --info
+          echo ""
+          echo "=== Test Project Info ==="
+          dotnet build app/tests/Ouroboros.CLI.Tests/Ouroboros.CLI.Tests.csproj --configuration Release -v minimal
+          echo ""
+          
+      - name: Run CLI Tests with crash diagnostics
+        run: |
+          dotnet test app/tests/Ouroboros.CLI.Tests/Ouroboros.CLI.Tests.csproj \
+            --configuration Release \
+            --logger "trx;LogFileName=results.trx" \
+            --blame-crash \
+            --blame-hang-timeout 5m \
+            --verbosity detailed \
+            -- RunConfiguration.TestSessionTimeout=600000
+        continue-on-error: true
+        id: cli_tests
+        
+      - name: Run WebApi Tests with crash diagnostics
+        run: |
+          dotnet test app/tests/Ouroboros.WebApi.Tests/Ouroboros.WebApi.Tests.csproj \
+            --configuration Release \
+            --logger "trx;LogFileName=results.trx" \
+            --blame-crash \
+            --blame-hang-timeout 5m \
+            --verbosity detailed \
+            -- RunConfiguration.TestSessionTimeout=600000
+        continue-on-error: true
+        id: webapi_tests
+        
+      - name: Run Application Tests with crash diagnostics
+        run: |
+          dotnet test app/tests/Ouroboros.Application.Tests/Ouroboros.Application.Tests.csproj \
+            --configuration Release \
+            --logger "trx;LogFileName=results.trx" \
+            --blame-crash \
+            --blame-hang-timeout 5m \
+            --verbosity detailed \
+            -- RunConfiguration.TestSessionTimeout=600000
+        continue-on-error: true
+        id: app_tests
+        
+      - name: Upload crash dumps
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: crash-dumps-app
+          path: |
+            **/TestResults/**/*.dmp
+            **/TestResults/**/*.sequence.xml
+          if-no-files-found: ignore
+          
+      - name: Check test results
+        run: |
+          if [ "${{ steps.cli_tests.outcome }}" != "success" ] || \
+             [ "${{ steps.webapi_tests.outcome }}" != "success" ] || \
+             [ "${{ steps.app_tests.outcome }}" != "success" ]; then
+            echo "One or more test suites failed"
+            exit 1
+          fi
 
   skipped-summary:
     name: Submodules Not Available
