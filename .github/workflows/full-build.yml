@@ -84,6 +84,10 @@ jobs:
     if: needs.check-submodules.outputs.available == 'true'
     runs-on: ubuntu-latest
     timeout-minutes: 15
+    permissions:
+      contents: read
+      checks: write
+      pull-requests: write
     steps:
       - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11
         with: { submodules: recursive }
@@ -203,6 +207,10 @@ jobs:
     if: needs.check-submodules.outputs.available == 'true'
     runs-on: ubuntu-latest
     timeout-minutes: 20
+    permissions:
+      contents: read
+      checks: write
+      pull-requests: write
     steps:
       - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11
         with: { submodules: recursive }
@@ -322,6 +330,10 @@ jobs:
     if: needs.check-submodules.outputs.available == 'true'
     runs-on: ubuntu-latest
     timeout-minutes: 20
+    permissions:
+      contents: read
+      checks: write
+      pull-requests: write
     steps:
       - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11
         with: { submodules: recursive }
