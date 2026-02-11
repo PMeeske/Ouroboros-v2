@@ -33,6 +33,30 @@ jobs:
       - name: Try cloning submodules
         run: git submodule update --init --recursive 2>&1 || true
 
+      - name: General fix for invalid submodule references
+        run: |
+          # For each submodule that failed to initialize, try to fix it by checking out the latest main branch
+          for sub in .build foundation engine app; do
+            if [ ! -f "$sub/.git" ] && [ ! -d "$sub/.git" ]; then
+              echo "Attempting to fix $sub submodule..."
+              # Get the submodule URL from .gitmodules
+              url=$(git config --file .gitmodules --get submodule.$sub.url)
+              if [ -n "$url" ]; then
+                # Initialize the submodule directory
+                git submodule init $sub
+                # Navigate to submodule and try to fetch the latest main branch
+                cd $sub
+                git init
+                git remote add origin $url
+                git fetch origin main --depth=1 || git fetch origin master --depth=1 || true
+                if [ -n "$(git rev-parse HEAD 2>/dev/null)" ] || [ -n "$(git rev-parse FETCH_HEAD 2>/dev/null)" ]; then
+                  git checkout FETCH_HEAD 2>/dev/null || true
+                fi
+                cd ..
+              fi
+            fi
+          done
+
       - name: Check submodule availability
         id: check
         run: |
