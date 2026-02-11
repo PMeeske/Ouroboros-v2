@@ -1,0 +1,392 @@
+From d8377184c68f93296f878b20048e80a5657cff49 Mon Sep 17 00:00:00 2001
+From: Claude <noreply@anthropic.com>
+Date: Wed, 11 Feb 2026 07:38:16 +0000
+Subject: [PATCH] Remove duplicate/dead code from engine
+
+- Remove SimulatedLLM.cs from Providers (identical copy exists in
+  foundation/Tools which engine already references)
+- Remove unused AskRequestBuilder, PipelineRequestBuilder, and
+  ApiResponseAssertions from Agent.Tests (dead code, no test files
+  import them; canonical copies live in app/WebApi.Tests)
+
+https://claude.ai/code/session_01Boj9PcGPKwHmq3s6s4K5sb
+---
+ src/Ouroboros.Providers/SimulatedLLM.cs       |  33 ------
+ .../Assertions/ApiResponseAssertions.cs       | 104 -----------------
+ .../Builders/AskRequestBuilder.cs             | 109 ------------------
+ .../Builders/PipelineRequestBuilder.cs        |  95 ---------------
+ 4 files changed, 341 deletions(-)
+ delete mode 100644 src/Ouroboros.Providers/SimulatedLLM.cs
+ delete mode 100644 tests/Ouroboros.Agent.Tests/Infrastructure/Assertions/ApiResponseAssertions.cs
+ delete mode 100644 tests/Ouroboros.Agent.Tests/Infrastructure/Builders/AskRequestBuilder.cs
+ delete mode 100644 tests/Ouroboros.Agent.Tests/Infrastructure/Builders/PipelineRequestBuilder.cs
+
+diff --git a/src/Ouroboros.Providers/SimulatedLLM.cs b/src/Ouroboros.Providers/SimulatedLLM.cs
+deleted file mode 100644
+index 2d4add0..0000000
+--- a/src/Ouroboros.Providers/SimulatedLLM.cs
++++ /dev/null
+@@ -1,33 +0,0 @@
+-using System.Threading.Tasks;
+-
+-namespace Ouroboros.Providers
+-{
+-    /// <summary>
+-    /// Simulated LLM provider for testing purposes.
+-    /// </summary>
+-    public class SimulatedLLM : ILlmProvider
+-    {
+-        /// <summary>
+-        /// Generates a response based on the prompt.
+-        /// </summary>
+-        /// <param name="prompt">The input prompt.</param>
+-        /// <returns>A simulated response.</returns>
+-        public async Task<string> GenerateAsync(string prompt)
+-        {
+-            await Task.Delay(10); // Simulate async operation
+-
+-            if (prompt.Contains("suggestions"))
+-                return "[{\"step\":\"UseDraft\",\"explanation\":\"Generate draft\",\"confidence\":0.9}]";
+-
+-            return "Simulated response";
+-        }
+-    }
+-
+-    /// <summary>
+-    /// Interface for LLM providers.
+-    /// </summary>
+-    public interface ILlmProvider
+-    {
+-        Task<string> GenerateAsync(string prompt);
+-    }
+-}
+\ No newline at end of file
+diff --git a/tests/Ouroboros.Agent.Tests/Infrastructure/Assertions/ApiResponseAssertions.cs b/tests/Ouroboros.Agent.Tests/Infrastructure/Assertions/ApiResponseAssertions.cs
+deleted file mode 100644
+index 5a0e125..0000000
+--- a/tests/Ouroboros.Agent.Tests/Infrastructure/Assertions/ApiResponseAssertions.cs
++++ /dev/null
+@@ -1,104 +0,0 @@
+-// <copyright file="ApiResponseAssertions.cs" company="PlaceholderCompany">
+-// Copyright (c) PlaceholderCompany. All rights reserved.
+-// </copyright>
+-
+-using FluentAssertions;
+-using FluentAssertions.Execution;
+-using FluentAssertions.Primitives;
+-using Ouroboros.WebApi.Models;
+-
+-namespace Ouroboros.Tests.Infrastructure.Assertions;
+-
+-/// <summary>
+-/// Custom FluentAssertions extensions for ApiResponse{T}.
+-/// </summary>
+-public static class ApiResponseAssertionsExtensions
+-{
+-    /// <summary>
+-    /// Returns an ApiResponseAssertionsContext for the given ApiResponse.
+-    /// </summary>
+-    public static ApiResponseAssertionsContext<T> Should<T>(this ApiResponse<T> response)
+-        => new ApiResponseAssertionsContext<T>(response);
+-}
+-
+-/// <summary>
+-/// Assertions context for ApiResponse{T}.
+-/// </summary>
+-public class ApiResponseAssertionsContext<T>
+-{
+-    private readonly ApiResponse<T> _subject;
+-
+-    /// <summary>
+-    /// Initializes a new instance of the <see cref="ApiResponseAssertionsContext{T}"/> class.
+-    /// </summary>
+-    public ApiResponseAssertionsContext(ApiResponse<T> subject)
+-    {
+-        _subject = subject;
+-    }
+-
+-    /// <summary>
+-    /// Asserts that the API response indicates success.
+-    /// </summary>
+-    public AndConstraint<ApiResponseAssertionsContext<T>> BeSuccessful(string because = "", params object[] becauseArgs)
+-    {
+-        _subject.Success.Should().BeTrue(because, becauseArgs);
+-        return new AndConstraint<ApiResponseAssertionsContext<T>>(this);
+-    }
+-
+-    /// <summary>
+-    /// Asserts that the API response indicates failure.
+-    /// </summary>
+-    public AndConstraint<ApiResponseAssertionsContext<T>> BeFailed(string because = "", params object[] becauseArgs)
+-    {
+-        _subject.Success.Should().BeFalse(because, becauseArgs);
+-        return new AndConstraint<ApiResponseAssertionsContext<T>>(this);
+-    }
+-
+-    /// <summary>
+-    /// Asserts that the API response has the expected data.
+-    /// </summary>
+-    public AndConstraint<ApiResponseAssertionsContext<T>> HaveData(T expectedData, string because = "", params object[] becauseArgs)
+-    {
+-        _subject.Data.Should().NotBeNull(because, becauseArgs);
+-        _subject.Data.Should().Be(expectedData, because, becauseArgs);
+-        return new AndConstraint<ApiResponseAssertionsContext<T>>(this);
+-    }
+-
+-    /// <summary>
+-    /// Asserts that the API response has non-null data.
+-    /// </summary>
+-    public AndConstraint<ApiResponseAssertionsContext<T>> HaveData(string because = "", params object[] becauseArgs)
+-    {
+-        _subject.Data.Should().NotBeNull(because, becauseArgs);
+-        return new AndConstraint<ApiResponseAssertionsContext<T>>(this);
+-    }
+-
+-    /// <summary>
+-    /// Asserts that the API response has the expected error message.
+-    /// </summary>
+-    public AndConstraint<ApiResponseAssertionsContext<T>> HaveError(string expectedError, string because = "", params object[] becauseArgs)
+-    {
+-        _subject.Error.Should().NotBeNull(because, becauseArgs);
+-        _subject.Error.Should().Contain(expectedError, because, becauseArgs);
+-        return new AndConstraint<ApiResponseAssertionsContext<T>>(this);
+-    }
+-
+-    /// <summary>
+-    /// Asserts that the API response has an error.
+-    /// </summary>
+-    public AndConstraint<ApiResponseAssertionsContext<T>> HaveError(string because = "", params object[] becauseArgs)
+-    {
+-        _subject.Error.Should().NotBeNull(because, becauseArgs);
+-        return new AndConstraint<ApiResponseAssertionsContext<T>>(this);
+-    }
+-
+-    /// <summary>
+-    /// Asserts that the API response execution time is less than the specified duration.
+-    /// </summary>
+-    public AndConstraint<ApiResponseAssertionsContext<T>> HaveExecutionTimeLessThan(long milliseconds, string because = "", params object[] becauseArgs)
+-    {
+-        _subject.ExecutionTimeMs.Should().HaveValue(because, becauseArgs);
+-        _subject.ExecutionTimeMs.Should().BeLessThan(milliseconds, because, becauseArgs);
+-        return new AndConstraint<ApiResponseAssertionsContext<T>>(this);
+-    }
+-}
+diff --git a/tests/Ouroboros.Agent.Tests/Infrastructure/Builders/AskRequestBuilder.cs b/tests/Ouroboros.Agent.Tests/Infrastructure/Builders/AskRequestBuilder.cs
+deleted file mode 100644
+index 54d874d..0000000
+--- a/tests/Ouroboros.Agent.Tests/Infrastructure/Builders/AskRequestBuilder.cs
++++ /dev/null
+@@ -1,109 +0,0 @@
+-// <copyright file="AskRequestBuilder.cs" company="PlaceholderCompany">
+-// Copyright (c) PlaceholderCompany. All rights reserved.
+-// </copyright>
+-
+-using Ouroboros.WebApi.Models;
+-
+-namespace Ouroboros.Tests.Infrastructure.Builders;
+-
+-/// <summary>
+-/// Builder for creating AskRequest test data with fluent API.
+-/// </summary>
+-public class AskRequestBuilder
+-{
+-    private string _question = "What is artificial intelligence?";
+-    private bool _useRag = false;
+-    private string? _sourcePath = null;
+-    private string? _model = "llama3";
+-    private bool _agent = false;
+-    private float? _temperature = null;
+-    private int? _maxTokens = null;
+-    private string? _endpoint = null;
+-    private string? _apiKey = null;
+-
+-    /// <summary>
+-    /// Sets the question.
+-    /// </summary>
+-    public AskRequestBuilder WithQuestion(string question)
+-    {
+-        _question = question;
+-        return this;
+-    }
+-
+-    /// <summary>
+-    /// Enables RAG mode.
+-    /// </summary>
+-    public AskRequestBuilder WithRag(string? sourcePath = null)
+-    {
+-        _useRag = true;
+-        _sourcePath = sourcePath;
+-        return this;
+-    }
+-
+-    /// <summary>
+-    /// Sets the model name.
+-    /// </summary>
+-    public AskRequestBuilder WithModel(string model)
+-    {
+-        _model = model;
+-        return this;
+-    }
+-
+-    /// <summary>
+-    /// Enables agent mode.
+-    /// </summary>
+-    public AskRequestBuilder WithAgent()
+-    {
+-        _agent = true;
+-        return this;
+-    }
+-
+-    /// <summary>
+-    /// Sets the temperature.
+-    /// </summary>
+-    public AskRequestBuilder WithTemperature(float temperature)
+-    {
+-        _temperature = temperature;
+-        return this;
+-    }
+-
+-    /// <summary>
+-    /// Sets the max tokens.
+-    /// </summary>
+-    public AskRequestBuilder WithMaxTokens(int maxTokens)
+-    {
+-        _maxTokens = maxTokens;
+-        return this;
+-    }
+-
+-    /// <summary>
+-    /// Sets the remote endpoint.
+-    /// </summary>
+-    public AskRequestBuilder WithEndpoint(string endpoint, string? apiKey = null)
+-    {
+-        _endpoint = endpoint;
+-        _apiKey = apiKey;
+-        return this;
+-    }
+-
+-    /// <summary>
+-    /// Builds the AskRequest instance.
+-    /// </summary>
+-    public AskRequest Build() => new AskRequest
+-    {
+-        Question = _question,
+-        UseRag = _useRag,
+-        SourcePath = _sourcePath,
+-        Model = _model,
+-        Agent = _agent,
+-        Temperature = _temperature,
+-        MaxTokens = _maxTokens,
+-        Endpoint = _endpoint,
+-        ApiKey = _apiKey,
+-    };
+-
+-    /// <summary>
+-    /// Implicit conversion to AskRequest.
+-    /// </summary>
+-    public static implicit operator AskRequest(AskRequestBuilder builder) => builder.Build();
+-}
+diff --git a/tests/Ouroboros.Agent.Tests/Infrastructure/Builders/PipelineRequestBuilder.cs b/tests/Ouroboros.Agent.Tests/Infrastructure/Builders/PipelineRequestBuilder.cs
+deleted file mode 100644
+index 386fd95..0000000
+--- a/tests/Ouroboros.Agent.Tests/Infrastructure/Builders/PipelineRequestBuilder.cs
++++ /dev/null
+@@ -1,95 +0,0 @@
+-// <copyright file="PipelineRequestBuilder.cs" company="PlaceholderCompany">
+-// Copyright (c) PlaceholderCompany. All rights reserved.
+-// </copyright>
+-
+-using Ouroboros.WebApi.Models;
+-
+-namespace Ouroboros.Tests.Infrastructure.Builders;
+-
+-/// <summary>
+-/// Builder for creating PipelineRequest test data with fluent API.
+-/// </summary>
+-public class PipelineRequestBuilder
+-{
+-    private string _dsl = "SetTopic('AI') | UseDraft";
+-    private string? _model = "llama3";
+-    private bool _debug = false;
+-    private float? _temperature = null;
+-    private int? _maxTokens = null;
+-    private string? _endpoint = null;
+-    private string? _apiKey = null;
+-
+-    /// <summary>
+-    /// Sets the DSL expression.
+-    /// </summary>
+-    public PipelineRequestBuilder WithDsl(string dsl)
+-    {
+-        _dsl = dsl;
+-        return this;
+-    }
+-
+-    /// <summary>
+-    /// Sets the model name.
+-    /// </summary>
+-    public PipelineRequestBuilder WithModel(string model)
+-    {
+-        _model = model;
+-        return this;
+-    }
+-
+-    /// <summary>
+-    /// Enables debug mode.
+-    /// </summary>
+-    public PipelineRequestBuilder WithDebug()
+-    {
+-        _debug = true;
+-        return this;
+-    }
+-
+-    /// <summary>
+-    /// Sets the temperature.
+-    /// </summary>
+-    public PipelineRequestBuilder WithTemperature(float temperature)
+-    {
+-        _temperature = temperature;
+-        return this;
+-    }
+-
+-    /// <summary>
+-    /// Sets the max tokens.
+-    /// </summary>
+-    public PipelineRequestBuilder WithMaxTokens(int maxTokens)
+-    {
+-        _maxTokens = maxTokens;
+-        return this;
+-    }
+-
+-    /// <summary>
+-    /// Sets the remote endpoint.
+-    /// </summary>
+-    public PipelineRequestBuilder WithEndpoint(string endpoint, string? apiKey = null)
+-    {
+-        _endpoint = endpoint;
+-        _apiKey = apiKey;
+-        return this;
+-    }
+-
+-    /// <summary>
+-    /// Builds the PipelineRequest instance.
+-    /// </summary>
+-    public PipelineRequest Build() => new PipelineRequest
+-    {
+-        Dsl = _dsl,
+-        Model = _model,
+-        Debug = _debug,
+-        Temperature = _temperature,
+-        MaxTokens = _maxTokens,
+-        Endpoint = _endpoint,
+-        ApiKey = _apiKey,
+-    };
+-
+-    /// <summary>
+-    /// Implicit conversion to PipelineRequest.
+-    /// </summary>
+-    public static implicit operator PipelineRequest(PipelineRequestBuilder builder) => builder.Build();
+-}
+-- 
+2.43.0
+
