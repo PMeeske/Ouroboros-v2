@@ -50,10 +50,46 @@ jobs:
             echo "All submodules available"
           fi
 
-  build-all:
-    name: Build All Projects
+  build-foundation:
+    name: Build Foundation
     needs: check-submodules
     if: needs.check-submodules.outputs.available == 'true'
+    uses: PMeeske/ouroboros-build/.github/workflows/_reusable-dotnet-build.yml@main
+    with:
+      projects: >-
+        foundation/src/Ouroboros.Abstractions/Ouroboros.Abstractions.csproj
+        foundation/src/Ouroboros.Core/Ouroboros.Core.csproj
+        foundation/src/Ouroboros.Domain/Ouroboros.Domain.csproj
+        foundation/src/Ouroboros.Genetic/Ouroboros.Genetic.csproj
+        foundation/src/Ouroboros.Roslynator/Ouroboros.Roslynator.csproj
+        foundation/src/Ouroboros.Tools/Ouroboros.Tools.csproj
+
+  build-engine:
+    name: Build Engine
+    needs: build-foundation
+    uses: PMeeske/ouroboros-build/.github/workflows/_reusable-dotnet-build.yml@main
+    with:
+      projects: >-
+        engine/src/Ouroboros.Agent/Ouroboros.Agent.csproj
+        engine/src/Ouroboros.Pipeline/Ouroboros.Pipeline.csproj
+        engine/src/Ouroboros.Providers/Ouroboros.Providers.csproj
+        engine/src/Ouroboros.Network/Ouroboros.Network.csproj
+
+  build-app:
+    name: Build App
+    needs: build-engine
+    uses: PMeeske/ouroboros-build/.github/workflows/_reusable-dotnet-build.yml@main
+    with:
+      projects: >-
+        app/src/Ouroboros.Application/Ouroboros.Application.csproj
+        app/src/Ouroboros.CLI/Ouroboros.CLI.csproj
+        app/src/Ouroboros.Easy/Ouroboros.Easy.csproj
+        app/src/Ouroboros.Examples/Ouroboros.Examples.csproj
+        app/src/Ouroboros.WebApi/Ouroboros.WebApi.csproj
+
+  build-all:
+    name: Build All Projects
+    needs: build-app
     runs-on: ubuntu-latest
     timeout-minutes: 30
 
