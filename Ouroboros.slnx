@@ -1,6 +1,8 @@
 <Solution>
+  <Folder Name="/foundation/" />
   <!-- Foundation: Source -->
   <Folder Name="/foundation/src/">
+    <Project Path="foundation/src/Ouroboros.Abstractions/Ouroboros.Abstractions.csproj" />
     <Project Path="foundation/src/Ouroboros.Core/Ouroboros.Core.csproj" />
     <Project Path="foundation/src/Ouroboros.Domain/Ouroboros.Domain.csproj" />
     <Project Path="foundation/src/Ouroboros.Genetic/Ouroboros.Genetic.csproj" />
@@ -15,6 +17,7 @@
     <Project Path="foundation/tests/Ouroboros.Genetic.Tests/Ouroboros.Genetic.Tests.csproj" />
     <Project Path="foundation/tests/Ouroboros.Foundation.BDD/Ouroboros.Foundation.BDD.csproj" />
   </Folder>
+  <Folder Name="/engine/" />
   <!-- Engine: Source -->
   <Folder Name="/engine/src/">
     <Project Path="engine/src/Ouroboros.Agent/Ouroboros.Agent.csproj" />
@@ -28,12 +31,9 @@
     <Project Path="engine/tests/Ouroboros.Pipeline.Tests/Ouroboros.Pipeline.Tests.csproj" />
     <Project Path="engine/tests/Ouroboros.Providers.Tests/Ouroboros.Providers.Tests.csproj" />
     <Project Path="engine/tests/Ouroboros.Network.Tests/Ouroboros.Network.Tests.csproj" />
-    <Project Path="engine/tests/Ouroboros.Learning.Tests/Ouroboros.Learning.Tests.csproj" />
-    <Project Path="engine/tests/Ouroboros.Safety.Tests/Ouroboros.Safety.Tests.csproj" />
-    <Project Path="engine/tests/Ouroboros.Meta.Tests/Ouroboros.Meta.Tests.csproj" />
-    <Project Path="engine/tests/Ouroboros.Memory.Tests/Ouroboros.Memory.Tests.csproj" />
     <Project Path="engine/tests/Ouroboros.Engine.BDD/Ouroboros.Engine.BDD.csproj" />
   </Folder>
+  <Folder Name="/app/" />
   <!-- App: Source -->
   <Folder Name="/app/src/">
     <!-- Android requires 'dotnet workload install android'; excluded from default build -->
@@ -54,6 +54,7 @@
     <!-- <Project Path="app/tests/Ouroboros.Android.Tests/Ouroboros.Android.Tests.csproj" /> -->
     <Project Path="app/tests/Ouroboros.App.BDD/Ouroboros.App.BDD.csproj" />
   </Folder>
+  <Folder Name="/.build/" />
   <!-- Shared: TestKit -->
   <Folder Name="/.build/test-infra/">
     <Project Path=".build/test-infra/Ouroboros.TestKit/Ouroboros.TestKit.csproj" />
