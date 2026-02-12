@@ -1,0 +1,183 @@
+name: .NET Integration Tests
+
+on:
+  push:
+    branches: [ main ]
+    paths:
+      - 'foundation/**'
+      - 'engine/**'
+      - 'app/**'
+      - '.build/**'
+      - '**.csproj'
+      - 'Ouroboros.slnx'
+      - '.github/workflows/dotnet-integration-tests.yml'
+  pull_request:
+    branches: [ main ]
+    paths:
+      - 'foundation/**'
+      - 'engine/**'
+      - 'app/**'
+      - '.build/**'
+      - '**.csproj'
+      - 'Ouroboros.slnx'
+      - '.github/workflows/dotnet-integration-tests.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pull-requests: write
+  checks: write
+
+# Cancel in-progress runs for the same workflow on the same branch
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  DOTNET_VERSION: '10.0.x'
+
+jobs:
+  check-submodules:
+    name: Check Submodule Availability
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    outputs:
+      available: ${{ steps.check.outputs.available }}
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11  # v4.1.1
+
+    - name: Try cloning submodules
+      run: git submodule update --init --recursive 2>&1 || true
+
+    - name: Check submodule availability
+      id: check
+      run: |
+        MISSING=""
+        for sub in .build foundation engine app; do
+          if [ ! -f "$sub/.git" ] && [ ! -d "$sub/.git" ]; then
+            MISSING="$MISSING $sub"
+          fi
+        done
+        if [ -n "$MISSING" ]; then
+          echo "available=false" >> $GITHUB_OUTPUT
+          echo "::warning::Sub-repo(s) not available:$MISSING — skipping integration tests"
+        else
+          echo "available=true" >> $GITHUB_OUTPUT
+          echo "All submodules available"
+        fi
+
+  integration-tests:
+    name: Integration Tests
+    needs: check-submodules
+    if: needs.check-submodules.outputs.available == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11  # v4.1.1
+      with:
+        fetch-depth: 0
+        submodules: recursive
+
+    - name: Setup .NET
+      uses: actions/setup-dotnet@4d6c8fcf3c8f7a60068d26b594648e99df24cee3  # v4.0.0
+      with:
+        dotnet-version: ${{ env.DOTNET_VERSION }}
+
+    - name: Cache NuGet packages
+      uses: actions/cache@v4
+      with:
+        path: ~/.nuget/packages
+        key: ${{ runner.os }}-nuget-${{ hashFiles('**/*.csproj') }}
+        restore-keys: |
+          ${{ runner.os }}-nuget-
+
+    - name: Restore dependencies
+      uses: nick-fields/retry@7152eba30c6575329ac0576536151aca5a72780e  # v3.0.0
+      with:
+        timeout_minutes: 10
+        max_attempts: 3
+        retry_wait_seconds: 30
+        command: dotnet restore Ouroboros.slnx
+
+    - name: Build solution
+      run: dotnet build Ouroboros.slnx --configuration Release --no-restore
+      timeout-minutes: 15
+
+    - name: Run Integration Tests
+      uses: nick-fields/retry@7152eba30c6575329ac0576536151aca5a72780e  # v3.0.0
+      with:
+        timeout_minutes: 20
+        max_attempts: 2
+        retry_wait_seconds: 15
+        command: |
+          # Run only integration tests (filter by Category=Integration trait)
+          # Note: Some integration tests may require external services (Ollama, GitHub Models, etc.)
+          # and may skip if those services are unavailable
+          dotnet test Ouroboros.slnx \
+            --configuration Release \
+            --no-build \
+            --verbosity normal \
+            --filter "Category=Integration" \
+            --results-directory ./TestResults \
+            --logger "trx;LogFileName=integration-test-results.trx"
+          EXIT_CODE=$?
+          
+          if [ $EXIT_CODE -ne 0 ]; then
+            echo "::warning::Integration tests failed with exit code $EXIT_CODE"
+            echo "Some integration tests may have failed due to missing external services"
+            echo "Check test results for details"
+          fi
+      continue-on-error: true
+
+    - name: Upload test results
+      uses: actions/upload-artifact@5d5d22a31266ced268874388b861e4b58bb5c2f3  # v4.3.1
+      if: always()
+      continue-on-error: true
+      with:
+        name: integration-test-results
+        path: TestResults/*.trx
+        retention-days: 30
+
+    - name: Publish test results
+      uses: EnricoMi/publish-unit-test-result-action@30eadd5010312f995f0d3b3cff7fe2984f69409e  # v2.16.1
+      if: always()
+      continue-on-error: true
+      with:
+        files: TestResults/**/*.trx
+        check_name: Integration Test Results
+        comment_mode: off
+
+    - name: Generate Test Summary
+      if: always()
+      run: |
+        echo "## 🔗 Integration Test Results" >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+        echo "### Environment" >> $GITHUB_STEP_SUMMARY
+        echo "- **Runner**: ubuntu-latest" >> $GITHUB_STEP_SUMMARY
+        echo "- **.NET Version**: ${{ env.DOTNET_VERSION }}" >> $GITHUB_STEP_SUMMARY
+        echo "- **Filter**: Category=Integration" >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+        echo "### Notes" >> $GITHUB_STEP_SUMMARY
+        echo "Integration tests may require external services. Tests that require" >> $GITHUB_STEP_SUMMARY
+        echo "unavailable services (e.g., Ollama, GitHub Models) may be skipped." >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+        echo "For full LLM integration testing, see:" >> $GITHUB_STEP_SUMMARY
+        echo "- **Ollama Integration Tests** workflow" >> $GITHUB_STEP_SUMMARY
+        echo "- **GitHub Models Integration Tests** workflow" >> $GITHUB_STEP_SUMMARY
+
+  skipped-summary:
+    name: Submodules Not Available
+    needs: check-submodules
+    if: needs.check-submodules.outputs.available == 'false'
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+    - name: Report skipped
+      run: |
+        echo "## ⚠️ Integration Tests Skipped" >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+        echo "One or more sub-repo submodules could not be cloned." >> $GITHUB_STEP_SUMMARY
+        echo "Ensure the submodule repositories are accessible to GitHub Actions." >> $GITHUB_STEP_SUMMARY

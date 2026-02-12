@@ -1,0 +1,7 @@
+name: PowerShell MCP
+version: 0.0.1
+schema: v1
+mcpServers:
+  - name: PowerShell MCP
+    command: "C:\\Users\\meeske\\OneDrive - adesso Group\\Dokumente\\PowerShell\\Modules\\PowerShell.MCP\\1.6.5\\bin\\win-x64\\PowerShell.MCP.Proxy.exe"
+    env: {}
