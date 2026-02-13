@@ -91,7 +91,10 @@ jobs:
         with:
           dotnet-version: '10.0.x'
 
-      - name: Install MAUI workloads
+      - name: Restore .NET workloads
+        run: dotnet workload restore
+
+      - name: Install required workloads
         run: dotnet workload install maui-android
 
       - name: Restore dependencies
@@ -115,6 +118,12 @@ jobs:
         with: { submodules: recursive }
       - uses: actions/setup-dotnet@4d6c8fcf3c8f7a60068d26b594648e99df24cee3
         with: { dotnet-version: '10.0.x' }
+      
+      - name: Restore .NET workloads
+        run: dotnet workload restore
+
+      - name: Install required workloads
+        run: dotnet workload install maui-android
       
       - name: Validate test environment
         run: |
@@ -239,6 +248,12 @@ jobs:
       - uses: actions/setup-dotnet@4d6c8fcf3c8f7a60068d26b594648e99df24cee3
         with: { dotnet-version: '10.0.x' }
       
+      - name: Restore .NET workloads
+        run: dotnet workload restore
+
+      - name: Install required workloads
+        run: dotnet workload install maui-android
+      
       - name: Validate test environment
         run: |
           echo "=== .NET SDK Info ==="
@@ -361,6 +376,12 @@ jobs:
         with: { submodules: recursive }
       - uses: actions/setup-dotnet@4d6c8fcf3c8f7a60068d26b594648e99df24cee3
         with: { dotnet-version: '10.0.x' }
+      
+      - name: Restore .NET workloads
+        run: dotnet workload restore
+
+      - name: Install required workloads
+        run: dotnet workload install maui-android
       
       - name: Validate test environment
         run: |
