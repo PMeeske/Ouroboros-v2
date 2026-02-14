@@ -5,12 +5,12 @@
 <h1 align="center">Ouroboros</h1>
 
 <p align="center">
-  <a href="https://github.com/PMeeske/ouroboros-foundation/actions/workflows/ci.yml"><img src="https://github.com/PMeeske/ouroboros-foundation/actions/workflows/ci.yml/badge.svg" alt="Foundation CI"></a>
-  <a href="https://github.com/PMeeske/ouroboros-foundation/actions/workflows/mutation.yml"><img src="https://github.com/PMeeske/ouroboros-foundation/actions/workflows/mutation.yml/badge.svg" alt="Foundation Mutation"></a>
-  <a href="https://github.com/PMeeske/ouroboros-engine/actions/workflows/ci.yml"><img src="https://github.com/PMeeske/ouroboros-engine/actions/workflows/ci.yml/badge.svg" alt="Engine CI"></a>
-  <a href="https://github.com/PMeeske/ouroboros-engine/actions/workflows/mutation.yml"><img src="https://github.com/PMeeske/ouroboros-engine/actions/workflows/mutation.yml/badge.svg" alt="Engine Mutation"></a>
-  <a href="https://github.com/PMeeske/ouroboros-app/actions/workflows/ci.yml"><img src="https://github.com/PMeeske/ouroboros-app/actions/workflows/ci.yml/badge.svg" alt="App CI"></a>
-  <a href="https://github.com/PMeeske/ouroboros-app/actions/workflows/mutation.yml"><img src="https://github.com/PMeeske/ouroboros-app/actions/workflows/mutation.yml/badge.svg" alt="App Mutation"></a>
+  <a href="https://github.com/PMeeske/ouroboros-foundation/actions/workflows/ci.yml">Foundation:<img src="https://github.com/PMeeske/ouroboros-foundation/actions/workflows/ci.yml/badge.svg" alt="Foundation CI"></a>
+  <a href="https://github.com/PMeeske/ouroboros-foundation/actions/workflows/mutation.yml">Foundation:<img src="https://github.com/PMeeske/ouroboros-foundation/actions/workflows/mutation.yml/badge.svg" alt="Foundation Mutation"></a>
+  <a href="https://github.com/PMeeske/ouroboros-engine/actions/workflows/ci.yml">Engine:<img src="https://github.com/PMeeske/ouroboros-engine/actions/workflows/ci.yml/badge.svg" alt="Engine CI"></a>
+  <a href="https://github.com/PMeeske/ouroboros-engine/actions/workflows/mutation.yml">Engine:<img src="https://github.com/PMeeske/ouroboros-engine/actions/workflows/mutation.yml/badge.svg" alt="Engine Mutation"></a>
+  <a href="https://github.com/PMeeske/ouroboros-app/actions/workflows/ci.yml">App:<img src="https://github.com/PMeeske/ouroboros-app/actions/workflows/ci.yml/badge.svg" alt="App CI"></a>
+  <a href="https://github.com/PMeeske/ouroboros-app/actions/workflows/mutation.yml">App:<img src="https://github.com/PMeeske/ouroboros-app/actions/workflows/mutation.yml/badge.svg" alt="App Mutation"></a>
   <a href="https://dotnet.microsoft.com/download/dotnet/10.0"><img src="https://img.shields.io/badge/.NET-10.0-blue" alt=".NET Version"></a>
   <a href="https://www.nuget.org/packages/LangChain/"><img src="https://img.shields.io/badge/LangChain-0.17.0-purple" alt="LangChain"></a>
 </p>
