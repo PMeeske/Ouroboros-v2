@@ -1,0 +1,19 @@
+{
+  "ApiKeys": {
+    "Firecrawl": "YOUR_FIRECRAWL_API_KEY",
+    "SerpApi": "YOUR_SERPAPI_KEY",
+    "OpenAI": "YOUR_OPENAI_API_KEY",
+    "Anthropic": "YOUR_ANTHROPIC_API_KEY"
+  },
+  "Tapo": {
+    "Username": "YOUR_TAPO_EMAIL",
+    "Password": "YOUR_TAPO_PASSWORD",
+    "Devices": [
+      {
+        "name": "Camera1",
+        "device_type": "C200",
+        "ip_addr": "YOUR_CAMERA_IP"
+      }
+    ]
+  }
+}
