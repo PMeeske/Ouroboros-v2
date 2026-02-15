@@ -209,8 +209,6 @@ For Docker deployments, use the `docker-compose.yml` or Kubernetes secrets.
 4. Environment Variables
 5. Command-line arguments
 
-See **[Configuration & Security](app/docs/CONFIGURATION_AND_SECURITY.md)** for comprehensive security best practices.
-
 ## Project Structure
 
 | Layer | Projects | Location |
