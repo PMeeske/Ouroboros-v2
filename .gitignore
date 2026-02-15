@@ -12,7 +12,24 @@
 logs/
 *.log
 appsettings.*.local.json
+
+# Sensitive configuration files
+appsettings.Development.json
+appsettings.Production.json
+appsettings.Local.json
+
+# Environment files
 .env
+.env.local
+.env.*.local
+*.env
+
+# User secrets
+**/Properties/launchSettings.json
+
+# Credential files
+secrets.json
+credentials.json
 
 # Test results
 **/TestResults/
