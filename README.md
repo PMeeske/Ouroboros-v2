@@ -133,6 +133,82 @@ var result = await pipeline(ReasoningState.Initial);
 
 See **[Easy API Quick Start](app/docs/EASY_API_QUICKSTART.md)** for more programmatic examples.
 
+## Configuration
+
+⚠️ **Security Warning**: Never commit real credentials to the repository. Use secure configuration methods as described below.
+
+Ouroboros supports multiple methods for configuring credentials and sensitive settings:
+
+### Option 1: Development Configuration File (Recommended for Local Development)
+
+1. Copy the example configuration:
+   ```bash
+   cp appsettings.Development.json.example appsettings.Development.json
+   ```
+
+2. Edit `appsettings.Development.json` with your actual credentials:
+   ```json
+   {
+     "ApiKeys": {
+       "OpenAI": "sk-...",
+       "Anthropic": "sk-ant-...",
+       "Firecrawl": "fc-...",
+       "SerpApi": "..."
+     },
+     "Tapo": {
+       "Username": "your-email@example.com",
+       "Password": "your-password",
+       "Devices": [
+         {
+           "name": "Camera1",
+           "device_type": "C200",
+           "ip_addr": "192.168.1.100"
+         }
+       ]
+     }
+   }
+   ```
+
+3. This file is automatically ignored by Git and will not be committed.
+
+### Option 2: .NET User Secrets (Recommended for Development)
+
+Use .NET's built-in secrets manager for development:
+
+```bash
+cd app/src/Ouroboros.CLI  # or any other project directory
+dotnet user-secrets init
+dotnet user-secrets set "ApiKeys:OpenAI" "sk-..."
+dotnet user-secrets set "ApiKeys:Anthropic" "sk-ant-..."
+dotnet user-secrets set "Tapo:Username" "your-email@example.com"
+dotnet user-secrets set "Tapo:Password" "your-password"
+```
+
+User secrets are stored outside the repository in your user profile directory.
+
+### Option 3: Environment Variables (Recommended for Production)
+
+Set environment variables using your operating system or deployment platform:
+
+```bash
+export ApiKeys__OpenAI="sk-..."
+export ApiKeys__Anthropic="sk-ant-..."
+export Tapo__Username="your-email@example.com"
+export Tapo__Password="your-password"
+```
+
+For Docker deployments, use the `docker-compose.yml` or Kubernetes secrets.
+
+### Configuration Priority
+
+.NET configuration sources are loaded in this order (later sources override earlier ones):
+
+1. `appsettings.json` (base configuration with no credentials)
+2. `appsettings.{Environment}.json` (e.g., `appsettings.Development.json`)
+3. User Secrets (development only)
+4. Environment Variables
+5. Command-line arguments
+
 ## Project Structure
 
 | Layer | Projects | Location |
