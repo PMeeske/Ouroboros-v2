@@ -255,33 +255,33 @@ Each sub-repo contains its own `docs/` directory. Key guides:
 ### Architecture & Design
 | Guide | Location |
 |-------|----------|
-| Architecture Overview | [engine/docs/ARCHITECTURE.md](engine/docs/ARCHITECTURE.md) |
-| Architectural Layers | [engine/docs/ARCHITECTURAL_LAYERS.md](engine/docs/ARCHITECTURAL_LAYERS.md) |
-| Cognitive Architecture | [engine/docs/COGNITIVE_ARCHITECTURE.md](engine/docs/COGNITIVE_ARCHITECTURE.md) |
-| Iterative Refinement | [engine/docs/ITERATIVE_REFINEMENT_ARCHITECTURE.md](engine/docs/ITERATIVE_REFINEMENT_ARCHITECTURE.md) |
-| Self-Improving Agent | [engine/docs/SELF_IMPROVING_AGENT.md](engine/docs/SELF_IMPROVING_AGENT.md) |
-| Arrow Composition | [foundation/docs/ARROW_COMPOSITION_EXAMPLES.md](foundation/docs/ARROW_COMPOSITION_EXAMPLES.md) |
-| Laws of Form | [foundation/docs/LAWS_OF_FORM.md](foundation/docs/LAWS_OF_FORM.md) |
+| Architecture Overview | [engine/docs/ARCHITECTURE.md](https://github.com/PMeeske/ouroboros-engine/tree/main/docs/ARCHITECTURE.md) |
+| Architectural Layers | [engine/docs/ARCHITECTURAL_LAYERS.md](https://github.com/PMeeske/ouroboros-engine/tree/main/docs/ARCHITECTURAL_LAYERS.md) |
+| Cognitive Architecture | [engine/docs/COGNITIVE_ARCHITECTURE.md](https://github.com/PMeeske/ouroboros-engine/tree/main/docs/COGNITIVE_ARCHITECTURE.md) |
+| Iterative Refinement | [engine/docs/ITERATIVE_REFINEMENT_ARCHITECTURE.md](https://github.com/PMeeske/ouroboros-engine/tree/main/docs/ITERATIVE_REFINEMENT_ARCHITECTURE.md) |
+| Self-Improving Agent | [engine/docs/SELF_IMPROVING_AGENT.md](https://github.com/PMeeske/ouroboros-engine/tree/main/docs/SELF_IMPROVING_AGENT.md) |
+| Arrow Composition | [foundation/docs/ARROW_COMPOSITION_EXAMPLES.md](https://github.com/PMeeske/ouroboros-foundation/tree/main/docs/ARROW_COMPOSITION_EXAMPLES.md) |
+| Laws of Form | [foundation/docs/LAWS_OF_FORM.md](https://github.com/PMeeske/ouroboros-foundation/tree/main/docs/LAWS_OF_FORM.md) |
 
 ### Providers & Integration
 | Guide | Location |
 |-------|----------|
-| Anthropic Claude | [engine/docs/ANTHROPIC_INTEGRATION.md](engine/docs/ANTHROPIC_INTEGRATION.md) |
-| Ollama Cloud | [engine/docs/OLLAMA_CLOUD_INTEGRATION.md](engine/docs/OLLAMA_CLOUD_INTEGRATION.md) |
-| GitHub Models | [engine/docs/GITHUB_MODELS_INTEGRATION.md](engine/docs/GITHUB_MODELS_INTEGRATION.md) |
-| Vector Stores | [engine/docs/VECTOR_STORES.md](engine/docs/VECTOR_STORES.md) |
-| MeTTa Neuro-Symbolic | [engine/docs/METTA_NEURO_SYMBOLIC_ARCHITECTURE.md](engine/docs/METTA_NEURO_SYMBOLIC_ARCHITECTURE.md) |
+| Anthropic Claude | [engine/docs/ANTHROPIC_INTEGRATION.md](https://github.com/PMeeske/ouroboros-engine/tree/main/docs/ANTHROPIC_INTEGRATION.md) |
+| Ollama Cloud | [engine/docs/OLLAMA_CLOUD_INTEGRATION.md](https://github.com/PMeeske/ouroboros-engine/tree/main/docs/OLLAMA_CLOUD_INTEGRATION.md) |
+| GitHub Models | [engine/docs/GITHUB_MODELS_INTEGRATION.md](https://github.com/PMeeske/ouroboros-engine/tree/main/docs/GITHUB_MODELS_INTEGRATION.md) |
+| Vector Stores | [engine/docs/VECTOR_STORES.md](https://github.com/PMeeske/ouroboros-engine/tree/main/docs/VECTOR_STORES.md) |
+| MeTTa Neuro-Symbolic | [engine/docs/METTA_NEURO_SYMBOLIC_ARCHITECTURE.md](https://github.com/PMeeske/ouroboros-engine/tree/main/docs/METTA_NEURO_SYMBOLIC_ARCHITECTURE.md) |
 
 ### Deployment & Infrastructure
 | Guide | Location |
 |-------|----------|
-| Deployment Guide | [app/docs/DEPLOYMENT.md](app/docs/DEPLOYMENT.md) |
-| Deployment Quick Reference | [app/docs/DEPLOYMENT-QUICK-REFERENCE.md](app/docs/DEPLOYMENT-QUICK-REFERENCE.md) |
-| IONOS Deployment | [app/docs/IONOS_DEPLOYMENT_GUIDE.md](app/docs/IONOS_DEPLOYMENT_GUIDE.md) |
-| Infrastructure Dependencies | [app/docs/INFRASTRUCTURE_DEPENDENCIES.md](app/docs/INFRASTRUCTURE_DEPENDENCIES.md) |
-| Terraform + K8s | [app/docs/TERRAFORM_K8S_INTEGRATION.md](app/docs/TERRAFORM_K8S_INTEGRATION.md) |
-| Android App | [app/src/Ouroboros.Android/README.md](app/src/Ouroboros.Android/README.md) |
-| Web API | [app/src/Ouroboros.WebApi/README.md](app/src/Ouroboros.WebApi/README.md) |
+| Deployment Guide | [app/docs/DEPLOYMENT.md](https://github.com/PMeeske/ouroboros-app/tree/main/docs/DEPLOYMENT.md) |
+| Deployment Quick Reference | [app/docs/DEPLOYMENT-QUICK-REFERENCE.md](https://github.com/PMeeske/ouroboros-app/tree/main/docs/DEPLOYMENT-QUICK-REFERENCE.md) |
+| IONOS Deployment | [app/docs/IONOS_DEPLOYMENT_GUIDE.md](https://github.com/PMeeske/ouroboros-app/tree/main/docs/IONOS_DEPLOYMENT_GUIDE.md) |
+| Infrastructure Dependencies | [app/docs/INFRASTRUCTURE_DEPENDENCIES.md](https://github.com/PMeeske/ouroboros-app/tree/main/docs/INFRASTRUCTURE_DEPENDENCIES.md) |
+| Terraform + K8s | [app/docs/TERRAFORM_K8S_INTEGRATION.md](https://github.com/PMeeske/ouroboros-app/tree/main/docs/TERRAFORM_K8S_INTEGRATION.md) |
+| Android App | [app/src/Ouroboros.Android/README.md](https://github.com/PMeeske/ouroboros-app/tree/main/src/Ouroboros.Android/README.md) |
+| Web API | [app/src/Ouroboros.WebApi/README.md](https://github.com/PMeeske/ouroboros-app/tree/main/src/Ouroboros.WebApi/README.md) |
 
 ### Testing & Quality
 | Guide | Location |
