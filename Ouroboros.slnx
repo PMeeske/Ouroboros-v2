@@ -36,6 +36,10 @@
   <Folder Name="/app/" />
   <!-- App: Source -->
   <Folder Name="/app/src/">
+    <Project Path="app/src/Ouroboros.Android/Ouroboros.Android.csproj">
+      <Deploy />
+    </Project>
+    <Project Path="app/src/Ouroboros.ApiHost/Ouroboros.ApiHost.csproj" />
     <!-- Android requires 'dotnet workload install android'; excluded from default build -->
     <!-- <Project Path="app/src/Ouroboros.Android/Ouroboros.Android.csproj" /> -->
     <Project Path="app/src/Ouroboros.Application/Ouroboros.Application.csproj" />
