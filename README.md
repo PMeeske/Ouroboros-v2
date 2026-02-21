@@ -5,10 +5,14 @@
 <h1 align="center">Ouroboros</h1>
 
 <p align="center">
-  <img src="https://img.shields.io/badge/tests-2549%20passing%2C%2015%20failing-red" alt="Tests">
-  <img src="https://img.shields.io/badge/coverage-8.7%25-red" alt="Coverage">
-  <a href="https://dotnet.microsoft.com/download/dotnet/10.0"><img src="https://img.shields.io/badge/.NET-10.0-blue" alt=".NET Version"></a>
-  <a href="https://www.nuget.org/packages/LangChain/"><img src="https://img.shields.io/badge/LangChain-0.17.0-purple" alt="LangChain"></a>
+  <a href="https://github.com/PMeeske/ouroboros-foundation/actions/workflows/ci.yml">Foundation:<img src="https://github.com/PMeeske/ouroboros-foundation/actions/workflows/ci.yml/badge.svg" alt="Foundation CI"></a></br>
+  <a href="https://github.com/PMeeske/ouroboros-foundation/actions/workflows/mutation.yml">Foundation:<img src="https://github.com/PMeeske/ouroboros-foundation/actions/workflows/mutation.yml/badge.svg" alt="Foundation Mutation"></a></br>
+  <a href="https://github.com/PMeeske/ouroboros-engine/actions/workflows/ci.yml">Engine:<img src="https://github.com/PMeeske/ouroboros-engine/actions/workflows/ci.yml/badge.svg" alt="Engine CI"></a></br>
+  <a href="https://github.com/PMeeske/ouroboros-engine/actions/workflows/mutation.yml">Engine:<img src="https://github.com/PMeeske/ouroboros-engine/actions/workflows/mutation.yml/badge.svg" alt="Engine Mutation"></a></br>
+  <a href="https://github.com/PMeeske/ouroboros-app/actions/workflows/ci.yml">App:<img src="https://github.com/PMeeske/ouroboros-app/actions/workflows/ci.yml/badge.svg" alt="App CI"></a></br>
+  <a href="https://github.com/PMeeske/ouroboros-app/actions/workflows/mutation.yml">App:<img src="https://github.com/PMeeske/ouroboros-app/actions/workflows/mutation.yml/badge.svg" alt="App Mutation"></a></br>
+  <a href="https://dotnet.microsoft.com/download/dotnet/10.0"><img src="https://img.shields.io/badge/.NET-10.0-blue" alt=".NET Version"></a></br>
+  <a href="https://www.nuget.org/packages/LangChain/"><img src="https://img.shields.io/badge/LangChain-0.17.0-purple" alt="LangChain"></a></br>
 </p>
 
 A **sophisticated functional programming-based AI pipeline system** (YET EXPERIMENTAL) built on LangChain, implementing category theory principles, monadic composition, and functional programming patterns to create robust, self-improving AI agents.
@@ -129,6 +133,82 @@ var result = await pipeline(ReasoningState.Initial);
 
 See **[Easy API Quick Start](app/docs/EASY_API_QUICKSTART.md)** for more programmatic examples.
 
+## Configuration
+
+⚠️ **Security Warning**: Never commit real credentials to the repository. Use secure configuration methods as described below.
+
+Ouroboros supports multiple methods for configuring credentials and sensitive settings:
+
+### Option 1: Development Configuration File (Recommended for Local Development)
+
+1. Copy the example configuration:
+   ```bash
+   cp appsettings.Development.json.example appsettings.Development.json
+   ```
+
+2. Edit `appsettings.Development.json` with your actual credentials:
+   ```json
+   {
+     "ApiKeys": {
+       "OpenAI": "sk-...",
+       "Anthropic": "sk-ant-...",
+       "Firecrawl": "fc-...",
+       "SerpApi": "..."
+     },
+     "Tapo": {
+       "Username": "your-email@example.com",
+       "Password": "your-password",
+       "Devices": [
+         {
+           "name": "Camera1",
+           "device_type": "C200",
+           "ip_addr": "192.168.1.100"
+         }
+       ]
+     }
+   }
+   ```
+
+3. This file is automatically ignored by Git and will not be committed.
+
+### Option 2: .NET User Secrets (Recommended for Development)
+
+Use .NET's built-in secrets manager for development:
+
+```bash
+cd app/src/Ouroboros.CLI  # or any other project directory
+dotnet user-secrets init
+dotnet user-secrets set "ApiKeys:OpenAI" "sk-..."
+dotnet user-secrets set "ApiKeys:Anthropic" "sk-ant-..."
+dotnet user-secrets set "Tapo:Username" "your-email@example.com"
+dotnet user-secrets set "Tapo:Password" "your-password"
+```
+
+User secrets are stored outside the repository in your user profile directory.
+
+### Option 3: Environment Variables (Recommended for Production)
+
+Set environment variables using your operating system or deployment platform:
+
+```bash
+export ApiKeys__OpenAI="sk-..."
+export ApiKeys__Anthropic="sk-ant-..."
+export Tapo__Username="your-email@example.com"
+export Tapo__Password="your-password"
+```
+
+For Docker deployments, use the `docker-compose.yml` or Kubernetes secrets.
+
+### Configuration Priority
+
+.NET configuration sources are loaded in this order (later sources override earlier ones):
+
+1. `appsettings.json` (base configuration with no credentials)
+2. `appsettings.{Environment}.json` (e.g., `appsettings.Development.json`)
+3. User Secrets (development only)
+4. Environment Variables
+5. Command-line arguments
+
 ## Project Structure
 
 | Layer | Projects | Location |
@@ -175,33 +255,33 @@ Each sub-repo contains its own `docs/` directory. Key guides:
 ### Architecture & Design
 | Guide | Location |
 |-------|----------|
-| Architecture Overview | [engine/docs/ARCHITECTURE.md](engine/docs/ARCHITECTURE.md) |
-| Architectural Layers | [engine/docs/ARCHITECTURAL_LAYERS.md](engine/docs/ARCHITECTURAL_LAYERS.md) |
-| Cognitive Architecture | [engine/docs/COGNITIVE_ARCHITECTURE.md](engine/docs/COGNITIVE_ARCHITECTURE.md) |
-| Iterative Refinement | [engine/docs/ITERATIVE_REFINEMENT_ARCHITECTURE.md](engine/docs/ITERATIVE_REFINEMENT_ARCHITECTURE.md) |
-| Self-Improving Agent | [engine/docs/SELF_IMPROVING_AGENT.md](engine/docs/SELF_IMPROVING_AGENT.md) |
-| Arrow Composition | [foundation/docs/ARROW_COMPOSITION_EXAMPLES.md](foundation/docs/ARROW_COMPOSITION_EXAMPLES.md) |
-| Laws of Form | [foundation/docs/LAWS_OF_FORM.md](foundation/docs/LAWS_OF_FORM.md) |
+| Architecture Overview | [engine/docs/ARCHITECTURE.md](https://github.com/PMeeske/ouroboros-engine/tree/main/docs/ARCHITECTURE.md) |
+| Architectural Layers | [engine/docs/ARCHITECTURAL_LAYERS.md](https://github.com/PMeeske/ouroboros-engine/tree/main/docs/ARCHITECTURAL_LAYERS.md) |
+| Cognitive Architecture | [engine/docs/COGNITIVE_ARCHITECTURE.md](https://github.com/PMeeske/ouroboros-engine/tree/main/docs/COGNITIVE_ARCHITECTURE.md) |
+| Iterative Refinement | [engine/docs/ITERATIVE_REFINEMENT_ARCHITECTURE.md](https://github.com/PMeeske/ouroboros-engine/tree/main/docs/ITERATIVE_REFINEMENT_ARCHITECTURE.md) |
+| Self-Improving Agent | [engine/docs/SELF_IMPROVING_AGENT.md](https://github.com/PMeeske/ouroboros-engine/tree/main/docs/SELF_IMPROVING_AGENT.md) |
+| Arrow Composition | [foundation/docs/ARROW_COMPOSITION_EXAMPLES.md](https://github.com/PMeeske/ouroboros-foundation/tree/main/docs/ARROW_COMPOSITION_EXAMPLES.md) |
+| Laws of Form | [foundation/docs/LAWS_OF_FORM.md](https://github.com/PMeeske/ouroboros-foundation/tree/main/docs/LAWS_OF_FORM.md) |
 
 ### Providers & Integration
 | Guide | Location |
 |-------|----------|
-| Anthropic Claude | [engine/docs/ANTHROPIC_INTEGRATION.md](engine/docs/ANTHROPIC_INTEGRATION.md) |
-| Ollama Cloud | [engine/docs/OLLAMA_CLOUD_INTEGRATION.md](engine/docs/OLLAMA_CLOUD_INTEGRATION.md) |
-| GitHub Models | [engine/docs/GITHUB_MODELS_INTEGRATION.md](engine/docs/GITHUB_MODELS_INTEGRATION.md) |
-| Vector Stores | [engine/docs/VECTOR_STORES.md](engine/docs/VECTOR_STORES.md) |
-| MeTTa Neuro-Symbolic | [engine/docs/METTA_NEURO_SYMBOLIC_ARCHITECTURE.md](engine/docs/METTA_NEURO_SYMBOLIC_ARCHITECTURE.md) |
+| Anthropic Claude | [engine/docs/ANTHROPIC_INTEGRATION.md](https://github.com/PMeeske/ouroboros-engine/tree/main/docs/ANTHROPIC_INTEGRATION.md) |
+| Ollama Cloud | [engine/docs/OLLAMA_CLOUD_INTEGRATION.md](https://github.com/PMeeske/ouroboros-engine/tree/main/docs/OLLAMA_CLOUD_INTEGRATION.md) |
+| GitHub Models | [engine/docs/GITHUB_MODELS_INTEGRATION.md](https://github.com/PMeeske/ouroboros-engine/tree/main/docs/GITHUB_MODELS_INTEGRATION.md) |
+| Vector Stores | [engine/docs/VECTOR_STORES.md](https://github.com/PMeeske/ouroboros-engine/tree/main/docs/VECTOR_STORES.md) |
+| MeTTa Neuro-Symbolic | [engine/docs/METTA_NEURO_SYMBOLIC_ARCHITECTURE.md](https://github.com/PMeeske/ouroboros-engine/tree/main/docs/METTA_NEURO_SYMBOLIC_ARCHITECTURE.md) |
 
 ### Deployment & Infrastructure
 | Guide | Location |
 |-------|----------|
-| Deployment Guide | [app/docs/DEPLOYMENT.md](app/docs/DEPLOYMENT.md) |
-| Deployment Quick Reference | [app/docs/DEPLOYMENT-QUICK-REFERENCE.md](app/docs/DEPLOYMENT-QUICK-REFERENCE.md) |
-| IONOS Deployment | [app/docs/IONOS_DEPLOYMENT_GUIDE.md](app/docs/IONOS_DEPLOYMENT_GUIDE.md) |
-| Infrastructure Dependencies | [app/docs/INFRASTRUCTURE_DEPENDENCIES.md](app/docs/INFRASTRUCTURE_DEPENDENCIES.md) |
-| Terraform + K8s | [app/docs/TERRAFORM_K8S_INTEGRATION.md](app/docs/TERRAFORM_K8S_INTEGRATION.md) |
-| Android App | [app/src/Ouroboros.Android/README.md](app/src/Ouroboros.Android/README.md) |
-| Web API | [app/src/Ouroboros.WebApi/README.md](app/src/Ouroboros.WebApi/README.md) |
+| Deployment Guide | [app/docs/DEPLOYMENT.md](https://github.com/PMeeske/ouroboros-app/tree/main/docs/DEPLOYMENT.md) |
+| Deployment Quick Reference | [app/docs/DEPLOYMENT-QUICK-REFERENCE.md](https://github.com/PMeeske/ouroboros-app/tree/main/docs/DEPLOYMENT-QUICK-REFERENCE.md) |
+| IONOS Deployment | [app/docs/IONOS_DEPLOYMENT_GUIDE.md](https://github.com/PMeeske/ouroboros-app/tree/main/docs/IONOS_DEPLOYMENT_GUIDE.md) |
+| Infrastructure Dependencies | [app/docs/INFRASTRUCTURE_DEPENDENCIES.md](https://github.com/PMeeske/ouroboros-app/tree/main/docs/INFRASTRUCTURE_DEPENDENCIES.md) |
+| Terraform + K8s | [app/docs/TERRAFORM_K8S_INTEGRATION.md](https://github.com/PMeeske/ouroboros-app/tree/main/docs/TERRAFORM_K8S_INTEGRATION.md) |
+| Android App | [app/src/Ouroboros.Android/README.md](https://github.com/PMeeske/ouroboros-app/tree/main/src/Ouroboros.Android/README.md) |
+| Web API | [app/src/Ouroboros.WebApi/README.md](https://github.com/PMeeske/ouroboros-app/tree/main/src/Ouroboros.WebApi/README.md) |
 
 ### Testing & Quality
 | Guide | Location |

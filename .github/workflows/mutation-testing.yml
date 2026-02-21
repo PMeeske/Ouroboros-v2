@@ -39,8 +39,40 @@ env:
   DOTNET_VERSION: '10.0.x'
 
 jobs:
+  check-submodules:
+    name: Check Submodule Availability
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    outputs:
+      available: ${{ steps.check.outputs.available }}
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11  # v4.1.1
+
+    - name: Try cloning submodules
+      run: git submodule update --init --recursive 2>&1 || true
+
+    - name: Check submodule availability
+      id: check
+      run: |
+        MISSING=""
+        for sub in .build foundation engine app; do
+          if [ ! -f "$sub/.git" ] && [ ! -d "$sub/.git" ]; then
+            MISSING="$MISSING $sub"
+          fi
+        done
+        if [ -n "$MISSING" ]; then
+          echo "available=false" >> $GITHUB_OUTPUT
+          echo "::warning::Sub-repo(s) not available:$MISSING — skipping mutation tests"
+        else
+          echo "available=true" >> $GITHUB_OUTPUT
+          echo "All submodules available"
+        fi
+
   mutation-test:
     name: Mutation Tests (${{ matrix.category }})
+    needs: check-submodules
+    if: needs.check-submodules.outputs.available == 'true'
     runs-on: ubuntu-latest
     timeout-minutes: 120
     strategy:
@@ -48,31 +80,31 @@ jobs:
       matrix:
         include:
           - category: Core
-            project: src/Ouroboros.Core/Ouroboros.Core.csproj
+            project: foundation/src/Ouroboros.Core/Ouroboros.Core.csproj
             config: stryker-config-core.json
           - category: Domain
-            project: src/Ouroboros.Domain/Ouroboros.Domain.csproj
+            project: foundation/src/Ouroboros.Domain/Ouroboros.Domain.csproj
             config: stryker-config-domain.json
           - category: Pipeline
-            project: src/Ouroboros.Pipeline/Ouroboros.Pipeline.csproj
+            project: engine/src/Ouroboros.Pipeline/Ouroboros.Pipeline.csproj
             config: stryker-config-pipeline.json
           - category: Tools
-            project: src/Ouroboros.Tools/Ouroboros.Tools.csproj
+            project: foundation/src/Ouroboros.Tools/Ouroboros.Tools.csproj
             config: stryker-config-tools.json
           - category: Application
-            project: src/Ouroboros.Application/Ouroboros.Application.csproj
+            project: app/src/Ouroboros.Application/Ouroboros.Application.csproj
             config: stryker-config-application.json
           - category: Providers
-            project: src/Ouroboros.Providers/Ouroboros.Providers.csproj
+            project: engine/src/Ouroboros.Providers/Ouroboros.Providers.csproj
             config: stryker-config-providers.json
           - category: Agent
-            project: src/Ouroboros.Agent/Ouroboros.Agent.csproj
+            project: engine/src/Ouroboros.Agent/Ouroboros.Agent.csproj
             config: stryker-config-agent.json
           - category: CLI
-            project: src/Ouroboros.CLI/Ouroboros.CLI.csproj
+            project: app/src/Ouroboros.CLI/Ouroboros.CLI.csproj
             config: stryker-config-cli.json
           - category: WebApi
-            project: src/Ouroboros.WebApi/Ouroboros.WebApi.csproj
+            project: app/src/Ouroboros.WebApi/Ouroboros.WebApi.csproj
             config: stryker-config-webapi.json
 
     steps:
@@ -80,6 +112,7 @@ jobs:
       uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11  # v4.1.1
       with:
         fetch-depth: 0
+        submodules: recursive
 
     - name: Setup .NET
       uses: actions/setup-dotnet@4d6c8fcf3c8f7a60068d26b594648e99df24cee3  # v4.0.0
@@ -101,7 +134,7 @@ jobs:
         timeout_minutes: 10
         max_attempts: 3
         retry_wait_seconds: 30
-        command: dotnet restore
+        command: dotnet restore Ouroboros.slnx
 
     - name: Restore dotnet tools
       uses: nick-fields/retry@7152eba30c6575329ac0576536151aca5a72780e  # v3.0.0
@@ -112,7 +145,7 @@ jobs:
         command: dotnet tool restore
 
     - name: Build solution
-      run: dotnet build --configuration Release --no-restore
+      run: dotnet build Ouroboros.slnx --configuration Release --no-restore
       timeout-minutes: 15
 
     - name: Run mutation tests (${{ matrix.category }})
@@ -275,8 +308,8 @@ jobs:
   mutation-test-summary:
     name: Mutation Test Summary
     runs-on: ubuntu-latest
-    needs: [mutation-test]
-    if: always()
+    needs: [check-submodules, mutation-test]
+    if: always() && needs.check-submodules.outputs.available == 'true'
     timeout-minutes: 15
 
     steps:
@@ -411,3 +444,17 @@ jobs:
         echo "Mutation testing validates test quality by introducing small changes (mutations)" >> $GITHUB_STEP_SUMMARY
         echo "to the code and verifying that tests detect these changes. A high mutation score" >> $GITHUB_STEP_SUMMARY
         echo "indicates a robust test suite." >> $GITHUB_STEP_SUMMARY
+
+  skipped-summary:
+    name: Submodules Not Available
+    needs: check-submodules
+    if: needs.check-submodules.outputs.available == 'false'
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+    - name: Report skipped
+      run: |
+        echo "## ⚠️ Mutation Testing Skipped" >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+        echo "One or more sub-repo submodules could not be cloned." >> $GITHUB_STEP_SUMMARY
+        echo "Ensure the submodule repositories are accessible to GitHub Actions." >> $GITHUB_STEP_SUMMARY
