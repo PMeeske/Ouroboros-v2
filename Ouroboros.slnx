@@ -36,12 +36,7 @@
   <Folder Name="/app/" />
   <!-- App: Source -->
   <Folder Name="/app/src/">
-    <Project Path="app/src/Ouroboros.Android/Ouroboros.Android.csproj">
-      <Deploy />
-    </Project>
     <Project Path="app/src/Ouroboros.ApiHost/Ouroboros.ApiHost.csproj" />
-    <!-- Android requires 'dotnet workload install android'; excluded from default build -->
-    <!-- <Project Path="app/src/Ouroboros.Android/Ouroboros.Android.csproj" /> -->
     <Project Path="app/src/Ouroboros.Application/Ouroboros.Application.csproj" />
     <Project Path="app/src/Ouroboros.CLI/Ouroboros.CLI.csproj" />
     <Project Path="app/src/Ouroboros.Easy/Ouroboros.Easy.csproj" />
@@ -54,9 +49,6 @@
     <Project Path="app/tests/Ouroboros.WebApi.Tests/Ouroboros.WebApi.Tests.csproj" />
     <Project Path="app/tests/Ouroboros.Integration.Tests/Ouroboros.Integration.Tests.csproj" />
     <Project Path="app/tests/Ouroboros.Application.Tests/Ouroboros.Application.Tests.csproj" />
-    <!-- Android.Tests excluded: requires 'dotnet workload install android' -->
-    <!-- <Project Path="app/tests/Ouroboros.Android.Tests/Ouroboros.Android.Tests.csproj" /> -->
-    <Project Path="app/tests/Ouroboros.App.BDD/Ouroboros.App.BDD.csproj" />
   </Folder>
   <Folder Name="/.build/" />
   <!-- Shared: TestKit -->
