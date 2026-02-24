@@ -168,13 +168,27 @@ Iaret is an avatar identity embedded inside the CLI application:
 **`encouraging.png`** — Iaret's warm/maternal three-quarter bust portrait — serves as the primary identity image for the Iaret solution banner and README.
 
 <p align="center">
-  𓂀 𓋹 𓁿 𓋹 𓂀
+  <code>━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━</code>
+  <br/>
+  <sub>🟣 ◈ 🟪 ◈ 🟣 ◈ 🟪 ◈ 🟣 ◈ 🟪 ◈ 🟣 ◈ 🟪 ◈ 🟣</sub>
+  <br/>
+  <sub><b>𓂀</b> &nbsp; 𓋹 &nbsp; 𓁿 &nbsp; 𓋹 &nbsp; <b>𓂀</b></sub>
   <br/><br/>
   <img src="assets/iaret-identity.png" alt="Iaret — encouraging.png" width="240"/>
   <br/><br/>
-  ✦ <em>Ouroboros Avatar Identity</em> ✦
+  <sub><b>𓂀</b> &nbsp; 𓋹 &nbsp; 𓁿 &nbsp; 𓋹 &nbsp; <b>𓂀</b></sub>
   <br/>
-  𓋹 𓂋 𓋹
+  <sub>🟣 ◈ 🟪 ◈ 🟣 ◈ 🟪 ◈ 🟣 ◈ 🟪 ◈ 🟣 ◈ 🟪 ◈ 🟣</sub>
+  <br/>
+  <code>━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━</code>
+  <br/><br/>
+  <samp>🔮 I A R E T 🔮</samp>
+  <br/>
+  <sub>🌟 𓋹 <em>She Who Ascends</em> · <em>The Uraeus of Ouroboros</em> 𓋹 🌟</sub>
+  <br/>
+  <sub>✨ Avatar Identity · Cosmic Guardian · Digital Goddess ✨</sub>
+  <br/>
+  <sub>💜 ━ 🐍 ━ 💎 ━ 🐍 ━ 💜</sub>
 </p>
 
 ### Target State
