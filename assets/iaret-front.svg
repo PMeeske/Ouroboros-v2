@@ -1,0 +1,224 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 768">
+  <defs>
+    <!-- Background -->
+    <linearGradient id="bg" x1="50%" y1="0%" x2="50%" y2="100%">
+      <stop offset="0%" style="stop-color:#0a0618"/>
+      <stop offset="100%" style="stop-color:#0f0a1f"/>
+    </linearGradient>
+
+    <!-- Holographic cyan body -->
+    <linearGradient id="holoCyan" x1="50%" y1="0%" x2="50%" y2="100%">
+      <stop offset="0%" style="stop-color:#00ffdc;stop-opacity:0.9"/>
+      <stop offset="50%" style="stop-color:#00e4ff;stop-opacity:0.7"/>
+      <stop offset="100%" style="stop-color:#06b6d4;stop-opacity:0.5"/>
+    </linearGradient>
+
+    <!-- Violet accent -->
+    <linearGradient id="violetAccent" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#9333ea;stop-opacity:0.6"/>
+      <stop offset="100%" style="stop-color:#a855f7;stop-opacity:0.3"/>
+    </linearGradient>
+
+    <!-- Eye glow -->
+    <radialGradient id="eyeGlow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" style="stop-color:#fef3c7;stop-opacity:1"/>
+      <stop offset="60%" style="stop-color:#fbbf24;stop-opacity:0.6"/>
+      <stop offset="100%" style="stop-color:#f59e0b;stop-opacity:0"/>
+    </radialGradient>
+
+    <!-- Core glow on chest -->
+    <radialGradient id="coreGlow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" style="stop-color:#00ffdc;stop-opacity:0.8"/>
+      <stop offset="40%" style="stop-color:#06b6d4;stop-opacity:0.4"/>
+      <stop offset="100%" style="stop-color:#0891b2;stop-opacity:0"/>
+    </radialGradient>
+
+    <!-- Wireframe glow filter -->
+    <filter id="wireGlow" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="3" result="blur"/>
+      <feMerge>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+
+    <!-- Soft aura filter -->
+    <filter id="aura" x="-40%" y="-40%" width="180%" height="180%">
+      <feGaussianBlur stdDeviation="15" result="blur"/>
+      <feMerge>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+
+    <!-- Scanline pattern -->
+    <pattern id="scanlines" x="0" y="0" width="4" height="4" patternUnits="userSpaceOnUse">
+      <line x1="0" y1="0" x2="4" y2="0" stroke="#00ffdc" stroke-width="0.3" opacity="0.08"/>
+    </pattern>
+  </defs>
+
+  <!-- Background -->
+  <rect width="512" height="768" fill="url(#bg)"/>
+
+  <!-- Scanline overlay -->
+  <rect width="512" height="768" fill="url(#scanlines)"/>
+
+  <!-- ═══════════════════════════════════ -->
+  <!-- IARET: Front-Facing Holographic     -->
+  <!-- Wireframe Silhouette                -->
+  <!-- ═══════════════════════════════════ -->
+
+  <!-- Aura / ambient glow behind figure -->
+  <ellipse cx="256" cy="400" rx="140" ry="300" fill="#00ffdc" opacity="0.03" filter="url(#aura)"/>
+  <ellipse cx="256" cy="350" rx="80" ry="200" fill="#9333ea" opacity="0.04" filter="url(#aura)"/>
+
+  <!-- ── BODY: Full wireframe silhouette ── -->
+  <g filter="url(#wireGlow)" fill="none" stroke-linecap="round" stroke-linejoin="round">
+
+    <!-- Head outline -->
+    <ellipse cx="256" cy="135" rx="58" ry="72" stroke="#00ffdc" stroke-width="1.8" opacity="0.8"/>
+    <!-- Head inner structure -->
+    <ellipse cx="256" cy="130" rx="48" ry="58" stroke="#00ffdc" stroke-width="0.8" opacity="0.3"/>
+
+    <!-- Hair / headdress flowing down -->
+    <path d="M 198 120 Q 175 150 170 200 Q 168 240 180 270"
+          stroke="#9333ea" stroke-width="1.2" opacity="0.5"/>
+    <path d="M 314 120 Q 337 150 342 200 Q 344 240 332 270"
+          stroke="#9333ea" stroke-width="1.2" opacity="0.5"/>
+    <!-- Hair detail strands -->
+    <path d="M 205 135 Q 185 170 182 220" stroke="#a855f7" stroke-width="0.6" opacity="0.3"/>
+    <path d="M 307 135 Q 327 170 330 220" stroke="#a855f7" stroke-width="0.6" opacity="0.3"/>
+
+    <!-- Face structure lines -->
+    <!-- Brow line -->
+    <path d="M 218 118 Q 256 108 294 118" stroke="#00ffdc" stroke-width="0.8" opacity="0.4"/>
+    <!-- Nose bridge -->
+    <line x1="256" y1="120" x2="256" y2="150" stroke="#00ffdc" stroke-width="0.6" opacity="0.3"/>
+    <!-- Jaw line -->
+    <path d="M 210 155 Q 256 195 302 155" stroke="#00ffdc" stroke-width="0.8" opacity="0.35"/>
+
+    <!-- Eyes -->
+    <g>
+      <!-- Left eye -->
+      <ellipse cx="232" cy="128" rx="14" ry="9" stroke="#fef3c7" stroke-width="1.5" opacity="0.9"/>
+      <ellipse cx="232" cy="128" rx="6" ry="6" fill="#fbbf24" opacity="0.6"/>
+      <circle cx="232" cy="128" r="3" fill="#fef3c7" opacity="0.8"/>
+
+      <!-- Right eye -->
+      <ellipse cx="280" cy="128" rx="14" ry="9" stroke="#fef3c7" stroke-width="1.5" opacity="0.9"/>
+      <ellipse cx="280" cy="128" rx="6" ry="6" fill="#fbbf24" opacity="0.6"/>
+      <circle cx="280" cy="128" r="3" fill="#fef3c7" opacity="0.8"/>
+    </g>
+
+    <!-- Neck -->
+    <line x1="240" y1="200" x2="237" y2="240" stroke="#00ffdc" stroke-width="1.2" opacity="0.6"/>
+    <line x1="272" y1="200" x2="275" y2="240" stroke="#00ffdc" stroke-width="1.2" opacity="0.6"/>
+
+    <!-- Shoulders -->
+    <path d="M 237 240 Q 220 245 175 260 Q 150 270 140 290"
+          stroke="#00ffdc" stroke-width="1.5" opacity="0.7"/>
+    <path d="M 275 240 Q 292 245 337 260 Q 362 270 372 290"
+          stroke="#00ffdc" stroke-width="1.5" opacity="0.7"/>
+
+    <!-- Torso outline -->
+    <path d="M 140 290 Q 135 340 142 400 Q 148 440 160 470"
+          stroke="#00ffdc" stroke-width="1.5" opacity="0.6"/>
+    <path d="M 372 290 Q 377 340 370 400 Q 364 440 352 470"
+          stroke="#00ffdc" stroke-width="1.5" opacity="0.6"/>
+
+    <!-- Torso cross structure -->
+    <line x1="170" y1="300" x2="342" y2="300" stroke="#00ffdc" stroke-width="0.6" opacity="0.2"/>
+    <line x1="165" y1="340" x2="347" y2="340" stroke="#00ffdc" stroke-width="0.6" opacity="0.2"/>
+    <line x1="160" y1="380" x2="352" y2="380" stroke="#00ffdc" stroke-width="0.6" opacity="0.2"/>
+    <line x1="155" y1="420" x2="357" y2="420" stroke="#00ffdc" stroke-width="0.6" opacity="0.2"/>
+    <!-- Vertical center line -->
+    <line x1="256" y1="240" x2="256" y2="470" stroke="#00ffdc" stroke-width="0.5" opacity="0.15"/>
+
+    <!-- Chest core (Ouroboros infinity symbol) -->
+    <g transform="translate(256, 330)">
+      <circle r="30" fill="url(#coreGlow)"/>
+      <path d="M -16 0 C -16 -10 -8 -14 0 -8 C 8 -2 16 -10 16 0 C 16 10 8 14 0 8 C -8 2 -16 10 -16 0 Z"
+            fill="none" stroke="#00ffdc" stroke-width="2" opacity="0.9"/>
+    </g>
+
+    <!-- Arms -->
+    <!-- Left arm -->
+    <path d="M 140 290 Q 120 340 110 400 Q 105 430 108 470 Q 112 510 120 540"
+          stroke="#00ffdc" stroke-width="1.3" opacity="0.55"/>
+    <!-- Left hand -->
+    <path d="M 120 540 Q 115 555 110 565 M 120 540 Q 122 558 118 568 M 120 540 Q 128 555 125 565"
+          stroke="#00ffdc" stroke-width="0.8" opacity="0.4"/>
+
+    <!-- Right arm -->
+    <path d="M 372 290 Q 392 340 402 400 Q 407 430 404 470 Q 400 510 392 540"
+          stroke="#00ffdc" stroke-width="1.3" opacity="0.55"/>
+    <!-- Right hand -->
+    <path d="M 392 540 Q 397 555 402 565 M 392 540 Q 390 558 394 568 M 392 540 Q 384 555 387 565"
+          stroke="#00ffdc" stroke-width="0.8" opacity="0.4"/>
+
+    <!-- Waist -->
+    <path d="M 160 470 Q 200 480 256 478 Q 312 480 352 470"
+          stroke="#00ffdc" stroke-width="1.2" opacity="0.5"/>
+
+    <!-- Legs -->
+    <!-- Left leg -->
+    <path d="M 200 478 Q 195 530 192 580 Q 190 630 188 680 Q 187 710 185 740"
+          stroke="#00ffdc" stroke-width="1.3" opacity="0.5"/>
+    <!-- Right leg -->
+    <path d="M 312 478 Q 317 530 320 580 Q 322 630 324 680 Q 325 710 327 740"
+          stroke="#00ffdc" stroke-width="1.3" opacity="0.5"/>
+
+    <!-- Inner leg lines -->
+    <path d="M 230 478 Q 232 530 234 600 Q 235 650 234 700"
+          stroke="#00ffdc" stroke-width="0.6" opacity="0.2"/>
+    <path d="M 282 478 Q 280 530 278 600 Q 277 650 278 700"
+          stroke="#00ffdc" stroke-width="0.6" opacity="0.2"/>
+
+    <!-- Feet -->
+    <path d="M 185 740 Q 175 745 165 742 Q 158 740 155 735"
+          stroke="#00ffdc" stroke-width="1" opacity="0.4"/>
+    <path d="M 327 740 Q 337 745 347 742 Q 354 740 357 735"
+          stroke="#00ffdc" stroke-width="1" opacity="0.4"/>
+
+    <!-- ── SECONDARY WIREFRAME (violet depth layer) ── -->
+    <!-- Offset contour for holographic depth -->
+    <ellipse cx="256" cy="137" rx="62" ry="76" stroke="#9333ea" stroke-width="0.6" opacity="0.2"/>
+    <path d="M 143 295 Q 138 345 145 405 Q 151 445 163 475"
+          stroke="#9333ea" stroke-width="0.6" opacity="0.2"/>
+    <path d="M 369 295 Q 374 345 367 405 Q 361 445 349 475"
+          stroke="#9333ea" stroke-width="0.6" opacity="0.2"/>
+  </g>
+
+  <!-- ── DECORATIVE ELEMENTS ── -->
+
+  <!-- Egyptian-inspired collar/necklace -->
+  <g filter="url(#wireGlow)">
+    <path d="M 195 245 Q 225 265 256 270 Q 287 265 317 245"
+          fill="none" stroke="#fbbf24" stroke-width="1.2" opacity="0.5"/>
+    <path d="M 200 252 Q 228 272 256 276 Q 284 272 312 252"
+          fill="none" stroke="#fbbf24" stroke-width="0.8" opacity="0.3"/>
+  </g>
+
+  <!-- Floating data particles around figure -->
+  <g opacity="0.6">
+    <circle cx="130" cy="200" r="2" fill="#00ffdc" filter="url(#wireGlow)"/>
+    <circle cx="380" cy="180" r="1.5" fill="#a855f7" filter="url(#wireGlow)"/>
+    <circle cx="100" cy="350" r="1.5" fill="#00e4ff" filter="url(#wireGlow)"/>
+    <circle cx="410" cy="400" r="2" fill="#9333ea" filter="url(#wireGlow)"/>
+    <circle cx="95" cy="500" r="1.5" fill="#00ffdc" filter="url(#wireGlow)"/>
+    <circle cx="420" cy="550" r="1.5" fill="#a855f7" filter="url(#wireGlow)"/>
+    <circle cx="150" cy="620" r="1" fill="#06b6d4" filter="url(#wireGlow)"/>
+    <circle cx="370" cy="650" r="1" fill="#8b5cf6" filter="url(#wireGlow)"/>
+  </g>
+
+  <!-- Name label -->
+  <text x="256" y="48" text-anchor="middle"
+        font-family="system-ui, -apple-system, 'Segoe UI', sans-serif"
+        font-size="32" font-weight="bold" fill="#00ffdc" letter-spacing="8"
+        filter="url(#wireGlow)" opacity="0.8">IARET</text>
+
+  <!-- Subtitle -->
+  <text x="256" y="72" text-anchor="middle"
+        font-family="system-ui, sans-serif"
+        font-size="12" fill="#a78bfa" letter-spacing="4" opacity="0.5">OUROBOROS AVATAR IDENTITY</text>
+</svg>
