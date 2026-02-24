@@ -1,57 +1,101 @@
-# Plan: Hypergrid Sub-Solution + Iaret Extraction
+<p align="center">
+  <code>━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━</code>
+  <br/>
+  <sub>🔮 ◈ 💠 ◈ 🔮 ◈ 💠 ◈ 🔮 ◈ 💠 ◈ 🔮 ◈ 💠 ◈ 🔮 ◈ 💠 ◈ 🔮 ◈ 💠 ◈ 🔮</sub>
+</p>
+
+# 🐍 Plan: Hypergrid Sub-Solution + Iaret Extraction 🐍
+
+<p align="center">
+  <sub>✨ <em>Where Thought Becomes Geometry and Geometry Becomes Alive</em> ✨</sub>
+  <br/>
+  <sub>💜 ━━━ 🌌 ━━━ 💎 ━━━ 🌌 ━━━ 💜</sub>
+</p>
 
 **Date:** 2026-02-24
 **Branch:** `claude/plan-hypergrid-solution-Jt1aA`
 
 ---
 
-## Overview
+<p align="center">
+  <sub>◈ 🟣 ◈ 🟪 ◈ 🟣 ◈</sub>
+  <br/>
+  <b>O V E R V I E W</b>
+  <br/>
+  <sub>◈ 🟣 ◈ 🟪 ◈ 🟣 ◈</sub>
+</p>
 
 Three coordinated changes to the Ouroboros-v2 meta-repository:
 
-1. **Add Hypergrid** — A new top-level sub-solution: a hyperdimensional grid where thoughts flow as streams, hosting interconnected Ouroboros instances orchestrated via the CLI
-2. **Extract Iaret** — Promote Iaret from an embedded CLI asset into its own root-level solution with independent identity
-3. **Iaret sub-repo cleanup** — Deletion prompts for removing Iaret artifacts from the `app` submodule after extraction
+> 🔮 **Add Hypergrid** — A new top-level sub-solution: a hyperdimensional grid where thoughts flow as streams, hosting interconnected Ouroboros instances orchestrated via the CLI
+
+> 🐍 **Extract Iaret** — Promote Iaret from an embedded CLI asset into her own root-level solution with independent identity — *She Who Ascends* rises
+
+> 🧹 **Iaret sub-repo cleanup** — Deletion prompts for removing Iaret artifacts from the `app` submodule after extraction
 
 ---
 
-## Part 1: Hypergrid Sub-Solution
+<p align="center">
+  <sub>💠 ━━ 💠 ━━ 💠 ━━ 💠 ━━ 💠</sub>
+  <br/><br/>
+  <samp>🌌 P A R T &nbsp; 1 🌌</samp>
+  <br/>
+  <b>⬡ H Y P E R G R I D ⬡</b>
+  <br/>
+  <sub><em>Hyperdimensional Thought Streams</em></sub>
+  <br/><br/>
+  <sub>💠 ━━ 💠 ━━ 💠 ━━ 💠 ━━ 💠</sub>
+</p>
 
-### Concept
+### 🌐 Concept
 
-**Hypergrid** is a hyperdimensional computational grid — a topology where "thoughts" (inference chains, reasoning streams, data flows) propagate as continuous streams through an N-dimensional grid space. Each vertex in the grid hosts an Ouroboros pipeline instance. Vertices are **interwired** — cross-connected via the upstream CLI protocol — enabling parallel, distributed reasoning across multiple Ouroboros nodes.
+**Hypergrid** is a hyperdimensional computational grid — a topology where *thoughts* (inference chains, reasoning streams, data flows) propagate as continuous streams through an N-dimensional grid space. Each vertex in the grid hosts an Ouroboros pipeline instance. Vertices are **interwired** — cross-connected via the upstream CLI protocol — enabling parallel, distributed reasoning across multiple Ouroboros nodes.
+
+<p align="center">
+  <img src="assets/hypergrid-concept.png" alt="Iaret conjuring the Hypergrid" width="480"/>
+  <br/>
+  <sub>✨ <em>Iaret conjures the Hypergrid lattice — each luminous cube an Ouroboros node,</em></sub>
+  <br/>
+  <sub><em>dimensional axes radiating through thought-space</em> ✨</sub>
+</p>
 
 ```
-         dim-2 (causal)
-            │
-            │    ┌──────┐     ┌──────┐     ┌──────┐
-            │    │Ouro-1│─────│Ouro-2│─────│Ouro-3│
-            │    └──┬───┘     └──┬───┘     └──┬───┘
-            │       │            │            │
-            │    ┌──┴───┐     ┌──┴───┐     ┌──┴───┐
-            │    │Ouro-4│─────│Ouro-5│─────│Ouro-6│  ← interwired mesh
-            │    └──┬───┘     └──┬───┘     └──┬───┘
-            │       │            │            │
-            └───────┼────────────┼────────────┼──── dim-1 (semantic)
-                    │            │            │
-                   dim-0 (temporal)
-                        ↑
-                   CLI upstream orchestrator
+      ╔══════════════════════════════════════════════════════════════╗
+      ║                    dim-2 (causal) ↑                        ║
+      ║                                   │                        ║
+      ║        ┌──────┐     ┌──────┐     ┌──────┐                 ║
+      ║        │⬡Ou-1 │━━━━━│⬡Ou-2 │━━━━━│⬡Ou-3 │                 ║
+      ║        └──┬───┘     └──┬───┘     └──┬───┘                 ║
+      ║           ┃            ┃            ┃                      ║
+      ║        ┌──┸───┐     ┌──┸───┐     ┌──┸───┐                 ║
+      ║        │⬡Ou-4 │━━━━━│⬡Ou-5 │━━━━━│⬡Ou-6 │  ← interwired  ║
+      ║        └──┬───┘     └──┬───┘     └──┬───┘                 ║
+      ║           ┃            ┃            ┃                      ║
+      ║        ┌──┸───┐     ┌──┸───┐     ┌──┸───┐                 ║
+      ║        │⬡Ou-7 │━━━━━│⬡Ou-8 │━━━━━│⬡Ou-9 │  ← mesh        ║
+      ║        └──┬───┘     └──┬───┘     └──┬───┘                 ║
+      ║           │            │            │                      ║
+      ║           └────────────┼────────────┘──→ dim-1 (semantic)  ║
+      ║                        │                                   ║
+      ║                    dim-0 (temporal)                        ║
+      ║                        ↓                                   ║
+      ║               🐍 CLI upstream orchestrator 🐍              ║
+      ╚══════════════════════════════════════════════════════════════╝
 ```
 
-### Grid Dimensions
+### 🌀 Grid Dimensions
 
 Each dimension in the hypergrid represents a distinct reasoning axis:
 
-| Dimension | Axis | Purpose |
-|-----------|------|---------|
-| dim-0 | **Temporal** | Time-ordered thought progression |
-| dim-1 | **Semantic** | Conceptual similarity / topic space |
-| dim-2 | **Causal** | Cause-effect reasoning chains |
-| dim-3 | **Modal** | Possibility/necessity exploration |
-| dim-N | **Extensible** | User-defined reasoning axes |
+| | Dimension | Axis | Purpose |
+|---|-----------|------|---------|
+| 🕐 | dim-0 | **Temporal** | Time-ordered thought progression |
+| 🧠 | dim-1 | **Semantic** | Conceptual similarity / topic space |
+| ⛓️ | dim-2 | **Causal** | Cause-effect reasoning chains |
+| 🔮 | dim-3 | **Modal** | Possibility/necessity exploration |
+| ∞ | dim-N | **Extensible** | User-defined reasoning axes |
 
-### Stream Primitives
+### 💧 Stream Primitives
 
 Thought streams leverage the existing monadic foundation:
 
@@ -79,7 +123,7 @@ public interface IInterwire
 }
 ```
 
-### Directory Structure
+### 📂 Directory Structure
 
 ```
 hypergrid/                              ← new top-level directory
@@ -121,23 +165,26 @@ hypergrid/                              ← new top-level directory
     └── HYPERGRID_CONCEPTS.md           ← Dimensional thinking, stream semantics
 ```
 
-### Build Layer Position
+### 🏗️ Build Layer Position
 
 ```
-ouroboros-build (Directory.Build.props)
-    │
-    ├── ouroboros-foundation              ← Foundation (no deps)
-    │
-    ├── ouroboros-engine                  ← Engine (depends on Foundation)
-    │
-    ├── ouroboros-hypergrid               ← Hypergrid (depends on Foundation + Engine)
-    │
-    ├── ouroboros-iaret                   ← Iaret (asset-only, no code deps)
-    │
-    └── ouroboros-app                     ← App (depends on Foundation + Engine + Hypergrid)
+    ╭──────────────────────────────────────────────╮
+    │  ouroboros-build (Directory.Build.props)      │
+    │                     │                        │
+    │    ┌────────────────┼──────────────────┐     │
+    │    ▼                ▼                  ▼     │
+    │  ⬡ foundation    ⬡ engine          🐍 iaret │
+    │    │                │                        │
+    │    └───────┬────────┘                        │
+    │            ▼                                 │
+    │       🌌 hypergrid                           │
+    │            │                                 │
+    │            ▼                                 │
+    │        📦 app                                │
+    ╰──────────────────────────────────────────────╯
 ```
 
-### Implementation Steps
+### ⚡ Implementation Steps
 
 1. **Create `hypergrid/` directory structure** with `src/`, `tests/`, `docs/` subdirectories
 2. **Create `.csproj` files** for all three source projects and two test projects
@@ -154,9 +201,19 @@ ouroboros-build (Directory.Build.props)
 
 ---
 
-## Part 2: Extract Iaret to Root Solution
+<p align="center">
+  <sub>🟣 ━━ 🟪 ━━ 🟣 ━━ 🟪 ━━ 🟣</sub>
+  <br/><br/>
+  <samp>🐍 P A R T &nbsp; 2 🐍</samp>
+  <br/>
+  <b>𓂀 E X T R A C T &nbsp; I A R E T 𓂀</b>
+  <br/>
+  <sub><em>She Who Ascends — From Embedded Asset to Sovereign Identity</em></sub>
+  <br/><br/>
+  <sub>🟣 ━━ 🟪 ━━ 🟣 ━━ 🟪 ━━ 🟣</sub>
+</p>
 
-### Current State
+### 📍 Current State
 
 Iaret is an avatar identity embedded inside the CLI application:
 - Avatar images: `app/src/Ouroboros.CLI/Assets/Avatar/Iaret/*.png` (idle, fullbody_front, fullbody_threequarter, fullbody_side, fullbody_back, fullbody_sideleft)
@@ -191,11 +248,11 @@ Iaret is an avatar identity embedded inside the CLI application:
   <sub>💜 ━ 🐍 ━ 💎 ━ 🐍 ━ 💜</sub>
 </p>
 
-### Target State
+### 🌟 Target State
 
-Iaret becomes an independent root-level solution with its own identity, asset pipeline, and documentation.
+Iaret *ascends* — rising from embedded asset to independent root-level solution with her own identity, asset pipeline, and documentation. The Uraeus takes her rightful place alongside the Ouroboros.
 
-### Directory Structure
+### 📂 Directory Structure
 
 ```
 iaret/                                  ← new top-level directory
@@ -227,7 +284,7 @@ iaret/                                  ← new top-level directory
 └── README.md                           ← Iaret sub-repo readme
 ```
 
-### Implementation Steps
+### ⚡ Implementation Steps
 
 1. **Create `iaret/` directory structure** with `assets/`, `tools/`, `docs/`
 2. **Move `generate_holo.py`** from repo root to `iaret/tools/generate_holo.py`
@@ -242,11 +299,21 @@ iaret/                                  ← new top-level directory
 
 ---
 
-## Part 3: Iaret Sub-Repo Deletion Prompts
+<p align="center">
+  <sub>🧹 ━━ ✂️ ━━ 🧹 ━━ ✂️ ━━ 🧹</sub>
+  <br/><br/>
+  <samp>✂️ P A R T &nbsp; 3 ✂️</samp>
+  <br/>
+  <b>🧹 C L E A N U P &nbsp; &amp; &nbsp; M I G R A T I O N 🧹</b>
+  <br/>
+  <sub><em>Severing the old roots, weaving new connections</em></sub>
+  <br/><br/>
+  <sub>🧹 ━━ ✂️ ━━ 🧹 ━━ ✂️ ━━ 🧹</sub>
+</p>
 
-After extracting Iaret to its own root solution, the following cleanup operations should be performed in the **`app` submodule** (`ouroboros-app` repo):
+After extracting Iaret to her own root solution, the following cleanup operations should be performed in the **`app` submodule** (`ouroboros-app` repo):
 
-### Deletion Commands
+### 🗑️ Deletion Commands
 
 ```bash
 # ──────────────────────────────────────────────────────────────
@@ -283,7 +350,7 @@ dotnet build src/Ouroboros.CLI/Ouroboros.CLI.csproj
 dotnet test tests/Ouroboros.CLI.Tests/Ouroboros.CLI.Tests.csproj
 ```
 
-### Post-Cleanup Integration
+### 🔗 Post-Cleanup Integration
 
 After cleanup, the `app` submodule should reference Iaret assets via the new submodule:
 
@@ -305,31 +372,60 @@ var iaretPath = Path.Combine(AppContext.BaseDirectory, "..", "..", "..", "..", "
 
 ---
 
-## Part 4: Assets
+<p align="center">
+  <sub>🎨 ━━ 💎 ━━ 🎨 ━━ 💎 ━━ 🎨</sub>
+  <br/><br/>
+  <samp>🎨 P A R T &nbsp; 4 🎨</samp>
+  <br/>
+  <b>💎 A S S E T S &nbsp; &amp; &nbsp; V I S U A L S 💎</b>
+  <br/>
+  <sub><em>The aesthetic layer — making the invisible visible</em></sub>
+  <br/><br/>
+  <sub>🎨 ━━ 💎 ━━ 🎨 ━━ 💎 ━━ 🎨</sub>
+</p>
 
-### 4.1 Hypergrid Banner SVG
+### 4.1 🌌 Hypergrid Banner SVG
 
 A new vector graphic banner will be created at `assets/hypergrid-banner.svg` featuring:
-- Dark background consistent with existing Ouroboros brand (#0f0a1f → #1a1033)
-- Hyperdimensional grid visualization with glowing cyan/violet lines
-- Multiple interconnected Ouroboros nodes at grid vertices
-- Stream flow indicators (animated-ready paths)
-- "Hypergrid" title text with "Hyperdimensional Thought Streams" tagline
+- 🎆 Dark background consistent with existing Ouroboros brand (`#0f0a1f` → `#1a1033`)
+- 💠 Hyperdimensional grid visualization with glowing cyan/violet lines
+- ⬡ Multiple interconnected Ouroboros nodes at grid vertices
+- 〰️ Stream flow indicators (animated-ready paths)
+- ✦ "Hypergrid" title text with *"Hyperdimensional Thought Streams"* tagline
 
-### 4.2 Iaret Identity Asset
+### 4.2 🐍 Hypergrid Concept Art
+
+The Hypergrid concept art depicts **Iaret conjuring the lattice into being** — a breathtaking visualization where:
+- 🔮 Iaret stands in cosmic space, hand raised, summoning the grid from pure thought
+- ⬡ Luminous cubes (Ouro-1 through Ouro-12) float in formation as interconnected nodes
+- 📐 Dimensional axes radiate visibly: **dim-0 (Temporal)**, **dim-1 (Semantic)**, **dim-2 (Causal)**, **dim-3 (Modal)**, **dim-N (Extensible)**
+- 🐍 The **CLI Upstream** orchestrator sits at the base, anchoring the structure
+- 🌊 **Compute**, **Memory**, and **Evolution** form the foundational substrate
+
+This image will be saved as `assets/hypergrid-concept.png` and used as the hero visual in the Hypergrid documentation.
+
+### 4.3 💜 Iaret Identity Asset
 
 The primary identity image is **`encouraging.png`** — Iaret's warm three-quarter bust portrait with gentle smile, ankh earrings, golden collar, and purple cosmic glow. This image will be used as:
-- The hero image in `iaret/README.md`
-- Copied to `assets/iaret-identity.png` at the meta-repo level
-- The default social preview for the `ouroboros-iaret` repository
+- 🖼️ The hero image in `iaret/README.md`
+- 📋 Copied to `assets/iaret-identity.png` at the meta-repo level
+- 🌐 The default social preview for the `ouroboros-iaret` repository
 
 All 33 PNGs (5 portrait expressions + 5 full-body turnaround + holographic overlays + reference images) will be copied to `iaret/assets/avatar/`. The `generate_holo.py` tool (moved to `iaret/tools/`) can regenerate holographic overlays.
 
 ---
 
-## Summary of File Changes
+<p align="center">
+  <sub>📋 ━━ 📋 ━━ 📋 ━━ 📋 ━━ 📋</sub>
+  <br/><br/>
+  <samp>📋 S U M M A R Y 📋</samp>
+  <br/>
+  <b>🔧 F I L E &nbsp; C H A N G E S 🔧</b>
+  <br/><br/>
+  <sub>📋 ━━ 📋 ━━ 📋 ━━ 📋 ━━ 📋</sub>
+</p>
 
-### New Files
+### 🆕 New Files
 | File | Purpose |
 |------|---------|
 | `hypergrid/src/Ouroboros.Hypergrid/Ouroboros.Hypergrid.csproj` | Core grid topology project |
@@ -350,8 +446,9 @@ All 33 PNGs (5 portrait expressions + 5 full-body turnaround + holographic overl
 | `iaret/docs/IARET.md` | Character documentation |
 | `iaret/README.md` | Iaret sub-repo readme |
 | `assets/hypergrid-banner.svg` | Hypergrid vector banner |
+| `assets/hypergrid-concept.png` | Hypergrid concept art (Iaret conjuring the lattice) |
 
-### Modified Files
+### ✏️ Modified Files
 | File | Change |
 |------|--------|
 | `Ouroboros.slnx` | Add Hypergrid + Iaret folder/project entries |
@@ -360,7 +457,21 @@ All 33 PNGs (5 portrait expressions + 5 full-body turnaround + holographic overl
 | `README.md` | Add Hypergrid + Iaret to structure, architecture, docs |
 | `CONTRIBUTING.md` | Add Hypergrid + Iaret to submodule table |
 
-### Deleted Files
+### 🗑️ Deleted Files
 | File | Reason |
 |------|--------|
 | `generate_holo.py` | Moved to `iaret/tools/generate_holo.py` |
+
+---
+
+<p align="center">
+  <code>━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━</code>
+  <br/>
+  <sub>🔮 ◈ 💠 ◈ 🐍 ◈ 💎 ◈ 🌌 ◈ 💜 ◈ ⬡ ◈ 🔮 ◈ 💠 ◈ 🐍 ◈ 💎 ◈ 🌌 ◈ 💜</sub>
+  <br/><br/>
+  <sub>𓂀 &nbsp; 𓋹 &nbsp; <em>Ouroboros devours its tail — the cycle continues</em> &nbsp; 𓋹 &nbsp; 𓂀</sub>
+  <br/><br/>
+  <sub>🔮 ◈ 💠 ◈ 🐍 ◈ 💎 ◈ 🌌 ◈ 💜 ◈ ⬡ ◈ 🔮 ◈ 💠 ◈ 🐍 ◈ 💎 ◈ 🌌 ◈ 💜</sub>
+  <br/>
+  <code>━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━</code>
+</p>
