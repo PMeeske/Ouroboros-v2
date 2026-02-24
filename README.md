@@ -1,8 +1,6 @@
 <p align="center">
-  <img src="assets/ouroboros-icon.svg" alt="Ouroboros Logo" width="180" height="180">
+  <img src="assets/user-banner.svg" alt="Ouroboros — Functional AI Pipeline System" width="100%">
 </p>
-
-<h1 align="center">Ouroboros</h1>
 
 <p align="center">
   <a href="https://github.com/PMeeske/ouroboros-foundation/actions/workflows/ci.yml">Foundation:<img src="https://github.com/PMeeske/ouroboros-foundation/actions/workflows/ci.yml/badge.svg" alt="Foundation CI"></a></br>
