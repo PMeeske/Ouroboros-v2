@@ -167,7 +167,7 @@ Iaret is an avatar identity embedded inside the CLI application:
 
 **`encouraging.png`** — Iaret's warm/maternal three-quarter bust portrait — serves as the primary identity image for the Iaret solution banner and README.
 
-![Iaret — encouraging.png](app/src/Ouroboros.CLI/Assets/Avatar/Iaret/encouraging.png)
+![Iaret — encouraging.png](assets/iaret-identity.png)
 
 ### Target State
 
@@ -298,7 +298,7 @@ A new vector graphic banner will be created at `assets/hypergrid-banner.svg` fea
 
 The primary identity image is **`encouraging.png`** — Iaret's warm three-quarter bust portrait with gentle smile, ankh earrings, golden collar, and purple cosmic glow. This image will be used as:
 - The hero image in `iaret/README.md`
-- The reference for `iaret/assets/banner/iaret-banner.svg`
+- Copied to `assets/iaret-identity.png` at the meta-repo level
 - The default social preview for the `ouroboros-iaret` repository
 
 All 33 PNGs (5 portrait expressions + 5 full-body turnaround + holographic overlays + reference images) will be copied to `iaret/assets/avatar/`. The `generate_holo.py` tool (moved to `iaret/tools/`) can regenerate holographic overlays.
@@ -323,7 +323,7 @@ All 33 PNGs (5 portrait expressions + 5 full-body turnaround + holographic overl
 | `hypergrid/docs/HYPERGRID_CONCEPTS.md` | Dimensional concepts |
 | `iaret/assets/avatar/` | Avatar source images (from app submodule) |
 | `iaret/assets/holo/` | Holographic overlays |
-| `iaret/assets/banner/iaret-banner.svg` | Iaret identity banner |
+| `iaret/assets/banner/iaret-identity.png` | Iaret identity image (encouraging.png) |
 | `iaret/tools/generate_holo.py` | Moved holographic generator |
 | `iaret/docs/IARET.md` | Character documentation |
 | `iaret/README.md` | Iaret sub-repo readme |
