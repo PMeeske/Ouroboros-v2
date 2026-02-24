@@ -167,7 +167,15 @@ Iaret is an avatar identity embedded inside the CLI application:
 
 **`encouraging.png`** — Iaret's warm/maternal three-quarter bust portrait — serves as the primary identity image for the Iaret solution banner and README.
 
-![Iaret — encouraging.png](assets/iaret-identity.png)
+<p align="center">
+  𓂀 𓋹 𓁿 𓋹 𓂀
+  <br/><br/>
+  <img src="assets/iaret-identity.png" alt="Iaret — encouraging.png" width="240"/>
+  <br/><br/>
+  ✦ <em>Ouroboros Avatar Identity</em> ✦
+  <br/>
+  𓋹 𓂋 𓋹
+</p>
 
 ### Target State
 
