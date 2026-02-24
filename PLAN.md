@@ -51,12 +51,30 @@ Three coordinated changes to the Ouroboros-v2 meta-repository:
 
 **Hypergrid** is a hyperdimensional computational grid — a topology where *thoughts* (inference chains, reasoning streams, data flows) propagate as continuous streams through an N-dimensional grid space. Each vertex in the grid hosts an Ouroboros pipeline instance. Vertices are **interwired** — cross-connected via the upstream CLI protocol — enabling parallel, distributed reasoning across multiple Ouroboros nodes.
 
-<p align="center">
+<!--
+  ┌─────────────────────────────────────────────────────────────┐
+  │  🖼️ CONCEPT ART PLACEHOLDER                                │
+  │  Save the Hypergrid concept art as:                        │
+  │    assets/hypergrid-concept.png                            │
+  │  Then uncomment the <img> tag below.                       │
+  └─────────────────────────────────────────────────────────────┘
   <img src="assets/hypergrid-concept.png" alt="Iaret conjuring the Hypergrid" width="480"/>
+-->
+
+<p align="center">
+  <sub>💠 ─── ⬡ ─── 💠 ─── ⬡ ─── 💠 ─── ⬡ ─── 💠</sub>
+  <br/><br/>
+  <sub>🔮 <em>Concept Art: Iaret conjures the Hypergrid lattice</em> 🔮</sub>
   <br/>
-  <sub>✨ <em>Iaret conjures the Hypergrid lattice — each luminous cube an Ouroboros node,</em></sub>
+  <sub><em>Each luminous cube an Ouroboros node · Dimensional axes</em></sub>
   <br/>
-  <sub><em>dimensional axes radiating through thought-space</em> ✨</sub>
+  <sub><em>radiating through thought-space · CLI Upstream anchoring below</em></sub>
+  <br/>
+  <sub><em>Compute · Memory · Evolution — the foundational substrate</em></sub>
+  <br/><br/>
+  <sub>💠 ─── ⬡ ─── 💠 ─── ⬡ ─── 💠 ─── ⬡ ─── 💠</sub>
+  <br/>
+  <sub>📎 <code>assets/hypergrid-concept.png</code> — <em>add image to activate</em></sub>
 </p>
 
 ```
