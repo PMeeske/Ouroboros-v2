@@ -12,13 +12,13 @@ terraform {
   }
 
   # Backend configuration for state management
-  # Uncomment and configure for production use
-  # backend "s3" {
-  #   bucket = "monadic-pipeline-terraform-state"
-  #   key    = "ionos/terraform.tfstate"
-  #   region = "de"
-  #   endpoint = "https://s3-eu-central-1.ionoscloud.com"
-  # }
+  # Initialize with: terraform init -backend-config=backend/<env>.hcl
+  backend "s3" {
+    bucket = "monadic-pipeline-terraform-state"
+    key    = "ionos/terraform.tfstate"
+    region = "de"
+    endpoint = "https://s3-eu-central-1.ionoscloud.com"
+  }
 }
 
 # IONOS Cloud Provider Configuration
