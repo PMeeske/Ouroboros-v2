@@ -24,6 +24,8 @@ git submodule update --init --recursive
 | `.build` | `.build/` | Build system, CI/CD, shared props |
 | `foundation` | `foundation/` | Core abstractions, monads, ethics |
 | `engine` | `engine/` | Agent, MetaAI, NeuralSymbolic |
+| `hypergrid` | `hypergrid/` | Hyperdimensional grid, thought streams, mesh |
+| `iaret` | `iaret/` | Avatar identity, assets, holographic tools |
 | `app` | `app/` | WebAPI, CLI, application layer |
 
 ### Common Submodule Operations
@@ -65,4 +67,5 @@ git submodule update --init --recursive
 dotnet build Ouroboros.slnx
 dotnet test foundation/tests/
 dotnet test engine/tests/
+dotnet test hypergrid/tests/
 ```
