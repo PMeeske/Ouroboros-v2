@@ -3,6 +3,8 @@
   <PropertyGroup>
     <OuroborosFoundation>$(MSBuildThisFileDirectory)foundation\src</OuroborosFoundation>
     <OuroborosEngine>$(MSBuildThisFileDirectory)engine\src</OuroborosEngine>
+    <OuroborosHypergrid>$(MSBuildThisFileDirectory)hypergrid\src</OuroborosHypergrid>
+    <OuroborosIaret>$(MSBuildThisFileDirectory)iaret</OuroborosIaret>
     <OuroborosApp>$(MSBuildThisFileDirectory)app\src</OuroborosApp>
     <OuroborosBuild>$(MSBuildThisFileDirectory).build</OuroborosBuild>
   </PropertyGroup>
