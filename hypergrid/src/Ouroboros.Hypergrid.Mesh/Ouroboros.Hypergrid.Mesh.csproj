@@ -1,0 +1,15 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <RootNamespace>Ouroboros.Hypergrid.Mesh</RootNamespace>
+    <Description>Ouroboros instance interconnection mesh — node lifecycle, interwiring, and CLI-driven orchestration.</Description>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Ouroboros.Hypergrid\Ouroboros.Hypergrid.csproj" />
+    <ProjectReference Include="..\Ouroboros.Hypergrid.Streams\Ouroboros.Hypergrid.Streams.csproj" />
+    <ProjectReference Include="$(OuroborosEngine)\Ouroboros.Agent\Ouroboros.Agent.csproj" />
+  </ItemGroup>
+
+</Project>

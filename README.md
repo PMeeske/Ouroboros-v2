@@ -26,6 +26,8 @@ This repository uses **git submodules** to compose the full system from independ
 | `.build/` | [ouroboros-build](https://github.com/PMeeske/ouroboros-build) | Shared build config, CI templates, TestKit |
 | `foundation/` | [ouroboros-foundation](https://github.com/PMeeske/ouroboros-foundation) | Core, Domain, Tools, Genetic, Roslynator |
 | `engine/` | [ouroboros-engine](https://github.com/PMeeske/ouroboros-engine) | Agent, Pipeline, Providers, Network |
+| `hypergrid/` | [ouroboros-hypergrid](https://github.com/PMeeske/ouroboros-hypergrid) | Hyperdimensional grid topology, thought streams, mesh |
+| `iaret/` | [ouroboros-iaret](https://github.com/PMeeske/ouroboros-iaret) | Iaret avatar identity, assets, holographic tools |
 | `app/` | [ouroboros-app](https://github.com/PMeeske/ouroboros-app) | Application, CLI, WebApi, Android, Easy |
 
 ### Build Inheritance
@@ -36,6 +38,10 @@ ouroboros-build (Directory.Build.props)         ← Base: analyzers, lang versio
     ├── ouroboros-foundation                    ← Layer: Foundation (no upstream deps)
     │
     ├── ouroboros-engine                        ← Layer: Engine (depends on Foundation)
+    │
+    ├── ouroboros-iaret                         ← Layer: Iaret identity (asset-only)
+    │
+    ├── ouroboros-hypergrid                     ← Layer: Hypergrid (depends on Foundation + Engine)
     │
     └── ouroboros-app                           ← Layer: App (depends on Foundation + Engine)
 ```
@@ -215,6 +221,8 @@ For Docker deployments, use the `docker-compose.yml` or Kubernetes secrets.
 |-------|----------|----------|
 | **Foundation** | Core, Domain, Tools, Genetic, Roslynator | `foundation/src/` |
 | **Engine** | Agent, Pipeline, Providers, Network | `engine/src/` |
+| **Hypergrid** | Hypergrid, Hypergrid.Streams, Hypergrid.Mesh | `hypergrid/src/` |
+| **Iaret** | Avatar identity, holographic tools | `iaret/` |
 | **App** | Application, CLI, WebApi, Android, Easy, Examples | `app/src/` |
 | **Build** | TestKit, CI templates, build config | `.build/` |
 
@@ -228,10 +236,12 @@ dotnet test
 dotnet test foundation/tests/**/*.csproj
 dotnet test engine/tests/**/*.csproj
 dotnet test app/tests/**/*.csproj
+dotnet test hypergrid/tests/**/*.csproj
 
 # Work on a specific layer (isolated AI context)
 cd foundation && claude
 cd engine && claude
+cd hypergrid && claude
 ```
 
 ### Working with Submodules
@@ -251,6 +261,18 @@ Each sub-repo contains its own `docs/` directory. Key guides:
 | Configuration & Security | [app/docs/CONFIGURATION_AND_SECURITY.md](app/docs/CONFIGURATION_AND_SECURITY.md) |
 | Troubleshooting | [app/docs/TROUBLESHOOTING.md](app/docs/TROUBLESHOOTING.md) |
 | Contributing | [.build/docs/CONTRIBUTING.md](.build/docs/CONTRIBUTING.md) |
+
+### Hypergrid
+| Guide | Location |
+|-------|----------|
+| Hypergrid Architecture | [hypergrid/docs/ARCHITECTURE.md](hypergrid/docs/ARCHITECTURE.md) |
+| Hypergrid Concepts | [hypergrid/docs/HYPERGRID_CONCEPTS.md](hypergrid/docs/HYPERGRID_CONCEPTS.md) |
+
+### Iaret
+| Guide | Location |
+|-------|----------|
+| Iaret Identity | [iaret/README.md](iaret/README.md) |
+| Character Docs | [iaret/docs/IARET.md](iaret/docs/IARET.md) |
 
 ### Architecture & Design
 | Guide | Location |

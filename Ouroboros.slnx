@@ -33,6 +33,21 @@
     <Project Path="engine/tests/Ouroboros.Network.Tests/Ouroboros.Network.Tests.csproj" />
     <Project Path="engine/tests/Ouroboros.Engine.BDD/Ouroboros.Engine.BDD.csproj" />
   </Folder>
+  <Folder Name="/hypergrid/" />
+  <!-- Hypergrid: Source -->
+  <Folder Name="/hypergrid/src/">
+    <Project Path="hypergrid/src/Ouroboros.Hypergrid/Ouroboros.Hypergrid.csproj" />
+    <Project Path="hypergrid/src/Ouroboros.Hypergrid.Streams/Ouroboros.Hypergrid.Streams.csproj" />
+    <Project Path="hypergrid/src/Ouroboros.Hypergrid.Mesh/Ouroboros.Hypergrid.Mesh.csproj" />
+  </Folder>
+  <!-- Hypergrid: Tests -->
+  <Folder Name="/hypergrid/tests/">
+    <Project Path="hypergrid/tests/Ouroboros.Hypergrid.Tests/Ouroboros.Hypergrid.Tests.csproj" />
+    <Project Path="hypergrid/tests/Ouroboros.Hypergrid.BDD/Ouroboros.Hypergrid.BDD.csproj" />
+  </Folder>
+  <Folder Name="/iaret/" />
+  <!-- Iaret: Identity assets (no .csproj — asset-only sub-solution) -->
+  <Folder Name="/iaret/assets/" />
   <Folder Name="/app/" />
   <!-- App: Source -->
   <Folder Name="/app/src/">

@@ -7,6 +7,12 @@
 [submodule "engine"]
 	path = engine
 	url = https://github.com/PMeeske/ouroboros-engine.git
+[submodule "hypergrid"]
+	path = hypergrid
+	url = https://github.com/PMeeske/ouroboros-hypergrid.git
+[submodule "iaret"]
+	path = iaret
+	url = https://github.com/PMeeske/ouroboros-iaret.git
 [submodule "app"]
 	path = app
 	url = https://github.com/PMeeske/ouroboros-app.git
