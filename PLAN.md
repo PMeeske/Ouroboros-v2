@@ -74,7 +74,7 @@ Three coordinated changes to the Ouroboros-v2 meta-repository:
   <br/><br/>
   <sub>💠 ─── ⬡ ─── 💠 ─── ⬡ ─── 💠 ─── ⬡ ─── 💠</sub>
   <br/>
-  <sub>📎 <code>assets/hypergrid-concept.png</code> — <em>add image to activate</em></sub>
+  <img src="assets/hypergrid-concept.png" alt="hypergrid-concept.png" width="240"/>
 </p>
 
 ```
