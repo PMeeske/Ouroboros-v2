@@ -1,0 +1,87 @@
+<Solution>
+  <Folder Name="/foundation/" />
+  <!-- Foundation: Source -->
+  <Folder Name="/foundation/src/">
+    <Project Path="foundation/src/Ouroboros.Abstractions/Ouroboros.Abstractions.csproj" />
+    <Project Path="foundation/src/Ouroboros.Core/Ouroboros.Core.csproj" />
+    <Project Path="foundation/src/Ouroboros.Domain/Ouroboros.Domain.csproj" />
+    <Project Path="foundation/src/Ouroboros.Genetic/Ouroboros.Genetic.csproj" />
+    <Project Path="foundation/src/Ouroboros.Roslynator/Ouroboros.Roslynator.csproj" />
+    <Project Path="foundation/src/Ouroboros.Tools/Ouroboros.Tools.csproj" />
+  </Folder>
+  <!-- Foundation: Tests -->
+  <Folder Name="/foundation/tests/">
+    <Project Path="foundation/tests/Ouroboros.Core.Tests/Ouroboros.Core.Tests.csproj" />
+    <Project Path="foundation/tests/Ouroboros.Domain.Tests/Ouroboros.Domain.Tests.csproj" />
+    <Project Path="foundation/tests/Ouroboros.Tools.Tests/Ouroboros.Tools.Tests.csproj" />
+    <Project Path="foundation/tests/Ouroboros.Genetic.Tests/Ouroboros.Genetic.Tests.csproj" />
+    <Project Path="foundation/tests/Ouroboros.Foundation.BDD/Ouroboros.Foundation.BDD.csproj" />
+  </Folder>
+  <Folder Name="/engine/" />
+  <!-- Engine: Source -->
+  <Folder Name="/engine/src/">
+    <Project Path="engine/src/Ouroboros.Agent/Ouroboros.Agent.csproj" />
+    <Project Path="engine/src/Ouroboros.Network/Ouroboros.Network.csproj" />
+    <Project Path="engine/src/Ouroboros.Pipeline/Ouroboros.Pipeline.csproj" />
+    <Project Path="engine/src/Ouroboros.Providers/Ouroboros.Providers.csproj" />
+  </Folder>
+  <!-- Engine: Tests -->
+  <Folder Name="/engine/tests/">
+    <Project Path="engine/tests/Ouroboros.Agent.Tests/Ouroboros.Agent.Tests.csproj" />
+    <Project Path="engine/tests/Ouroboros.Pipeline.Tests/Ouroboros.Pipeline.Tests.csproj" />
+    <Project Path="engine/tests/Ouroboros.Providers.Tests/Ouroboros.Providers.Tests.csproj" />
+    <Project Path="engine/tests/Ouroboros.Network.Tests/Ouroboros.Network.Tests.csproj" />
+    <Project Path="engine/tests/Ouroboros.Engine.BDD/Ouroboros.Engine.BDD.csproj" />
+  </Folder>
+  <Folder Name="/hypergrid/" />
+  <!-- Hypergrid: Source -->
+  <Folder Name="/hypergrid/src/">
+    <Project Path="hypergrid/src/Ouroboros.Hypergrid/Ouroboros.Hypergrid.csproj" />
+    <Project Path="hypergrid/src/Ouroboros.Hypergrid.Streams/Ouroboros.Hypergrid.Streams.csproj" />
+    <Project Path="hypergrid/src/Ouroboros.Hypergrid.Mesh/Ouroboros.Hypergrid.Mesh.csproj" />
+  </Folder>
+  <!-- Hypergrid: Tests -->
+  <Folder Name="/hypergrid/tests/">
+    <Project Path="hypergrid/tests/Ouroboros.Hypergrid.Tests/Ouroboros.Hypergrid.Tests.csproj" />
+    <Project Path="hypergrid/tests/Ouroboros.Hypergrid.BDD/Ouroboros.Hypergrid.BDD.csproj" />
+  </Folder>
+  <Folder Name="/iaret/" />
+  <!-- Iaret: Identity assets (no .csproj — asset-only sub-solution) -->
+  <Folder Name="/iaret/assets/" />
+  <Folder Name="/app/" />
+  <!-- App: Source -->
+  <Folder Name="/app/src/">
+    <Project Path="app/src/Ouroboros.ApiHost/Ouroboros.ApiHost.csproj" />
+    <Project Path="app/src/Ouroboros.Application/Ouroboros.Application.csproj" />
+    <Project Path="app/src/Ouroboros.CLI/Ouroboros.CLI.csproj" />
+    <Project Path="app/src/Ouroboros.Easy/Ouroboros.Easy.csproj" />
+    <Project Path="app/src/Ouroboros.Examples/Ouroboros.Examples.csproj" />
+    <Project Path="app/src/Ouroboros.WebApi/Ouroboros.WebApi.csproj" />
+  </Folder>
+  <!-- App: Tests -->
+  <Folder Name="/app/tests/">
+    <Project Path="app/tests/Ouroboros.CLI.Tests/Ouroboros.CLI.Tests.csproj" />
+    <Project Path="app/tests/Ouroboros.WebApi.Tests/Ouroboros.WebApi.Tests.csproj" />
+    <Project Path="app/tests/Ouroboros.Integration.Tests/Ouroboros.Integration.Tests.csproj" />
+    <Project Path="app/tests/Ouroboros.Application.Tests/Ouroboros.Application.Tests.csproj" />
+  </Folder>
+  <Folder Name="/.build/" />
+  <!-- Shared: TestKit -->
+  <Folder Name="/.build/test-infra/">
+    <Project Path=".build/test-infra/Ouroboros.TestKit/Ouroboros.TestKit.csproj" />
+    <Project Path=".build/test-infra/Ouroboros.TestKit.BDD/Ouroboros.TestKit.BDD.csproj" />
+  </Folder>
+  <!-- Kubernetes manifests -->
+  <Folder Name="/k8s/">
+    <File Path="k8s/namespace.yaml" />
+    <File Path="k8s/configmap.yaml" />
+    <File Path="k8s/secrets.yaml" />
+    <File Path="k8s/deployment.yaml" />
+    <File Path="k8s/deployment.cloud.yaml" />
+    <File Path="k8s/webapi-deployment.yaml" />
+    <File Path="k8s/webapi-deployment.cloud.yaml" />
+    <File Path="k8s/ollama.yaml" />
+    <File Path="k8s/qdrant.yaml" />
+    <File Path="k8s/jaeger.yaml" />
+  </Folder>
+</Solution>

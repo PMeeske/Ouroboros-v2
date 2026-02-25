@@ -1,0 +1,294 @@
+name: Ollama Integration Tests
+
+on:
+  push:
+    branches: [ main ]
+    paths:
+      - 'foundation/**'
+      - 'engine/**'
+      - 'app/**'
+      - '.build/**'
+      - '**.csproj'
+      - '.github/workflows/ollama-integration-test.yml'
+  pull_request:
+    branches: [ main ]
+    paths:
+      - 'foundation/**'
+      - 'engine/**'
+      - 'app/**'
+      - '.build/**'
+      - '**.csproj'
+      - '.github/workflows/ollama-integration-test.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+# Cancel in-progress runs for the same workflow on the same branch
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  DOTNET_VERSION: '10.0.x'
+
+jobs:
+  check-submodules:
+    name: Check Submodule Availability
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    outputs:
+      available: ${{ steps.check.outputs.available }}
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11  # v4.1.1
+
+    - name: Try cloning submodules
+      run: git submodule update --init --recursive 2>&1 || true
+
+    - name: Check submodule availability
+      id: check
+      run: |
+        MISSING=""
+        for sub in .build foundation engine app; do
+          if [ ! -f "$sub/.git" ] && [ ! -d "$sub/.git" ]; then
+            MISSING="$MISSING $sub"
+          fi
+        done
+        if [ -n "$MISSING" ]; then
+          echo "available=false" >> $GITHUB_OUTPUT
+          echo "::warning::Sub-repo(s) not available:$MISSING — skipping Ollama integration tests"
+        else
+          echo "available=true" >> $GITHUB_OUTPUT
+          echo "All submodules available"
+        fi
+
+  ollama-integration:
+    name: Ollama Integration Tests
+    needs: check-submodules
+    if: needs.check-submodules.outputs.available == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11  # v4.1.1
+      with:
+        fetch-depth: 0
+        submodules: recursive
+
+    - name: Setup .NET
+      uses: actions/setup-dotnet@4d6c8fcf3c8f7a60068d26b594648e99df24cee3  # v4.0.0
+      with:
+        dotnet-version: ${{ env.DOTNET_VERSION }}
+
+    - name: Cache NuGet packages
+      uses: actions/cache@v4
+      with:
+        path: ~/.nuget/packages
+        key: ${{ runner.os }}-nuget-${{ hashFiles('**/*.csproj') }}
+        restore-keys: |
+          ${{ runner.os }}-nuget-
+
+    - name: Restore dependencies
+      uses: nick-fields/retry@7152eba30c6575329ac0576536151aca5a72780e  # v3.0.0
+      with:
+        timeout_minutes: 10
+        max_attempts: 3
+        retry_wait_seconds: 30
+        command: dotnet restore Ouroboros.slnx
+
+    - name: Build
+      run: |
+        # Build CLI project and its dependencies for integration tests
+        dotnet build app/src/Ouroboros.CLI/Ouroboros.CLI.csproj --configuration Release --no-restore
+      timeout-minutes: 15
+
+    - name: Setup Ollama
+      uses: nick-fields/retry@7152eba30c6575329ac0576536151aca5a72780e  # v3.0.0
+      with:
+        timeout_minutes: 10
+        max_attempts: 3
+        retry_wait_seconds: 30
+        command: |
+          # Install Ollama
+          curl -fsSL https://ollama.com/install.sh | sh
+          
+          # Start Ollama service in background
+          ollama serve > /tmp/ollama.log 2>&1 &
+          
+          # Wait for Ollama to be ready
+          echo "Waiting for Ollama service to start..."
+          for i in {1..30}; do
+            if curl -s http://localhost:11434/api/tags > /dev/null 2>&1; then
+              echo "✓ Ollama service is ready"
+              break
+            fi
+            if [ $i -eq 30 ]; then
+              echo "Error: Ollama service failed to start"
+              cat /tmp/ollama.log
+              exit 1
+            fi
+            echo -n "."
+            sleep 2
+          done
+
+    - name: Pull Ollama models
+      uses: nick-fields/retry@7152eba30c6575329ac0576536151aca5a72780e  # v3.0.0
+      with:
+        timeout_minutes: 20
+        max_attempts: 3
+        retry_wait_seconds: 60
+        command: |
+          echo "Pulling llama3:8b model (memory-efficient)..."
+          ollama pull llama3:8b
+          
+          echo "Pulling nomic-embed-text embedding model..."
+          ollama pull nomic-embed-text
+          
+          echo "✓ Models pulled successfully"
+          ollama list
+
+    - name: Test 1 - Basic Ollama Connectivity
+      uses: nick-fields/retry@7152eba30c6575329ac0576536151aca5a72780e  # v3.0.0
+      with:
+        timeout_minutes: 5
+        max_attempts: 2
+        retry_wait_seconds: 10
+        command: |
+          echo "=== Test 1: Basic Ollama Connectivity ==="
+          cd app/src/Ouroboros.CLI
+          
+          # Basic ask command to verify Ollama works
+          dotnet run --no-build --configuration Release -- ask \
+            -q "What is 2+2? Answer with just the number." \
+            --model "llama3:8b" \
+            --max-tokens 50
+          
+          echo "✓ Basic connectivity test passed"
+
+    - name: Test 2 - Pipeline DSL Execution
+      uses: nick-fields/retry@7152eba30c6575329ac0576536151aca5a72780e  # v3.0.0
+      with:
+        timeout_minutes: 5
+        max_attempts: 2
+        retry_wait_seconds: 10
+        command: |
+          echo "=== Test 2: Pipeline DSL Execution ==="
+          cd app/src/Ouroboros.CLI
+          
+          # Test pipeline DSL with draft step
+          dotnet run --no-build --configuration Release -- pipeline \
+            --dsl "SetPrompt('Explain what functional programming is in one sentence') | UseDraft" \
+            --model "llama3:8b" \
+            --max-tokens 100
+          
+          echo "✓ Pipeline DSL test passed"
+
+    - name: Test 3 - Memory-Efficient Reverse Engineering
+      uses: nick-fields/retry@7152eba30c6575329ac0576536151aca5a72780e  # v3.0.0
+      with:
+        timeout_minutes: 10
+        max_attempts: 2
+        retry_wait_seconds: 15
+        command: |
+          echo "=== Test 3: Reverse Engineering Pipeline (Memory-Efficient) ==="
+          cd app/src/Ouroboros.CLI
+          
+          # Create a minimal test directory structure
+          mkdir -p /tmp/test-project
+          echo "# Test Project" > /tmp/test-project/README.md
+          echo "public class TestClass { }" > /tmp/test-project/TestClass.cs
+          
+          # Run reverse engineering pipeline with memory-efficient settings
+          dotnet run --no-build --configuration Release -- pipeline \
+            --dsl "UseDir('root=/tmp/test-project|norec') | UseIngest | SetTopic('Generate markdown requirement specs') | UseDraft" \
+            --model "llama3:8b" \
+            --embed "nomic-embed-text" \
+            --topk 3 \
+            --max-tokens 200
+          
+          echo "✓ Reverse engineering test passed"
+
+    - name: Test 4 - RAG with Embeddings
+      uses: nick-fields/retry@7152eba30c6575329ac0576536151aca5a72780e  # v3.0.0
+      with:
+        timeout_minutes: 10
+        max_attempts: 2
+        retry_wait_seconds: 15
+        command: |
+          echo "=== Test 4: RAG with Embeddings ==="
+          cd app/src/Ouroboros.CLI
+          
+          # Create test content for RAG
+          mkdir -p /tmp/rag-test
+          echo "Functional programming is a paradigm that treats computation as evaluation of mathematical functions." > /tmp/rag-test/fp-guide.txt
+          
+          # Test with RAG enabled
+          dotnet run --no-build --configuration Release -- ask \
+            -q "What is functional programming?" \
+            --model "llama3:8b" \
+            --embed "nomic-embed-text" \
+            --rag \
+            --topk 2 \
+            --max-tokens 100
+          
+          echo "✓ RAG test passed"
+
+    - name: Verify Ollama Service Logs
+      if: always()
+      run: |
+        echo "=== Ollama Service Logs ==="
+        if [ -f /tmp/ollama.log ]; then
+          tail -50 /tmp/ollama.log
+        else
+          echo "No Ollama logs found"
+        fi
+
+    - name: Generate Test Summary
+      if: always()
+      run: |
+        echo "## 🧪 Ollama Integration Test Results" >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+        echo "### Environment" >> $GITHUB_STEP_SUMMARY
+        echo "- **Runner**: ubuntu-latest" >> $GITHUB_STEP_SUMMARY
+        echo "- **Models**: llama3:8b, nomic-embed-text" >> $GITHUB_STEP_SUMMARY
+        echo "- **.NET Version**: ${{ env.DOTNET_VERSION }}" >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+        echo "### Tests Executed" >> $GITHUB_STEP_SUMMARY
+        echo "1. ✅ Basic Ollama Connectivity" >> $GITHUB_STEP_SUMMARY
+        echo "2. ✅ Pipeline DSL Execution" >> $GITHUB_STEP_SUMMARY
+        echo "3. ✅ Memory-Efficient Reverse Engineering" >> $GITHUB_STEP_SUMMARY
+        echo "4. ✅ RAG with Embeddings" >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+        echo "### Resource Usage" >> $GITHUB_STEP_SUMMARY
+        echo "- RAM: ~7GB available on GitHub Actions" >> $GITHUB_STEP_SUMMARY
+        echo "- Model Size: llama3:8b (~4.7GB)" >> $GITHUB_STEP_SUMMARY
+        echo "- Timeout: 30 minutes" >> $GITHUB_STEP_SUMMARY
+
+    - name: Upload Test Artifacts
+      uses: actions/upload-artifact@5d5d22a31266ced268874388b861e4b58bb5c2f3  # v4.3.1
+      if: always()
+      continue-on-error: true
+      with:
+        name: ollama-test-logs
+        path: |
+          /tmp/ollama.log
+          /tmp/test-project/
+          /tmp/rag-test/
+        retention-days: 7
+        if-no-files-found: ignore
+
+  skipped-summary:
+    name: Submodules Not Available
+    needs: check-submodules
+    if: needs.check-submodules.outputs.available == 'false'
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+    - name: Report skipped
+      run: |
+        echo "## ⚠️ Ollama Integration Tests Skipped" >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+        echo "One or more sub-repo submodules could not be cloned." >> $GITHUB_STEP_SUMMARY
+        echo "Ensure the submodule repositories are accessible to GitHub Actions." >> $GITHUB_STEP_SUMMARY

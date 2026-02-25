@@ -1,0 +1,496 @@
+# Full build workflow for the Ouroboros meta-repo
+# Builds and tests all sub-repos together
+
+name: Full Build
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+  repository_dispatch:
+    types: [dependency-updated]
+
+concurrency:
+  group: full-build-${{ github.event_name == 'repository_dispatch' && format('dispatch-{0}', github.event.client_payload.source_repo || 'unknown') || github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  check-submodules:
+    name: Check Submodule Availability
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    outputs:
+      available: ${{ steps.check.outputs.available }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11  # v4.1.1
+
+      - name: Try cloning submodules
+        run: git submodule update --init --recursive 2>&1 || true
+
+      - name: General fix for invalid submodule references
+        run: |
+          # For each submodule that failed to initialize, try to fix it by checking out the latest main branch
+          for sub in .build foundation engine app; do
+            if [ ! -f "$sub/.git" ] && [ ! -d "$sub/.git" ]; then
+              echo "Attempting to fix $sub submodule..."
+              # Get the submodule URL from .gitmodules
+              url=$(git config --file .gitmodules --get submodule.$sub.url)
+              if [ -n "$url" ]; then
+                # Initialize the submodule directory
+                git submodule init $sub
+                # Navigate to submodule and try to fetch the latest main branch
+                cd $sub
+                git init
+                git remote add origin $url
+                git fetch origin main --depth=1 || git fetch origin master --depth=1 || true
+                if [ -n "$(git rev-parse HEAD 2>/dev/null)" ] || [ -n "$(git rev-parse FETCH_HEAD 2>/dev/null)" ]; then
+                  git checkout FETCH_HEAD 2>/dev/null || true
+                fi
+                cd ..
+              fi
+            fi
+          done
+
+      - name: Check submodule availability
+        id: check
+        run: |
+          MISSING=""
+          for sub in .build foundation engine app; do
+            if [ ! -f "$sub/.git" ] && [ ! -d "$sub/.git" ]; then
+              MISSING="$MISSING $sub"
+            fi
+          done
+          if [ -n "$MISSING" ]; then
+            echo "available=false" >> $GITHUB_OUTPUT
+            echo "::warning::Sub-repo(s) not available:$MISSING — skipping build and test jobs"
+          else
+            echo "available=true" >> $GITHUB_OUTPUT
+            echo "All submodules available"
+          fi
+
+  build-all:
+    name: Build All Projects
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      - name: Checkout with submodules
+        uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11  # v4.1.1
+        with:
+          fetch-depth: 0
+          submodules: recursive
+
+      - name: Setup .NET SDK
+        uses: actions/setup-dotnet@4d6c8fcf3c8f7a60068d26b594648e99df24cee3  # v4.0.0
+        with:
+          dotnet-version: '10.0.x'
+
+      - name: Restore .NET workloads
+        run: dotnet workload restore
+
+      - name: Install required workloads
+        run: dotnet workload install maui-android
+
+      - name: Restore dependencies
+        run: dotnet restore Ouroboros.slnx
+
+      - name: Build solution
+        run: dotnet build Ouroboros.slnx --configuration Release --no-restore
+
+  test-foundation:
+    name: Test Foundation
+    needs: [check-submodules, build-all]
+    if: needs.check-submodules.outputs.available == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    permissions:
+      contents: read
+      checks: write
+      pull-requests: write
+    steps:
+      - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11
+        with: { submodules: recursive }
+      - uses: actions/setup-dotnet@4d6c8fcf3c8f7a60068d26b594648e99df24cee3
+        with: { dotnet-version: '10.0.x' }
+      
+      - name: Restore .NET workloads
+        run: dotnet workload restore
+
+      - name: Install required workloads
+        run: dotnet workload install maui-android
+      
+      - name: Validate test environment
+        run: |
+          echo "=== .NET SDK Info ==="
+          dotnet --info
+          echo ""
+          echo "=== Test Project Info ==="
+          dotnet build foundation/tests/Ouroboros.Core.Tests/Ouroboros.Core.Tests.csproj --configuration Release -v minimal
+          echo ""
+          
+      - name: Run Core Tests with crash diagnostics
+        run: |
+          dotnet test foundation/tests/Ouroboros.Core.Tests/Ouroboros.Core.Tests.csproj \
+            --configuration Release \
+            --logger "trx;LogFileName=results.trx" \
+            --blame-crash \
+            --blame-hang-timeout 5m \
+            --verbosity detailed \
+            -- RunConfiguration.TestSessionTimeout=600000
+        continue-on-error: true
+        id: core_tests
+        
+      - name: Run Domain Tests with crash diagnostics
+        run: |
+          dotnet test foundation/tests/Ouroboros.Domain.Tests/Ouroboros.Domain.Tests.csproj \
+            --configuration Release \
+            --logger "trx;LogFileName=results.trx" \
+            --blame-crash \
+            --blame-hang-timeout 5m \
+            --verbosity detailed \
+            -- RunConfiguration.TestSessionTimeout=600000
+        continue-on-error: true
+        id: domain_tests
+        
+      - name: Run Tools Tests with crash diagnostics
+        run: |
+          dotnet test foundation/tests/Ouroboros.Tools.Tests/Ouroboros.Tools.Tests.csproj \
+            --configuration Release \
+            --logger "trx;LogFileName=results.trx" \
+            --blame-crash \
+            --blame-hang-timeout 5m \
+            --verbosity detailed \
+            -- RunConfiguration.TestSessionTimeout=600000
+        continue-on-error: true
+        id: tools_tests
+        
+      - name: Run Genetic Tests with crash diagnostics
+        run: |
+          dotnet test foundation/tests/Ouroboros.Genetic.Tests/Ouroboros.Genetic.Tests.csproj \
+            --configuration Release \
+            --logger "trx;LogFileName=results.trx" \
+            --blame-crash \
+            --blame-hang-timeout 5m \
+            --verbosity detailed \
+            -- RunConfiguration.TestSessionTimeout=600000
+        continue-on-error: true
+        id: genetic_tests
+        
+      - name: Upload test results and crash dumps
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-results-foundation
+          path: |
+            **/TestResults/**/*.trx
+            **/TestResults/**/*.dmp
+            **/TestResults/**/*.sequence.xml
+          if-no-files-found: ignore
+
+      - name: Test result summary
+        if: always()
+        run: |
+          echo "## Test Results" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          
+          for trx in $(find . -name "*.trx" 2>/dev/null); do
+            TEST_NAME=$(basename $(dirname $(dirname "$trx")))
+            echo "### $TEST_NAME" >> $GITHUB_STEP_SUMMARY
+            
+            # Extract counters from TRX
+            TOTAL=$(grep -oP 'total="\K[^"]+' "$trx" 2>/dev/null | head -1 || echo "?")
+            PASSED=$(grep -oP 'passed="\K[^"]+' "$trx" 2>/dev/null | head -1 || echo "?")
+            FAILED=$(grep -oP 'failed="\K[^"]+' "$trx" 2>/dev/null | head -1 || echo "?")
+            echo "| Total | Passed | Failed |" >> $GITHUB_STEP_SUMMARY
+            echo "|-------|--------|--------|" >> $GITHUB_STEP_SUMMARY
+            echo "| $TOTAL | $PASSED | $FAILED |" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            
+            # List failed tests
+            if [ "$FAILED" != "0" ] && [ "$FAILED" != "?" ]; then
+              echo "**Failed tests:**" >> $GITHUB_STEP_SUMMARY
+              grep -oP 'testName="\K[^"]+' "$trx" | while read test; do
+                echo "- \`$test\`" >> $GITHUB_STEP_SUMMARY
+              done
+              echo "" >> $GITHUB_STEP_SUMMARY
+            fi
+          done
+          
+      - name: Check test results
+        run: |
+          if [ "${{ steps.core_tests.outcome }}" != "success" ] || \
+             [ "${{ steps.domain_tests.outcome }}" != "success" ] || \
+             [ "${{ steps.tools_tests.outcome }}" != "success" ] || \
+             [ "${{ steps.genetic_tests.outcome }}" != "success" ]; then
+            echo "One or more test suites failed"
+            exit 1
+          fi
+
+  test-engine:
+    name: Test Engine
+    needs: [check-submodules, build-all]
+    if: needs.check-submodules.outputs.available == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    permissions:
+      contents: read
+      checks: write
+      pull-requests: write
+    steps:
+      - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11
+        with: { submodules: recursive }
+      - uses: actions/setup-dotnet@4d6c8fcf3c8f7a60068d26b594648e99df24cee3
+        with: { dotnet-version: '10.0.x' }
+      
+      - name: Restore .NET workloads
+        run: dotnet workload restore
+
+      - name: Install required workloads
+        run: dotnet workload install maui-android
+      
+      - name: Validate test environment
+        run: |
+          echo "=== .NET SDK Info ==="
+          dotnet --info
+          echo ""
+          echo "=== Test Project Info ==="
+          dotnet build engine/tests/Ouroboros.Agent.Tests/Ouroboros.Agent.Tests.csproj --configuration Release -v minimal
+          echo ""
+          
+      - name: Run Agent Tests with crash diagnostics
+        run: |
+          dotnet test engine/tests/Ouroboros.Agent.Tests/Ouroboros.Agent.Tests.csproj \
+            --configuration Release \
+            --logger "trx;LogFileName=results.trx" \
+            --blame-crash \
+            --blame-hang-timeout 5m \
+            --verbosity detailed \
+            -- RunConfiguration.TestSessionTimeout=600000
+        continue-on-error: true
+        id: agent_tests
+        
+      - name: Run Pipeline Tests with crash diagnostics
+        run: |
+          dotnet test engine/tests/Ouroboros.Pipeline.Tests/Ouroboros.Pipeline.Tests.csproj \
+            --configuration Release \
+            --logger "trx;LogFileName=results.trx" \
+            --blame-crash \
+            --blame-hang-timeout 5m \
+            --verbosity detailed \
+            -- RunConfiguration.TestSessionTimeout=600000
+        continue-on-error: true
+        id: pipeline_tests
+        
+      - name: Run Providers Tests with crash diagnostics
+        run: |
+          dotnet test engine/tests/Ouroboros.Providers.Tests/Ouroboros.Providers.Tests.csproj \
+            --configuration Release \
+            --logger "trx;LogFileName=results.trx" \
+            --blame-crash \
+            --blame-hang-timeout 5m \
+            --verbosity detailed \
+            -- RunConfiguration.TestSessionTimeout=600000
+        continue-on-error: true
+        id: providers_tests
+        
+      - name: Run Network Tests with crash diagnostics
+        run: |
+          dotnet test engine/tests/Ouroboros.Network.Tests/Ouroboros.Network.Tests.csproj \
+            --configuration Release \
+            --logger "trx;LogFileName=results.trx" \
+            --blame-crash \
+            --blame-hang-timeout 5m \
+            --verbosity detailed \
+            -- RunConfiguration.TestSessionTimeout=600000
+        continue-on-error: true
+        id: network_tests
+        
+      - name: Upload test results and crash dumps
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-results-engine
+          path: |
+            **/TestResults/**/*.trx
+            **/TestResults/**/*.dmp
+            **/TestResults/**/*.sequence.xml
+          if-no-files-found: ignore
+
+      - name: Test result summary
+        if: always()
+        run: |
+          echo "## Test Results" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          
+          for trx in $(find . -name "*.trx" 2>/dev/null); do
+            TEST_NAME=$(basename $(dirname $(dirname "$trx")))
+            echo "### $TEST_NAME" >> $GITHUB_STEP_SUMMARY
+            
+            # Extract counters from TRX
+            TOTAL=$(grep -oP 'total="\K[^"]+' "$trx" 2>/dev/null | head -1 || echo "?")
+            PASSED=$(grep -oP 'passed="\K[^"]+' "$trx" 2>/dev/null | head -1 || echo "?")
+            FAILED=$(grep -oP 'failed="\K[^"]+' "$trx" 2>/dev/null | head -1 || echo "?")
+            echo "| Total | Passed | Failed |" >> $GITHUB_STEP_SUMMARY
+            echo "|-------|--------|--------|" >> $GITHUB_STEP_SUMMARY
+            echo "| $TOTAL | $PASSED | $FAILED |" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            
+            # List failed tests
+            if [ "$FAILED" != "0" ] && [ "$FAILED" != "?" ]; then
+              echo "**Failed tests:**" >> $GITHUB_STEP_SUMMARY
+              grep -oP 'testName="\K[^"]+' "$trx" | while read test; do
+                echo "- \`$test\`" >> $GITHUB_STEP_SUMMARY
+              done
+              echo "" >> $GITHUB_STEP_SUMMARY
+            fi
+          done
+          
+      - name: Check test results
+        run: |
+          if [ "${{ steps.agent_tests.outcome }}" != "success" ] || \
+             [ "${{ steps.pipeline_tests.outcome }}" != "success" ] || \
+             [ "${{ steps.providers_tests.outcome }}" != "success" ] || \
+             [ "${{ steps.network_tests.outcome }}" != "success" ]; then
+            echo "One or more test suites failed"
+            exit 1
+          fi
+
+  test-app:
+    name: Test App
+    needs: [check-submodules, build-all]
+    if: needs.check-submodules.outputs.available == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    permissions:
+      contents: read
+      checks: write
+      pull-requests: write
+    steps:
+      - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11
+        with: { submodules: recursive }
+      - uses: actions/setup-dotnet@4d6c8fcf3c8f7a60068d26b594648e99df24cee3
+        with: { dotnet-version: '10.0.x' }
+      
+      - name: Restore .NET workloads
+        run: dotnet workload restore
+
+      - name: Install required workloads
+        run: dotnet workload install maui-android
+      
+      - name: Validate test environment
+        run: |
+          echo "=== .NET SDK Info ==="
+          dotnet --info
+          echo ""
+          echo "=== Test Project Info ==="
+          dotnet build app/tests/Ouroboros.CLI.Tests/Ouroboros.CLI.Tests.csproj --configuration Release -v minimal
+          echo ""
+          
+      - name: Run CLI Tests with crash diagnostics
+        run: |
+          dotnet test app/tests/Ouroboros.CLI.Tests/Ouroboros.CLI.Tests.csproj \
+            --configuration Release \
+            --logger "trx;LogFileName=results.trx" \
+            --blame-crash \
+            --blame-hang-timeout 5m \
+            --verbosity detailed \
+            -- RunConfiguration.TestSessionTimeout=600000
+        continue-on-error: true
+        id: cli_tests
+        
+      - name: Run WebApi Tests with crash diagnostics
+        run: |
+          dotnet test app/tests/Ouroboros.WebApi.Tests/Ouroboros.WebApi.Tests.csproj \
+            --configuration Release \
+            --logger "trx;LogFileName=results.trx" \
+            --blame-crash \
+            --blame-hang-timeout 5m \
+            --verbosity detailed \
+            -- RunConfiguration.TestSessionTimeout=600000
+        continue-on-error: true
+        id: webapi_tests
+        
+      - name: Run Application Tests with crash diagnostics
+        run: |
+          dotnet test app/tests/Ouroboros.Application.Tests/Ouroboros.Application.Tests.csproj \
+            --configuration Release \
+            --logger "trx;LogFileName=results.trx" \
+            --blame-crash \
+            --blame-hang-timeout 5m \
+            --verbosity detailed \
+            -- RunConfiguration.TestSessionTimeout=600000
+        continue-on-error: true
+        id: app_tests
+        
+      - name: Upload test results and crash dumps
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-results-app
+          path: |
+            **/TestResults/**/*.trx
+            **/TestResults/**/*.dmp
+            **/TestResults/**/*.sequence.xml
+          if-no-files-found: ignore
+
+      - name: Test result summary
+        if: always()
+        run: |
+          echo "## Test Results" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          
+          for trx in $(find . -name "*.trx" 2>/dev/null); do
+            TEST_NAME=$(basename $(dirname $(dirname "$trx")))
+            echo "### $TEST_NAME" >> $GITHUB_STEP_SUMMARY
+            
+            # Extract counters from TRX
+            TOTAL=$(grep -oP 'total="\K[^"]+' "$trx" 2>/dev/null | head -1 || echo "?")
+            PASSED=$(grep -oP 'passed="\K[^"]+' "$trx" 2>/dev/null | head -1 || echo "?")
+            FAILED=$(grep -oP 'failed="\K[^"]+' "$trx" 2>/dev/null | head -1 || echo "?")
+            echo "| Total | Passed | Failed |" >> $GITHUB_STEP_SUMMARY
+            echo "|-------|--------|--------|" >> $GITHUB_STEP_SUMMARY
+            echo "| $TOTAL | $PASSED | $FAILED |" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            
+            # List failed tests
+            if [ "$FAILED" != "0" ] && [ "$FAILED" != "?" ]; then
+              echo "**Failed tests:**" >> $GITHUB_STEP_SUMMARY
+              grep -oP 'testName="\K[^"]+' "$trx" | while read test; do
+                echo "- \`$test\`" >> $GITHUB_STEP_SUMMARY
+              done
+              echo "" >> $GITHUB_STEP_SUMMARY
+            fi
+          done
+          
+      - name: Check test results
+        run: |
+          if [ "${{ steps.cli_tests.outcome }}" != "success" ] || \
+             [ "${{ steps.webapi_tests.outcome }}" != "success" ] || \
+             [ "${{ steps.app_tests.outcome }}" != "success" ]; then
+            echo "One or more test suites failed"
+            exit 1
+          fi
+
+  skipped-summary:
+    name: Submodules Not Available
+    needs: check-submodules
+    if: needs.check-submodules.outputs.available == 'false'
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Report skipped
+        run: |
+          echo "## ⚠️ Full Build Skipped" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "One or more sub-repo submodules could not be cloned." >> $GITHUB_STEP_SUMMARY
+          echo "Ensure the submodule repositories are accessible to GitHub Actions:" >> $GITHUB_STEP_SUMMARY
+          echo "- \`ouroboros-build\`" >> $GITHUB_STEP_SUMMARY
+          echo "- \`ouroboros-foundation\`" >> $GITHUB_STEP_SUMMARY
+          echo "- \`ouroboros-engine\`" >> $GITHUB_STEP_SUMMARY
+          echo "- \`ouroboros-app\`" >> $GITHUB_STEP_SUMMARY

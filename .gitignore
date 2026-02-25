@@ -1,0 +1,112 @@
+/bin
+/obj
+**/bin/
+**/obj/
+/example/Entwicklung
+/.vscode
+/.vs
+**/.vs/
+*.suo
+*.user
+/.monadic_ingest_cache.json
+logs/
+*.log
+appsettings.*.local.json
+
+# Sensitive configuration files
+appsettings.Development.json
+appsettings.Production.json
+appsettings.Local.json
+
+# Environment files
+.env
+.env.local
+.env.*.local
+*.env
+
+# User secrets
+**/Properties/launchSettings.json
+
+# Credential files
+secrets.json
+credentials.json
+
+# Test results
+**/TestResults/
+*.trx
+*.coverage
+*.coveragexml
+*.zip
+
+# Code Coverage Reports
+TestCoverageReport/
+coverage/
+**/coverage.cobertura.xml
+StrykerOutput/
+**/StrykerOutput/
+.stryker-temp/
+
+# Node.js dependencies and Playwright
+node_modules/
+package-lock.json
+.github/scripts/node_modules/
+.github/scripts/package-lock.json
+
+# Playwright artifacts
+playwright-report/
+test-results/
+playwright/.cache/
+
+# Android/MAUI build artifacts
+*.apk
+*.aab
+*.ipa
+*.dSYM
+*.app
+.DS_Store
+
+# Temporary tool downloads
+actionlint
+actionlint_*.tar.gz
+
+# Reqnroll auto-generated files
+*.feature.cs
+
+# Test/debug files in root
+/test_*.wav
+/test-results*.txt
+/speech_*.wav
+/test_*.py
+/test_*.metta
+/test_*.csx
+/test_*.ps1
+/*_test.wav
+/repro_*.cs
+/ollama_agent.*
+
+# Generated OpenAPI specs
+/openapi.json
+
+# NuGet
+packages/
+*.nupkg
+*.snupkg
+
+# IDE
+.idea/
+*.swp
+*~
+Thumbs.db
+
+# Terraform
+.terraform/
+*.tfstate
+*.tfstate.backup
+*.tfplan
+
+# Security - certificate and key files
+*.pem
+*.key
+*.p12
+*.pfx
+*.jks

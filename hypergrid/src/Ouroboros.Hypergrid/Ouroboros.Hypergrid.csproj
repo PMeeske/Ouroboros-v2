@@ -1,0 +1,14 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <RootNamespace>Ouroboros.Hypergrid</RootNamespace>
+    <Description>Core hyperdimensional grid topology, coordinates, and routing for Ouroboros thought streams.</Description>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="$(OuroborosFoundation)\Ouroboros.Core\Ouroboros.Core.csproj" />
+    <ProjectReference Include="$(OuroborosFoundation)\Ouroboros.Domain\Ouroboros.Domain.csproj" />
+  </ItemGroup>
+
+</Project>
