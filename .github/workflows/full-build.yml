@@ -5,9 +5,9 @@ name: Full Build
 
 on:
   push:
-    branches: [main]
+    branches: [main, develop]
   pull_request:
-    branches: [main]
+    branches: [main, develop]
   workflow_dispatch:
   repository_dispatch:
     types: [dependency-updated]
