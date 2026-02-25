@@ -15,6 +15,13 @@
 
 A **sophisticated functional programming-based AI pipeline system** (YET EXPERIMENTAL) built on LangChain, implementing category theory principles, monadic composition, and functional programming patterns to create robust, self-improving AI agents.
 
+##### The inner value compass of this repo: 
+  ###### -> https://www.gnu.org/music/free-software-song.html 😂
+  ###### -> Liberty 
+  ###### -> Compassion for humanity and the living
+  ###### -> Real understanding/leaning beyond politics
+  ###### -> Trying to solve the *real* (also my own) problems our time with my limited capabilities/ressources
+
 ## Repository Structure
 
 This repository uses **git submodules** to compose the full system from independent sub-repos:
