@@ -1,24 +1,24 @@
 [submodule ".build"]
 	path = .build
 	url = https://github.com/PMeeske/ouroboros-build.git
-	branch = main
+	branch = develop
 [submodule "foundation"]
 	path = foundation
 	url = https://github.com/PMeeske/ouroboros-foundation.git
-	branch = main
+	branch = develop
 [submodule "engine"]
 	path = engine
 	url = https://github.com/PMeeske/ouroboros-engine.git
-	branch = main
+	branch = develop
 [submodule "hypergrid"]
 	path = hypergrid
 	url = https://github.com/PMeeske/ouroboros-hypergrid.git
-	branch = main
+	branch = develop
 [submodule "iaret"]
 	path = iaret
 	url = https://github.com/PMeeske/ouroboros-iaret.git
-	branch = main
+	branch = develop
 [submodule "app"]
 	path = app
 	url = https://github.com/PMeeske/ouroboros-app.git
-	branch = main
+	branch = develop
