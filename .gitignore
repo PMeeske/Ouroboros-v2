@@ -103,3 +103,10 @@ Thumbs.db
 *.tfstate
 *.tfstate.backup
 *.tfplan
+
+# Security - certificate and key files
+*.pem
+*.key
+*.p12
+*.pfx
+*.jks
