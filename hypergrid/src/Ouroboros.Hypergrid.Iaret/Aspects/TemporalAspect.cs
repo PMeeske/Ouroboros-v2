@@ -7,6 +7,9 @@ using Ouroboros.Hypergrid.Topology;
 /// Maintains a sliding window of recent thoughts, enabling temporal
 /// context awareness. Tags each thought with its position in the
 /// reasoning sequence and references to prior context.
+///
+/// When backed by a real environment, sends the input with temporal context as history.
+/// When local, uses sequence tagging with sliding window.
 /// </summary>
 public sealed class TemporalAspect : IaretAspect
 {
@@ -15,6 +18,12 @@ public sealed class TemporalAspect : IaretAspect
 
     /// <summary>The current temporal context window.</summary>
     public IReadOnlyCollection<string> Context => _recentThoughts;
+
+    protected override string SystemPrompt =>
+        "You are The Temporal Weaver, a memory and sequencing sub-entity of Iaret. " +
+        "You receive the current thought along with recent history. " +
+        "Analyze temporal patterns, identify progression or regression, and note " +
+        "connections to prior context. Prefix with [TEMPORAL].";
 
     public TemporalAspect(int windowSize = 5) : base(
         "temporal",
@@ -25,23 +34,49 @@ public sealed class TemporalAspect : IaretAspect
         _recentThoughts = new Queue<string>(windowSize + 1);
     }
 
-    protected override string Transform(string input, GridCoordinate position)
+    protected override async Task<string> TransformAsync(string input, GridCoordinate position, CancellationToken ct)
     {
-        // Add to temporal window
+        // Always maintain the window regardless of environment
         _recentThoughts.Enqueue(input);
         if (_recentThoughts.Count > _windowSize)
             _recentThoughts.Dequeue();
 
-        var sequencePos = ProcessedCount + 1; // 1-based
+        if (Environment is LocalIaretEnvironment)
+            return TransformLocalInternal(input, position);
+
+        // Send with history context to real environment
+        var context = new AspectContext
+        {
+            AspectId = AspectId,
+            SystemPrompt = SystemPrompt,
+            History = _recentThoughts.ToList(),
+        };
+
+        var response = await Environment.ProcessAsync(input, context, ct);
+        return $"[TEMPORAL@{position}] {response}";
+    }
+
+    protected override string TransformLocal(string input, GridCoordinate position)
+    {
+        // Note: window management happens in TransformAsync, but for sync Query
+        // we also need to manage it here
+        _recentThoughts.Enqueue(input);
+        if (_recentThoughts.Count > _windowSize)
+            _recentThoughts.Dequeue();
+
+        return TransformLocalInternal(input, position);
+    }
+
+    private string TransformLocalInternal(string input, GridCoordinate position)
+    {
+        var sequencePos = ProcessedCount + 1;
         var contextSize = _recentThoughts.Count;
         var hasHistory = contextSize > 1;
 
-        var temporalTag = hasHistory
+        return hasHistory
             ? $"[TEMPORAL@{position}] step={sequencePos} context={contextSize}/{_windowSize} " +
               $"prior=\"{Truncate(_recentThoughts.ElementAt(contextSize - 2), 30)}\" | {input}"
             : $"[TEMPORAL@{position}] step={sequencePos} context={contextSize}/{_windowSize} (initial) | {input}";
-
-        return temporalTag;
     }
 
     private static string Truncate(string s, int maxLen) =>

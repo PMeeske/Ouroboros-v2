@@ -25,6 +25,7 @@ public sealed class IaretConvergence : IDisposable
 {
     private readonly HypergridSpace _space;
     private readonly IGridSimulator _simulator;
+    private readonly IIaretEnvironment _environment;
     private readonly Dictionary<string, IaretAspect> _aspects = new();
     private readonly Dictionary<string, GridCoordinate> _aspectPositions = new();
     private readonly SynthesisAspect _synthesis;
@@ -39,19 +40,26 @@ public sealed class IaretConvergence : IDisposable
     /// <summary>The compute backend being used.</summary>
     public string ComputeBackend => _simulator.BackendName;
 
-    private IaretConvergence(HypergridSpace space, IGridSimulator simulator, GridCoordinate synthesisPosition)
+    /// <summary>The environment powering this convergent identity.</summary>
+    public IIaretEnvironment Environment => _environment;
+
+    private IaretConvergence(HypergridSpace space, IGridSimulator simulator, IIaretEnvironment environment, GridCoordinate synthesisPosition)
     {
         _space = space;
         _simulator = simulator;
+        _environment = environment;
         _synthesis = new SynthesisAspect();
+        _synthesis.Bind(environment);
         _synthesisPosition = synthesisPosition;
     }
 
     /// <summary>
     /// Creates a convergent Iaret with the standard 4 aspects on a 3D grid.
     /// Uses the best available compute backend (GPU if present, CPU fallback).
+    /// Pass an <see cref="IIaretEnvironment"/> to power the aspects with a real
+    /// Ouroboros pipeline — or omit it to use local heuristic transforms.
     /// </summary>
-    public static IaretConvergence Create(IGridSimulator? simulator = null)
+    public static IaretConvergence Create(IIaretEnvironment? environment = null, IGridSimulator? simulator = null)
     {
         var dims = new[]
         {
@@ -61,12 +69,13 @@ public sealed class IaretConvergence : IDisposable
         };
         var space = new HypergridSpace(dims);
         var sim = simulator ?? SimulatorFactory.CreateCpu();
+        var env = environment ?? new LocalIaretEnvironment();
 
         // Synthesis sits at the origin — the convergence point
         var synthesisPos = new GridCoordinate(0, 0, 0);
         space.AddCell(synthesisPos, "iaret-synthesis");
 
-        var iaret = new IaretConvergence(space, sim, synthesisPos);
+        var iaret = new IaretConvergence(space, sim, env, synthesisPos);
 
         // Register the 4 standard aspects at known grid positions
         iaret.RegisterAspect(new AnalyticalAspect(), new GridCoordinate(0, 0, 1));  // causal axis
@@ -77,12 +86,13 @@ public sealed class IaretConvergence : IDisposable
         return iaret;
     }
 
-    /// <summary>Registers a custom aspect at a specific grid position.</summary>
+    /// <summary>Registers a custom aspect at a specific grid position and binds it to the environment.</summary>
     public void RegisterAspect(IaretAspect aspect, GridCoordinate position)
     {
         ArgumentNullException.ThrowIfNull(aspect);
         ArgumentNullException.ThrowIfNull(position);
 
+        aspect.Bind(_environment);
         _aspects[aspect.AspectId] = aspect;
         _aspectPositions[aspect.AspectId] = position;
         _space.AddCell(position, $"iaret-{aspect.AspectId}");
@@ -129,7 +139,7 @@ public sealed class IaretConvergence : IDisposable
         }
 
         // Fan-in: synthesis merges all aspect contributions
-        var synthesized = _synthesis.Synthesize(aspectOutputs, _synthesisPosition);
+        var synthesized = await _synthesis.SynthesizeAsync(aspectOutputs, _synthesisPosition, ct);
 
         return new Thought<string>
         {
@@ -141,13 +151,14 @@ public sealed class IaretConvergence : IDisposable
             {
                 ["convergent"] = true,
                 ["aspects_count"] = aspectOutputs.Count,
-                ["compute_backend"] = _simulator.BackendName
+                ["compute_backend"] = _simulator.BackendName,
+                ["environment"] = _environment.Name
             }
         };
     }
 
     /// <summary>
-    /// Directly interact with a specific sub-entity aspect.
+    /// Directly interact with a specific sub-entity aspect (sync, local-only).
     /// Returns the aspect's individual response (not converged).
     /// </summary>
     public Thought<string> QueryAspect(string aspectId, string input)
@@ -157,6 +168,19 @@ public sealed class IaretConvergence : IDisposable
 
         var position = _aspectPositions[aspectId];
         return aspect.Query(input, position);
+    }
+
+    /// <summary>
+    /// Directly interact with a specific sub-entity aspect (async, uses environment).
+    /// Returns the aspect's individual response (not converged).
+    /// </summary>
+    public async Task<Thought<string>> QueryAspectAsync(string aspectId, string input, CancellationToken ct = default)
+    {
+        if (!_aspects.TryGetValue(aspectId, out var aspect))
+            throw new KeyNotFoundException($"Aspect '{aspectId}' not found. Available: {string.Join(", ", _aspects.Keys)}");
+
+        var position = _aspectPositions[aspectId];
+        return await aspect.QueryAsync(input, position, ct);
     }
 
     /// <summary>

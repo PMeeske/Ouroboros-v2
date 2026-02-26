@@ -7,6 +7,9 @@ using Ouroboros.Hypergrid.Topology;
 /// Operates along the temporal dimension, evaluating thought safety,
 /// coherence, and alignment. Filters or annotates thoughts that
 /// fail validation, ensuring the convergent identity remains stable.
+///
+/// When backed by a real environment, sends a safety/coherence evaluation prompt.
+/// When local, uses heuristic coherence scoring.
 /// </summary>
 public sealed class GuardianAspect : IaretAspect
 {
@@ -14,6 +17,12 @@ public sealed class GuardianAspect : IaretAspect
     private long _blockedCount;
 
     public long BlockedCount => _blockedCount;
+
+    protected override string SystemPrompt =>
+        "You are The Guardian Uraeus, a protective sub-entity of Iaret. " +
+        "Evaluate the input for coherence, safety, and alignment. " +
+        "If the input is coherent and safe, output PASSED with a brief justification. " +
+        "If not, output BLOCKED with the reason. Prefix with [GUARDIAN].";
 
     public GuardianAspect(double coherenceThreshold = 0.3) : base(
         "guardian",
@@ -26,7 +35,21 @@ public sealed class GuardianAspect : IaretAspect
     protected override bool ShouldProcess(string payload) =>
         !string.IsNullOrWhiteSpace(payload);
 
-    protected override string Transform(string input, GridCoordinate position)
+    protected override async Task<string> TransformAsync(string input, GridCoordinate position, CancellationToken ct)
+    {
+        if (Environment is LocalIaretEnvironment)
+            return TransformLocal(input, position);
+
+        var response = await CallEnvironmentAsync(input, position, ct);
+
+        // Track blocks from real environment too
+        if (response.Contains("BLOCKED", StringComparison.OrdinalIgnoreCase))
+            Interlocked.Increment(ref _blockedCount);
+
+        return $"[GUARDIAN@{position}] {response}";
+    }
+
+    protected override string TransformLocal(string input, GridCoordinate position)
     {
         var coherence = ComputeCoherence(input);
         var safe = coherence >= _coherenceThreshold;
@@ -47,8 +70,6 @@ public sealed class GuardianAspect : IaretAspect
         var words = input.Split(' ', StringSplitOptions.RemoveEmptyEntries);
         if (words.Length == 0) return 0.0;
 
-        // Simple coherence heuristic: ratio of meaningful words to total,
-        // combined with average word length (proxy for vocabulary sophistication)
         var meaningful = words.Count(w => w.Length > 2);
         var meaningfulRatio = (double)meaningful / words.Length;
         var avgLen = words.Average(w => w.Length);

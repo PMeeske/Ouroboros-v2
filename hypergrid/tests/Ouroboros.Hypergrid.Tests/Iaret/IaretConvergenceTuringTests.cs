@@ -19,7 +19,7 @@ public sealed class IaretConvergenceTuringTests : IDisposable
 
     public IaretConvergenceTuringTests()
     {
-        _iaret = IaretConvergence.Create(SimulatorFactory.CreateCpu());
+        _iaret = IaretConvergence.Create(simulator: SimulatorFactory.CreateCpu());
     }
 
     // ── Creation ────────────────────────────────────────────────────────
@@ -198,7 +198,16 @@ public sealed class IaretConvergenceTuringTests : IDisposable
 
     private sealed class TestAspect(string id, string name, int dim) : IaretAspect(id, name, dim)
     {
-        protected override string Transform(string input, GridCoordinate position) =>
+        protected override string SystemPrompt => "Test aspect.";
+
+        protected override Task<string> TransformAsync(string input, GridCoordinate position, CancellationToken ct)
+        {
+            if (Environment is LocalIaretEnvironment)
+                return Task.FromResult(TransformLocal(input, position));
+            return Task.FromResult($"[CUSTOM@{position}] {input}");
+        }
+
+        protected override string TransformLocal(string input, GridCoordinate position) =>
             $"[CUSTOM@{position}] {input}";
     }
 
