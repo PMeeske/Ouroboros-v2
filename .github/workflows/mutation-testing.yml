@@ -79,33 +79,69 @@ jobs:
       fail-fast: false
       matrix:
         include:
+          # Foundation projects
           - category: Core
             project: foundation/src/Ouroboros.Core/Ouroboros.Core.csproj
+            test-project: foundation/tests/Ouroboros.Core.Tests/Ouroboros.Core.Tests.csproj
             config: stryker-config-core.json
           - category: Domain
             project: foundation/src/Ouroboros.Domain/Ouroboros.Domain.csproj
+            test-project: foundation/tests/Ouroboros.Domain.Tests/Ouroboros.Domain.Tests.csproj
             config: stryker-config-domain.json
-          - category: Pipeline
-            project: engine/src/Ouroboros.Pipeline/Ouroboros.Pipeline.csproj
-            config: stryker-config-pipeline.json
           - category: Tools
             project: foundation/src/Ouroboros.Tools/Ouroboros.Tools.csproj
+            test-project: foundation/tests/Ouroboros.Tools.Tests/Ouroboros.Tools.Tests.csproj
             config: stryker-config-tools.json
-          - category: Application
-            project: app/src/Ouroboros.Application/Ouroboros.Application.csproj
-            config: stryker-config-application.json
-          - category: Providers
-            project: engine/src/Ouroboros.Providers/Ouroboros.Providers.csproj
-            config: stryker-config-providers.json
+          - category: Genetic
+            project: foundation/src/Ouroboros.Genetic/Ouroboros.Genetic.csproj
+            test-project: foundation/tests/Ouroboros.Genetic.Tests/Ouroboros.Genetic.Tests.csproj
+            config: stryker-config-genetic.json
+          - category: Abstractions
+            project: foundation/src/Ouroboros.Abstractions/Ouroboros.Abstractions.csproj
+            test-project: foundation/tests/Ouroboros.Abstractions.Tests/Ouroboros.Abstractions.Tests.csproj
+            config: stryker-config-abstractions.json
+          - category: Roslynator
+            project: foundation/src/Ouroboros.Roslynator/Ouroboros.Roslynator.csproj
+            test-project: foundation/tests/Ouroboros.Roslynator.Tests/Ouroboros.Roslynator.Tests.csproj
+            config: stryker-config-roslynator.json
+          # Engine projects
+          - category: Pipeline
+            project: engine/src/Ouroboros.Pipeline/Ouroboros.Pipeline.csproj
+            test-project: engine/tests/Ouroboros.Pipeline.Tests/Ouroboros.Pipeline.Tests.csproj
+            config: stryker-config-pipeline.json
           - category: Agent
             project: engine/src/Ouroboros.Agent/Ouroboros.Agent.csproj
+            test-project: engine/tests/Ouroboros.Agent.Tests/Ouroboros.Agent.Tests.csproj
             config: stryker-config-agent.json
+          - category: Providers
+            project: engine/src/Ouroboros.Providers/Ouroboros.Providers.csproj
+            test-project: engine/tests/Ouroboros.Providers.Tests/Ouroboros.Providers.Tests.csproj
+            config: stryker-config-providers.json
+          - category: Network
+            project: engine/src/Ouroboros.Network/Ouroboros.Network.csproj
+            test-project: engine/tests/Ouroboros.Network.Tests/Ouroboros.Network.Tests.csproj
+            config: stryker-config-network.json
+          # App projects
+          - category: Application
+            project: app/src/Ouroboros.Application/Ouroboros.Application.csproj
+            test-project: app/tests/Ouroboros.Application.Tests/Ouroboros.Application.Tests.csproj
+            config: stryker-config-application.json
           - category: CLI
             project: app/src/Ouroboros.CLI/Ouroboros.CLI.csproj
+            test-project: app/tests/Ouroboros.CLI.Tests/Ouroboros.CLI.Tests.csproj
             config: stryker-config-cli.json
           - category: WebApi
             project: app/src/Ouroboros.WebApi/Ouroboros.WebApi.csproj
+            test-project: app/tests/Ouroboros.WebApi.Tests/Ouroboros.WebApi.Tests.csproj
             config: stryker-config-webapi.json
+          - category: ApiHost
+            project: app/src/Ouroboros.ApiHost/Ouroboros.ApiHost.csproj
+            test-project: app/tests/Ouroboros.ApiHost.Tests/Ouroboros.ApiHost.Tests.csproj
+            config: stryker-config-apihost.json
+          - category: Easy
+            project: app/src/Ouroboros.Easy/Ouroboros.Easy.csproj
+            test-project: app/tests/Ouroboros.Easy.Tests/Ouroboros.Easy.Tests.csproj
+            config: stryker-config-easy.json
 
     steps:
     - name: Checkout code
@@ -157,6 +193,7 @@ jobs:
 
         echo "Running mutation tests for ${{ matrix.category }} with level: ${ML}"
         echo "Target project: ${{ matrix.project }}"
+        echo "Test project: ${{ matrix.test-project }}"
         echo "Config file: ${{ matrix.config }}"
 
         # Run Stryker with category-specific configuration file
@@ -165,6 +202,7 @@ jobs:
           dotnet stryker \
             --config-file "${{ matrix.config }}" \
             --project "${{ matrix.project }}" \
+            --test-project "${{ matrix.test-project }}" \
             --mutation-level "${ML}" \
             --max-concurrent-test-runners 4 \
             --since:main
@@ -172,6 +210,7 @@ jobs:
           dotnet stryker \
             --config-file "${{ matrix.config }}" \
             --project "${{ matrix.project }}" \
+            --test-project "${{ matrix.test-project }}" \
             --max-concurrent-test-runners 4 \
             --since:main
         fi
@@ -221,7 +260,7 @@ jobs:
           echo "- Project: ${{ matrix.project }}" >> $GITHUB_STEP_SUMMARY
           echo "- Mutation Level: ${ML}" >> $GITHUB_STEP_SUMMARY
           echo "- Target Framework: net10.0" >> $GITHUB_STEP_SUMMARY
-          echo "- Test Project: Ouroboros.Tests" >> $GITHUB_STEP_SUMMARY
+          echo "- Test Project: ${{ matrix.test-project }}" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "**Thresholds:**" >> $GITHUB_STEP_SUMMARY
           echo "- 🟢 High: ≥80%" >> $GITHUB_STEP_SUMMARY
@@ -339,7 +378,7 @@ jobs:
         CATEGORIES_MISSING=""
         
         # Expected categories
-        CATEGORIES=(Core Domain Pipeline Tools Application Providers Agent CLI WebApi)
+        CATEGORIES=(Core Domain Tools Genetic Abstractions Roslynator Pipeline Agent Providers Network Application CLI WebApi ApiHost Easy)
         
         for CATEGORY in "${CATEGORIES[@]}"; do
           REPORT_DIR="MutationReports/mutation-report-json-${CATEGORY}"
@@ -379,7 +418,7 @@ jobs:
         echo "" >> $GITHUB_STEP_SUMMARY
         
         echo "### Overview" >> $GITHUB_STEP_SUMMARY
-        echo "Mutation testing completed across **9 project categories** in parallel." >> $GITHUB_STEP_SUMMARY
+        echo "Mutation testing completed across **15 project categories** in parallel." >> $GITHUB_STEP_SUMMARY
         echo "" >> $GITHUB_STEP_SUMMARY
         
         COMPLETED="${{ steps.aggregate.outputs.categories_completed }}"
@@ -388,7 +427,7 @@ jobs:
         MISSING="${{ steps.aggregate.outputs.categories_missing }}"
         
         echo "**Results:**" >> $GITHUB_STEP_SUMMARY
-        echo "- Categories completed: ${COMPLETED}/9" >> $GITHUB_STEP_SUMMARY
+        echo "- Categories completed: ${COMPLETED}/15" >> $GITHUB_STEP_SUMMARY
         
         if [ -n "$AVG_SCORE" ] && [ "$AVG_SCORE" != "0" ]; then
           echo "- Average mutation score: ${AVG_SCORE}%" >> $GITHUB_STEP_SUMMARY
@@ -397,17 +436,23 @@ jobs:
         echo "" >> $GITHUB_STEP_SUMMARY
         echo "### Categories Tested" >> $GITHUB_STEP_SUMMARY
         echo "" >> $GITHUB_STEP_SUMMARY
-        echo "| Category | Project |" >> $GITHUB_STEP_SUMMARY
-        echo "|----------|---------|" >> $GITHUB_STEP_SUMMARY
-        echo "| Core | Ouroboros.Core |" >> $GITHUB_STEP_SUMMARY
-        echo "| Domain | Ouroboros.Domain |" >> $GITHUB_STEP_SUMMARY
-        echo "| Pipeline | Ouroboros.Pipeline |" >> $GITHUB_STEP_SUMMARY
-        echo "| Tools | Ouroboros.Tools |" >> $GITHUB_STEP_SUMMARY
-        echo "| Application | Ouroboros.Application |" >> $GITHUB_STEP_SUMMARY
-        echo "| Providers | Ouroboros.Providers |" >> $GITHUB_STEP_SUMMARY
-        echo "| Agent | Ouroboros.Agent |" >> $GITHUB_STEP_SUMMARY
-        echo "| CLI | Ouroboros.CLI |" >> $GITHUB_STEP_SUMMARY
-        echo "| WebApi | Ouroboros.WebApi |" >> $GITHUB_STEP_SUMMARY
+        echo "| Category | Project | Layer |" >> $GITHUB_STEP_SUMMARY
+        echo "|----------|---------|-------|" >> $GITHUB_STEP_SUMMARY
+        echo "| Core | Ouroboros.Core | Foundation |" >> $GITHUB_STEP_SUMMARY
+        echo "| Domain | Ouroboros.Domain | Foundation |" >> $GITHUB_STEP_SUMMARY
+        echo "| Tools | Ouroboros.Tools | Foundation |" >> $GITHUB_STEP_SUMMARY
+        echo "| Genetic | Ouroboros.Genetic | Foundation |" >> $GITHUB_STEP_SUMMARY
+        echo "| Abstractions | Ouroboros.Abstractions | Foundation |" >> $GITHUB_STEP_SUMMARY
+        echo "| Roslynator | Ouroboros.Roslynator | Foundation |" >> $GITHUB_STEP_SUMMARY
+        echo "| Pipeline | Ouroboros.Pipeline | Engine |" >> $GITHUB_STEP_SUMMARY
+        echo "| Agent | Ouroboros.Agent | Engine |" >> $GITHUB_STEP_SUMMARY
+        echo "| Providers | Ouroboros.Providers | Engine |" >> $GITHUB_STEP_SUMMARY
+        echo "| Network | Ouroboros.Network | Engine |" >> $GITHUB_STEP_SUMMARY
+        echo "| Application | Ouroboros.Application | App |" >> $GITHUB_STEP_SUMMARY
+        echo "| CLI | Ouroboros.CLI | App |" >> $GITHUB_STEP_SUMMARY
+        echo "| WebApi | Ouroboros.WebApi | App |" >> $GITHUB_STEP_SUMMARY
+        echo "| ApiHost | Ouroboros.ApiHost | App |" >> $GITHUB_STEP_SUMMARY
+        echo "| Easy | Ouroboros.Easy | App |" >> $GITHUB_STEP_SUMMARY
         echo "" >> $GITHUB_STEP_SUMMARY
         
         if [ -n "$FOUND" ]; then
@@ -425,7 +470,7 @@ jobs:
         echo "- Mutation Level: ${ML}" >> $GITHUB_STEP_SUMMARY
         echo "- Target Framework: net10.0" >> $GITHUB_STEP_SUMMARY
         echo "- Test Project: Ouroboros.Tests" >> $GITHUB_STEP_SUMMARY
-        echo "- Parallel Jobs: 9" >> $GITHUB_STEP_SUMMARY
+        echo "- Parallel Jobs: 15" >> $GITHUB_STEP_SUMMARY
         echo "" >> $GITHUB_STEP_SUMMARY
         
         echo "### Thresholds" >> $GITHUB_STEP_SUMMARY

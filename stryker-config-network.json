@@ -1,0 +1,27 @@
+{
+  "stryker-config": {
+    "project": "engine/src/Ouroboros.Network/Ouroboros.Network.csproj",
+    "test-project": "engine/tests/Ouroboros.Network.Tests/Ouroboros.Network.Tests.csproj",
+    "target-framework": "net10.0",
+    "coverage-analysis": "perTestInIsolation",
+    "mutation-level": "Standard",
+    "reporters": ["Html", "Json", "ClearTextSummary"],
+    "thresholds": { "high": 80, "low": 60, "break": 50 },
+    "mutate": [
+      "engine/src/Ouroboros.Network/**/*.cs",
+      "!**/bin/**",
+      "!**/obj/**",
+      "!**/*.g.cs",
+      "!**/*.Designer.cs",
+      "!**/GlobalUsings.cs",
+      "!**/Program.cs",
+      "!**/Startup.cs",
+      "!**/Tests/**"
+    ],
+    "ignore-methods": ["ToString", "GetHashCode", "Equals", "Dispose", "GetEnumerator"],
+    "ignore-mutations": ["string", "StringEmpty"],
+    "verbosity": "info",
+    "additional-timeout": 10000,
+    "max-concurrent-test-runners": 4
+  }
+}
