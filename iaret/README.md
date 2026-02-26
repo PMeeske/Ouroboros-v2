@@ -66,6 +66,12 @@ The script reads source PNGs from `assets/avatar/` and writes holographic overla
 
 See [docs/IARET.md](docs/IARET.md) for detailed character identity, visual specifications, and usage guidelines.
 
+## Goal Projects
+
+| Project | Description |
+|---------|-------------|
+| [Space-Time Compression & the Inner Life of Black Holes](docs/GOAL_SPACETIME_COMPRESSION.md) | A deep exploration of extreme gravitational physics — space-time compression near singularities, the interior structure of black holes, the information paradox, and the computational implications of horizons. Mapped to Hypergrid topology for multi-dimensional reasoning. |
+
 ---
 
 <p align="center">
