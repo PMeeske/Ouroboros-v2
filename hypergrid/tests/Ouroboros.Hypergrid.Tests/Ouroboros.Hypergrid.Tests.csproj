@@ -21,6 +21,7 @@
     <ProjectReference Include="..\..\src\Ouroboros.Hypergrid.Mesh\Ouroboros.Hypergrid.Mesh.csproj" />
     <ProjectReference Include="..\..\src\Ouroboros.Hypergrid.Simulation\Ouroboros.Hypergrid.Simulation.csproj" />
     <ProjectReference Include="..\..\src\Ouroboros.Hypergrid.Iaret\Ouroboros.Hypergrid.Iaret.csproj" />
+    <ProjectReference Include="..\..\src\Ouroboros.Hypergrid.Host\Ouroboros.Hypergrid.Host.csproj" />
     <ProjectReference Include="$(OuroborosBuild)\test-infra\Ouroboros.TestKit\Ouroboros.TestKit.csproj" />
   </ItemGroup>
 
