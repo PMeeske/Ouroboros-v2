@@ -330,6 +330,8 @@ MIT — see [LICENSE](LICENSE).
 
 ## Acknowledgments
 
+- [OpenClaw](https://github.com/PMeeske/ouroboros-app/tree/main/src/Ouroboros.Application/OpenClaw) — PC-node remote orchestration, device identity, signed token auth, and resilience primitives that power Ouroboros' embodied agent capabilities
+- [ruvector](https://github.com/ruvnet/ruvector) — Vector store tooling and patterns that informed the vector compression and retrieval architecture
 - [LangChain](https://github.com/langchain-ai/langchain) for the inspiration
 - [Ollama](https://ollama.ai/) for making local LLMs accessible
 - [MeTTa](https://github.com/trueagi-io/hyperon-experimental) for symbolic reasoning capabilities
