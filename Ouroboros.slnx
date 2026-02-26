@@ -11,8 +11,10 @@
   </Folder>
   <!-- Foundation: Tests -->
   <Folder Name="/foundation/tests/">
+    <Project Path="foundation/tests/Ouroboros.Abstractions.Tests/Ouroboros.Abstractions.Tests.csproj" />
     <Project Path="foundation/tests/Ouroboros.Core.Tests/Ouroboros.Core.Tests.csproj" />
     <Project Path="foundation/tests/Ouroboros.Domain.Tests/Ouroboros.Domain.Tests.csproj" />
+    <Project Path="foundation/tests/Ouroboros.Roslynator.Tests/Ouroboros.Roslynator.Tests.csproj" />
     <Project Path="foundation/tests/Ouroboros.Tools.Tests/Ouroboros.Tools.Tests.csproj" />
     <Project Path="foundation/tests/Ouroboros.Genetic.Tests/Ouroboros.Genetic.Tests.csproj" />
     <Project Path="foundation/tests/Ouroboros.Foundation.BDD/Ouroboros.Foundation.BDD.csproj" />
@@ -60,10 +62,12 @@
   </Folder>
   <!-- App: Tests -->
   <Folder Name="/app/tests/">
-    <Project Path="app/tests/Ouroboros.CLI.Tests/Ouroboros.CLI.Tests.csproj" />
-    <Project Path="app/tests/Ouroboros.WebApi.Tests/Ouroboros.WebApi.Tests.csproj" />
-    <Project Path="app/tests/Ouroboros.Integration.Tests/Ouroboros.Integration.Tests.csproj" />
+    <Project Path="app/tests/Ouroboros.ApiHost.Tests/Ouroboros.ApiHost.Tests.csproj" />
     <Project Path="app/tests/Ouroboros.Application.Tests/Ouroboros.Application.Tests.csproj" />
+    <Project Path="app/tests/Ouroboros.CLI.Tests/Ouroboros.CLI.Tests.csproj" />
+    <Project Path="app/tests/Ouroboros.Easy.Tests/Ouroboros.Easy.Tests.csproj" />
+    <Project Path="app/tests/Ouroboros.Integration.Tests/Ouroboros.Integration.Tests.csproj" />
+    <Project Path="app/tests/Ouroboros.WebApi.Tests/Ouroboros.WebApi.Tests.csproj" />
   </Folder>
   <Folder Name="/.build/" />
   <!-- Shared: TestKit -->
