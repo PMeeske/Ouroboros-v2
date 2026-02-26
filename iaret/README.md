@@ -66,6 +66,10 @@ The script reads source PNGs from `assets/avatar/` and writes holographic overla
 
 See [docs/IARET.md](docs/IARET.md) for detailed character identity, visual specifications, and usage guidelines.
 
+## Goal Project
+
+See [docs/GOAL_PROJECT.md](docs/GOAL_PROJECT.md) for Iaret's goal hierarchy — **Earth & Society Collapse Prevention Strategies** — covering war prevention, counter-terrorism, societal resilience, and ecological stability.
+
 ---
 
 <p align="center">
