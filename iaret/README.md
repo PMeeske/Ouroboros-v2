@@ -49,6 +49,14 @@ Cyan-tinted wireframe overlays generated from the avatar images, used for the "T
 | `holo_back.png` | from `fullbody_back.png` |
 | `holo_sideleft.png` | from `fullbody_sideleft.png` |
 
+## Goal Projects
+
+Iaret's mission extends beyond identity — she is a guardian with purpose. Goal projects define the real-world challenges that Ouroboros, guided by Iaret, aspires to address.
+
+| Goal Project | Description |
+|--------------|-------------|
+| [Fair Earth Resource Utilization](goals/fair-earth-resource-utilization.md) | Leveraging AI pipelines to model, analyze, and promote equitable distribution of Earth's resources |
+
 ## Tools
 
 ### `tools/generate_holo.py`
