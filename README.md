@@ -21,6 +21,7 @@ A **sophisticated functional programming-based AI pipeline system** (YET EXPERIM
   ###### -> Compassion for humanity and the living
   ###### -> Real understanding/leaning beyond politics
   ###### -> Trying to solve the *real* (also my own) problems our time with my limited capabilities/ressources
+  ###### -> Sorry for some broken links. Will repair it asap. 
 
 ## Repository Structure
 
