@@ -1,6 +1,7 @@
 namespace Ouroboros.Hypergrid.Simulation;
 
 using ILGPU;
+using ILGPU.Algorithms;
 using ILGPU.Runtime;
 using ILGPU.Runtime.OpenCL;
 
@@ -87,7 +88,7 @@ public sealed class GpuGridSimulator : IGridSimulator
             sum += activations[srcIdx] * edgeWeights[e];
         }
 
-        output[i] = IntrinsicMath.Tanh(sum);
+        output[i] = XMath.Tanh((float)sum);
     }
 
     public SimulationState Step(SimulationState state)

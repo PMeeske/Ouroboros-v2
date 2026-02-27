@@ -1,0 +1,16 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <RootNamespace>Ouroboros.Hypergrid.Cli</RootNamespace>
+    <Description>OpenAI-compatible API gateway for the Ouroboros Hypergrid — routes model requests to convergent Iaret, Ollama, and upstream providers.</Description>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Ouroboros.Hypergrid.Host\Ouroboros.Hypergrid.Host.csproj" />
+    <ProjectReference Include="..\Ouroboros.Hypergrid.Mesh\Ouroboros.Hypergrid.Mesh.csproj" />
+    <ProjectReference Include="..\Ouroboros.Hypergrid.Simulation\Ouroboros.Hypergrid.Simulation.csproj" />
+    <ProjectReference Include="..\Ouroboros.Hypergrid.Iaret\Ouroboros.Hypergrid.Iaret.csproj" />
+  </ItemGroup>
+
+</Project>

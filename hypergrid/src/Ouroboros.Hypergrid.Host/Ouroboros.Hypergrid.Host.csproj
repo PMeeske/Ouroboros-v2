@@ -10,6 +10,7 @@
     <ProjectReference Include="..\Ouroboros.Hypergrid\Ouroboros.Hypergrid.csproj" />
     <ProjectReference Include="..\Ouroboros.Hypergrid.Streams\Ouroboros.Hypergrid.Streams.csproj" />
     <ProjectReference Include="..\Ouroboros.Hypergrid.Iaret\Ouroboros.Hypergrid.Iaret.csproj" />
+    <ProjectReference Include="$(OuroborosFoundation)\Ouroboros.Abstractions\Ouroboros.Abstractions.csproj" />
   </ItemGroup>
 
 </Project>

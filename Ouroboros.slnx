@@ -44,6 +44,8 @@
     <Project Path="hypergrid/src/Ouroboros.Hypergrid.Simulation/Ouroboros.Hypergrid.Simulation.csproj" />
     <Project Path="hypergrid/src/Ouroboros.Hypergrid.Iaret/Ouroboros.Hypergrid.Iaret.csproj" />
     <Project Path="hypergrid/src/Ouroboros.Hypergrid.Host/Ouroboros.Hypergrid.Host.csproj" />
+    <Project Path="hypergrid/src/Ouroboros.Hypergrid.Node/Ouroboros.Hypergrid.Node.csproj" />
+    <Project Path="hypergrid/src/Ouroboros.Hypergrid.Cli/Ouroboros.Hypergrid.Cli.csproj" />
   </Folder>
   <!-- Hypergrid: Tests -->
   <Folder Name="/hypergrid/tests/">

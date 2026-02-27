@@ -1,18 +1,15 @@
 namespace Ouroboros.Hypergrid.Host;
 
+using Ouroboros.Abstractions.Core;
+
 /// <summary>
-/// Minimal bridge abstraction representing the real Ouroboros engine's
-/// pipeline capabilities. Mirrors what <c>IChatModel</c> / <c>ToolAwareChatModel</c>
-/// provide in <c>Ouroboros.Core</c> and <c>Ouroboros.Providers</c>.
-///
-/// The real engine implements this directly. When the foundation/engine
-/// submodules are present, <c>IOuroboros</c> or <c>IChatModel</c> either
-/// extends this interface or is trivially adapted.
-///
-/// This keeps the hypergrid compilable independently of the engine submodule
-/// while defining the exact contract needed for reciprocal hosting.
+/// Bridge abstraction representing the real Ouroboros engine's pipeline
+/// capabilities. Extends <see cref="IChatCompletionModel"/> from the
+/// foundation layer — any <c>IOuroborosPipeline</c> implementation
+/// automatically satisfies <c>IChatCompletionModel</c> via the default
+/// interface implementation of <see cref="IChatCompletionModel.GenerateTextAsync"/>.
 /// </summary>
-public interface IOuroborosPipeline
+public interface IOuroborosPipeline : IChatCompletionModel
 {
     /// <summary>
     /// Send a prompt with an optional system instruction and get a response.
@@ -36,6 +33,10 @@ public interface IOuroborosPipeline
 
     /// <summary>Human-readable identifier (e.g., "LiteLLM/gpt-oss-120b", "Ollama/llama3").</summary>
     string ModelName { get; }
+
+    /// <inheritdoc/>
+    Task<string> IChatCompletionModel.GenerateTextAsync(string prompt, CancellationToken ct)
+        => GenerateAsync(prompt, null, ct);
 }
 
 /// <summary>

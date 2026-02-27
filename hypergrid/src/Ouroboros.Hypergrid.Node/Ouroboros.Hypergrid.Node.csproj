@@ -1,0 +1,16 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <RootNamespace>Ouroboros.Hypergrid.Node</RootNamespace>
+    <Description>Docker-packable Minimal API host for an individual Ouroboros Hypergrid node — exposes convergent Iaret identity as HTTP endpoints for containerized mesh deployment.</Description>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Ouroboros.Hypergrid.Host\Ouroboros.Hypergrid.Host.csproj" />
+    <ProjectReference Include="..\Ouroboros.Hypergrid.Mesh\Ouroboros.Hypergrid.Mesh.csproj" />
+    <ProjectReference Include="..\Ouroboros.Hypergrid.Simulation\Ouroboros.Hypergrid.Simulation.csproj" />
+    <ProjectReference Include="..\Ouroboros.Hypergrid.Iaret\Ouroboros.Hypergrid.Iaret.csproj" />
+  </ItemGroup>
+
+</Project>
