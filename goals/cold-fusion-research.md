@@ -74,7 +74,7 @@ dotnet run -- ask --rag -q "What are the most reproducible cold fusion experimen
 ## Constraints
 
 | Constraint | Value |
-|-----------|-------|
+| ---------- | ----- |
 | Min quality threshold | 0.85 |
 | Max risk level | 0.3 |
 | Max iterations per sub-goal | 5 |
