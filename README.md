@@ -279,6 +279,7 @@ Each sub-repo contains its own `docs/` directory. Key guides:
 |-------|----------|
 | Iaret Identity | [iaret/README.md](iaret/README.md) |
 | Character Docs | [iaret/docs/IARET.md](iaret/docs/IARET.md) |
+| Goal Project | [iaret/docs/GOAL_PROJECT.md](iaret/docs/GOAL_PROJECT.md) |
 
 ### Architecture & Design
 | Guide | Location |
