@@ -1,0 +1,15 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <RootNamespace>Ouroboros.Hypergrid.Host</RootNamespace>
+    <Description>Reciprocal CLI host bridge — wraps the Ouroboros pipeline as an IIaretEnvironment and exposes the convergent Iaret as a pipeline-consumable chat model. Both directions, same host.</Description>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Ouroboros.Hypergrid\Ouroboros.Hypergrid.csproj" />
+    <ProjectReference Include="..\Ouroboros.Hypergrid.Streams\Ouroboros.Hypergrid.Streams.csproj" />
+    <ProjectReference Include="..\Ouroboros.Hypergrid.Iaret\Ouroboros.Hypergrid.Iaret.csproj" />
+  </ItemGroup>
+
+</Project>

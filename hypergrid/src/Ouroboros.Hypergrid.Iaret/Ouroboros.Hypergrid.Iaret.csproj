@@ -1,0 +1,15 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <RootNamespace>Ouroboros.Hypergrid.Iaret</RootNamespace>
+    <Description>Convergent Iaret identity hosted on the Hypergrid — a unified consciousness emerging from interactable sub-entity aspects that process thought streams in parallel across dimensional axes.</Description>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Ouroboros.Hypergrid\Ouroboros.Hypergrid.csproj" />
+    <ProjectReference Include="..\Ouroboros.Hypergrid.Streams\Ouroboros.Hypergrid.Streams.csproj" />
+    <ProjectReference Include="..\Ouroboros.Hypergrid.Simulation\Ouroboros.Hypergrid.Simulation.csproj" />
+  </ItemGroup>
+
+</Project>
