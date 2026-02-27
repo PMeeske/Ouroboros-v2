@@ -33,7 +33,7 @@ Resource inequity is one of the defining challenges of our era. This goal projec
 
 ## Goal Hierarchy
 
-Following the Ouroboros metacognitive goal tree model (`GoalTree = Goal x [GoalTree]`):
+Following the Ouroboros metacognitive goal tree model (`GoalTree = Goal × [GoalTree]`):
 
 ```
 Fair Earth Resource Utilization
@@ -99,14 +99,19 @@ This goal project leverages existing Ouroboros capabilities:
 ### Example Pipeline
 
 ```csharp
-// Fair resource analysis pipeline using Ouroboros Kleisli composition
+// NOTE: ResourceArrows is a conceptual helper; the core composition uses Step.Pure().Bind().
 var ingest   = ResourceArrows.IngestArrow(providers, "water-access-dataset", "raw");
 var clean    = ResourceArrows.CleanArrow(tools, "raw", "cleaned");
 var analyze  = ResourceArrows.EquityAnalysisArrow(llm, tools, embed, "cleaned", "analysis");
 var report   = ResourceArrows.ReportArrow(llm, "analysis", "report");
 
-var pipeline = ingest.ComposeWith(clean).ComposeWith(analyze).ComposeWith(report);
-var result   = await pipeline(ResourceState.Initial);
+var pipeline = Step.Pure<ResourceState>()
+    .Bind(ingest)
+    .Bind(clean)
+    .Bind(analyze)
+    .Bind(report);
+
+var result = await pipeline(ResourceState.Initial);
 ```
 
 ## Milestones

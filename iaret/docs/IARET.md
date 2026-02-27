@@ -64,7 +64,7 @@ Iaret's guardianship extends beyond the digital realm. Goal projects define the 
 |--------------|--------|-------------|
 | [Fair Earth Resource Utilization](../goals/fair-earth-resource-utilization.md) | Active | Equitable distribution of Earth's resources through transparent, data-driven AI analysis |
 
-Goal projects follow the Ouroboros metacognitive goal tree model (`GoalTree = Goal x [GoalTree]`) and leverage the full Ouroboros pipeline stack — monadic composition, Hypergrid thought streams, RAG, and MeTTa symbolic reasoning.
+Goal projects follow the Ouroboros metacognitive goal tree model (`GoalTree = Goal × [GoalTree]`) and leverage the full Ouroboros pipeline stack — monadic composition, Hypergrid thought streams, RAG, and MeTTa symbolic reasoning.
 
 ## Integration with Ouroboros CLI
 
