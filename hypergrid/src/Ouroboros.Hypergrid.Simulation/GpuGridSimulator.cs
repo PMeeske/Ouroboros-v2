@@ -7,7 +7,8 @@ using ILGPU.Runtime.OpenCL;
 /// <summary>
 /// GPU-accelerated grid simulator using ILGPU's OpenCL backend.
 /// Each cell's activation update runs as a parallel work-item on the GPU.
-/// Falls back to CPU accelerator if no OpenCL device is available.
+/// Note: this constructor throws if GPU initialization fails; the CPU fallback
+/// logic lives in <see cref="SimulatorFactory"/>.
 ///
 /// The propagation kernel computes, for each cell i:
 ///   activation'[i] = tanh( Σ(weight[e] * activation[source[e]]) )
@@ -129,8 +130,10 @@ public sealed class GpuGridSimulator : IGridSimulator
 
     public void Dispose()
     {
-        _accelerator.Dispose();
         if (_ownsContext)
+        {
+            _accelerator.Dispose();
             _context.Dispose();
+        }
     }
 }

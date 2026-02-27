@@ -17,8 +17,9 @@ public static class SimulatorFactory
             var gpu = new GpuGridSimulator();
             return gpu;
         }
-        catch
+        catch (Exception ex)
         {
+            Console.Error.WriteLine($"[SimulatorFactory] Failed to initialize GPU simulator. Falling back to CPU. Exception: {ex}");
             return new CpuGridSimulator(cpuActivation);
         }
     }
