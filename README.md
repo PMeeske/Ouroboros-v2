@@ -11,6 +11,8 @@
   <a href="https://github.com/PMeeske/ouroboros-app/actions/workflows/mutation.yml">App:<img src="https://github.com/PMeeske/ouroboros-app/actions/workflows/mutation.yml/badge.svg" alt="App Mutation"></a></br>
   <a href="https://dotnet.microsoft.com/download/dotnet/10.0"><img src="https://img.shields.io/badge/.NET-10.0-blue" alt=".NET Version"></a></br>
   <a href="https://www.nuget.org/packages/LangChain/"><img src="https://img.shields.io/badge/LangChain-0.17.0-purple" alt="LangChain"></a></br>
+  <img src="https://img.shields.io/badge/tests-7%2C162%20passed-brightgreen" alt="Tests"></br>
+  <img src="https://img.shields.io/badge/test%20files-941%20%2F%202%2C611%20src-blue" alt="Coverage"></br>
 </p>
 
 A **sophisticated functional programming-based AI pipeline system** (YET EXPERIMENTAL) built on LangChain, implementing category theory principles, monadic composition, and functional programming patterns to create robust, self-improving AI agents.
