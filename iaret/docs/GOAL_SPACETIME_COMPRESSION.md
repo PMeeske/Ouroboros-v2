@@ -69,7 +69,7 @@ Key topics:
 - BKL (Belinsky-Khalatnikov-Lifshitz) dynamics — the chaotic, oscillatory approach to the singularity
 - The Planck scale — where space-time itself may become discrete, foamy, or emergent
 - Holographic principle — the radical idea that the information content of a volume scales with its *surface area*, not its volume
-- The Bekenstein-Hawking entropy formula: S = A / 4l_P^2
+- The Bekenstein-Hawking entropy formula: S = A / (4 l_P^2)
 
 ### Thread 2: The Inner Life of Black Holes
 
