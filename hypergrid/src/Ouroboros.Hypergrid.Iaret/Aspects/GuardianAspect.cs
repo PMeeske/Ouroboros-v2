@@ -16,7 +16,7 @@ public sealed class GuardianAspect : IaretAspect
     private readonly double _coherenceThreshold;
     private long _blockedCount;
 
-    public long BlockedCount => _blockedCount;
+    public long BlockedCount => Interlocked.Read(ref _blockedCount);
 
     protected override string SystemPrompt =>
         "You are The Guardian Uraeus, a protective sub-entity of Iaret. " +

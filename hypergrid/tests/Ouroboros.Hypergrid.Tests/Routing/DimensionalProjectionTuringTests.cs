@@ -153,7 +153,7 @@ public sealed class DimensionalProjectionTuringTests
     }
 
     [Fact]
-    public void Double_projection_should_be_equivalent_to_multi_field_replacement()
+    public void Sequential_projections_on_different_dimensions_should_compose()
     {
         var source = new GridCoordinate(1, 2, 3);
 

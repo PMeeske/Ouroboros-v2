@@ -65,12 +65,12 @@ public sealed class StreamOperatorsTuringTests
     [Fact]
     public async Task Merge_should_handle_streams_of_different_lengths()
     {
-        var short_ = ThoughtStream.From([MakeThought("x")]);
-        var long_ = ThoughtStream.From(
+        var shortStream = ThoughtStream.From([MakeThought("x")]);
+        var longStream = ThoughtStream.From(
             Enumerable.Range(1, 10).Select(i => MakeThought($"y{i}")).ToList());
 
         var merged = new List<string>();
-        await foreach (var t in StreamOperators.Merge<string>([short_, long_]))
+        await foreach (var t in StreamOperators.Merge<string>([shortStream, longStream]))
             merged.Add(t.Payload);
 
         merged.Should().HaveCount(11);

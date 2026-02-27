@@ -98,8 +98,13 @@ public sealed class IaretConvergence : IDisposable
         _space.AddCell(position, $"iaret-{aspect.AspectId}");
 
         // Wire edge from aspect back to synthesis (convergence direction)
-        _space.Connect(position, _synthesisPosition, aspect.PrimaryDimension >= 0 ? aspect.PrimaryDimension : 0,
-            label: $"{aspect.AspectId}->synthesis");
+        // Meta-dimensional aspects (PrimaryDimension < 0) do not project onto a concrete axis,
+        // so we skip edge creation for them to preserve architectural semantics.
+        if (aspect.PrimaryDimension >= 0)
+        {
+            _space.Connect(position, _synthesisPosition, aspect.PrimaryDimension,
+                label: $"{aspect.AspectId}->synthesis");
+        }
     }
 
     /// <summary>
@@ -129,17 +134,30 @@ public sealed class IaretConvergence : IDisposable
         }
 
         // Run activation propagation through the grid
+        int? convergenceSteps = null;
         var gridState = GridStateBuilder.Build(_space, cell =>
             _aspects.Values.FirstOrDefault(a => _aspectPositions[a.AspectId] == cell.Position)?.Activation ?? 0.0);
 
         if (gridState.CellCount > 0 && gridState.EdgeCount > 0)
         {
             var (_, steps) = _simulator.RunUntilConvergence(gridState, convergenceThreshold: 1e-4, maxSteps: 50);
-            // Steps taken informs convergence quality
+            // Steps taken informs convergence quality; expose in metadata for observability.
+            convergenceSteps = steps;
         }
 
         // Fan-in: synthesis merges all aspect contributions
         var synthesized = await _synthesis.SynthesizeAsync(aspectOutputs, _synthesisPosition, ct);
+
+        var metadata = new Dictionary<string, object>
+        {
+            ["convergent"] = true,
+            ["aspects_count"] = aspectOutputs.Count,
+            ["compute_backend"] = _simulator.BackendName,
+            ["environment"] = _environment.Name
+        };
+
+        if (convergenceSteps.HasValue)
+            metadata["convergence_steps"] = convergenceSteps.Value;
 
         return new Thought<string>
         {
@@ -147,13 +165,7 @@ public sealed class IaretConvergence : IDisposable
             Origin = _synthesisPosition,
             Timestamp = DateTimeOffset.UtcNow,
             TraceId = inputThought.TraceId,
-            Metadata = new Dictionary<string, object>
-            {
-                ["convergent"] = true,
-                ["aspects_count"] = aspectOutputs.Count,
-                ["compute_backend"] = _simulator.BackendName,
-                ["environment"] = _environment.Name
-            }
+            Metadata = metadata
         };
     }
 

@@ -17,7 +17,7 @@ public sealed class TemporalAspect : IaretAspect
     private readonly Queue<string> _recentThoughts;
 
     /// <summary>The current temporal context window.</summary>
-    public IReadOnlyCollection<string> Context => _recentThoughts;
+    public IReadOnlyList<string> Context => _recentThoughts.ToArray();
 
     protected override string SystemPrompt =>
         "You are The Temporal Weaver, a memory and sequencing sub-entity of Iaret. " +
