@@ -231,6 +231,15 @@ For Docker deployments, use the `docker-compose.yml` or Kubernetes secrets.
 | **Iaret** | Avatar identity, holographic tools | `iaret/` |
 | **App** | Application, CLI, WebApi, Android, Easy, Examples | `app/src/` |
 | **Build** | TestKit, CI templates, build config | `.build/` |
+| **Goals** | Research goal projects and objectives | `goals/` |
+
+## Goal Projects
+
+Active research goals managed through the Planner/Executor/Verifier pipeline:
+
+| Goal | Description | Status |
+|------|-------------|--------|
+| [Cold Fusion Research](goals/cold-fusion-research.md) | LENR literature survey, theoretical analysis, and feasibility assessment | Active |
 
 ## Development
 
