@@ -147,7 +147,7 @@ internal sealed class OllamaHttpPipeline : IOuroborosPipeline
     {
         var body = new
         {
-            model = Environment.GetEnvironmentVariable("OLLAMA_MODEL") ?? "deepseek-v3.1:671b-cloud"
+            model = Environment.GetEnvironmentVariable("OLLAMA_MODEL") ?? "deepseek-v3.1:671b-cloud",
             prompt = systemPrompt is not null ? $"[System: {systemPrompt}]\n{prompt}" : prompt,
             stream = false
         };
