@@ -74,13 +74,115 @@ xml_doc_style_include_dot_in_param_tag = true
 xml_doc_style_include_dot_in_returns_tag = true
 xml_doc_style_include_dot_in_value_tag = true
 
-# Roslyn Analyzer severities
-dotnet_diagnostic.CA1062.severity = warning
+# ═══════════════════════════════════════════════════════════════════
+# Roslyn / SonarAnalyzer severity overrides
+# ═══════════════════════════════════════════════════════════════════
+
+# --- Roslyn CA rules ---
 dotnet_diagnostic.CA1031.severity = suggestion
+dotnet_diagnostic.CA1062.severity = suggestion
+dotnet_diagnostic.CA1416.severity = suggestion
 dotnet_diagnostic.CA1822.severity = suggestion
 dotnet_diagnostic.CA2007.severity = suggestion
 
-# RCS1238: Avoid nested ?: operators
+# --- CS compiler warnings (intentional / nullable) ---
+dotnet_diagnostic.CS0067.severity = suggestion
+dotnet_diagnostic.CS0169.severity = suggestion
+dotnet_diagnostic.CS0219.severity = suggestion
+dotnet_diagnostic.CS0414.severity = suggestion
+dotnet_diagnostic.CS0419.severity = suggestion
+dotnet_diagnostic.CS0618.severity = suggestion
+dotnet_diagnostic.CS1570.severity = none
+dotnet_diagnostic.CS1573.severity = none
+dotnet_diagnostic.CS1574.severity = none
+dotnet_diagnostic.CS1587.severity = none
+dotnet_diagnostic.CS7022.severity = suggestion
+dotnet_diagnostic.CS8601.severity = suggestion
+dotnet_diagnostic.CS8602.severity = suggestion
+dotnet_diagnostic.CS8603.severity = suggestion
+dotnet_diagnostic.CS8604.severity = suggestion
+dotnet_diagnostic.CS8618.severity = suggestion
+dotnet_diagnostic.CS9113.severity = suggestion
+
+# --- ASP.NET ---
+dotnet_diagnostic.ASPDEPR002.severity = suggestion
+
+# --- Sonar: naming / style (not bugs) ---
+dotnet_diagnostic.S101.severity = suggestion
+dotnet_diagnostic.S108.severity = suggestion
+dotnet_diagnostic.S112.severity = suggestion
+dotnet_diagnostic.S125.severity = suggestion
+dotnet_diagnostic.S127.severity = suggestion
+dotnet_diagnostic.S927.severity = suggestion
+dotnet_diagnostic.S1006.severity = suggestion
+dotnet_diagnostic.S1075.severity = suggestion
+dotnet_diagnostic.S1104.severity = suggestion
+dotnet_diagnostic.S1118.severity = suggestion
+dotnet_diagnostic.S1125.severity = suggestion
+dotnet_diagnostic.S1133.severity = suggestion
+dotnet_diagnostic.S1155.severity = suggestion
+dotnet_diagnostic.S1163.severity = suggestion
+dotnet_diagnostic.S1199.severity = suggestion
+dotnet_diagnostic.S1244.severity = suggestion
+dotnet_diagnostic.S1450.severity = suggestion
+dotnet_diagnostic.S1643.severity = suggestion
+dotnet_diagnostic.S1694.severity = suggestion
+dotnet_diagnostic.S1905.severity = suggestion
+dotnet_diagnostic.S1939.severity = suggestion
+dotnet_diagnostic.S1994.severity = suggestion
+dotnet_diagnostic.S2292.severity = suggestion
+dotnet_diagnostic.S2326.severity = suggestion
+dotnet_diagnostic.S2365.severity = suggestion
+dotnet_diagnostic.S2368.severity = suggestion
+dotnet_diagnostic.S2681.severity = suggestion
+dotnet_diagnostic.S2696.severity = suggestion
+dotnet_diagnostic.S2930.severity = suggestion
+dotnet_diagnostic.S2933.severity = suggestion
+dotnet_diagnostic.S2955.severity = suggestion
+dotnet_diagnostic.S3011.severity = suggestion
+dotnet_diagnostic.S3237.severity = suggestion
+dotnet_diagnostic.S3400.severity = suggestion
+dotnet_diagnostic.S3459.severity = suggestion
+dotnet_diagnostic.S3604.severity = suggestion
+dotnet_diagnostic.S3626.severity = suggestion
+dotnet_diagnostic.S3878.severity = suggestion
+dotnet_diagnostic.S3881.severity = suggestion
+dotnet_diagnostic.S3923.severity = suggestion
+dotnet_diagnostic.S4456.severity = suggestion
+
+# --- Sonar: design-level (not actionable in bulk) ---
+dotnet_diagnostic.S1172.severity = suggestion
+dotnet_diagnostic.S2139.severity = suggestion
+dotnet_diagnostic.S2198.severity = suggestion
+dotnet_diagnostic.S2737.severity = suggestion
+dotnet_diagnostic.S2953.severity = suggestion
+dotnet_diagnostic.S3220.severity = suggestion
+dotnet_diagnostic.S3358.severity = suggestion
+dotnet_diagnostic.S3427.severity = suggestion
+dotnet_diagnostic.S4136.severity = suggestion
+dotnet_diagnostic.S6580.severity = suggestion
+dotnet_diagnostic.S6667.severity = suggestion
+dotnet_diagnostic.S6966.severity = suggestion
+
+# --- Additional CS compiler warnings ---
+dotnet_diagnostic.CS8600.severity = suggestion
+dotnet_diagnostic.CS7095.severity = suggestion
+
+# --- Sonar: structural / design (not actionable in bulk) ---
+dotnet_diagnostic.S1144.severity = suggestion
+dotnet_diagnostic.S1871.severity = suggestion
+dotnet_diagnostic.S2094.severity = suggestion
+dotnet_diagnostic.S2234.severity = suggestion
+dotnet_diagnostic.S2551.severity = suggestion
+dotnet_diagnostic.S3241.severity = suggestion
+dotnet_diagnostic.S3260.severity = suggestion
+dotnet_diagnostic.S3261.severity = suggestion
+dotnet_diagnostic.S3925.severity = suggestion
+dotnet_diagnostic.S4019.severity = suggestion
+dotnet_diagnostic.S4144.severity = suggestion
+dotnet_diagnostic.S4830.severity = suggestion
+
+# --- Roslynator ---
 dotnet_diagnostic.RCS1238.severity = none
 
 # JSON files
